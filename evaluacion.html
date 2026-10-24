@@ -1,0 +1,2945 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Sistema de Evaluación · Guía Docente UNPHU IA</title>
+</head>
+
+<body>
+
+  <header>
+    <h1>Guía Docente UNPHU IA</h1>
+    <p>Elaboración del Sistema de Evaluación</p>
+  </header>
+
+  <main>
+
+    <section id="cargando">
+      <h2>Preparando el sistema de evaluación...</h2>
+
+      <p>
+        Se está recuperando la información del cronograma
+        elaborado en el paso anterior.
+      </p>
+    </section>
+
+    <section
+      id="sistemaEvaluacion"
+      style="display:none;"
+    >
+
+<a
+  href="elaborar.html"
+  onclick="localStorage.setItem('volverCronogramaCompleto','si')"
+>
+  ← Volver al cronograma completo
+</a>
+      
+      <h2>X. Sistema de Evaluación</h2>
+
+      <p>
+        El sistema de evaluación será generado tomando como
+        referencia el cronograma completo de la asignatura.
+      </p>
+
+      <div id="resumenAsignatura"></div>
+
+      <div id="contenidoSistemaEvaluacion"></div>
+
+    </section>
+
+    <section
+      id="errorEvaluacion"
+      style="display:none;"
+    >
+
+      <h2>No se puede elaborar el sistema de evaluación</h2>
+
+      <p id="mensajeErrorEvaluacion"></p>
+
+      <a href="index.html">
+        Volver al inicio
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    let datosPaso1 = null;
+
+    let propuestaEvaluacionActual = null;
+
+    function cargarDatosPaso1(){
+
+      const respaldo =
+        localStorage.getItem("respaldoGuiaDocente");
+
+      if (!respaldo) {
+        mostrarError(
+          "No se encontró un cronograma previamente elaborado."
+        );
+        return;
+      }
+
+      try {
+
+        const datosGuardados =
+          JSON.parse(respaldo);
+
+        if (
+          !datosGuardados.datosGuia ||
+          datosGuardados.datosGuia.cronogramaCompletado !== true
+        ) {
+
+          mostrarError(
+            "Para elaborar el sistema de evaluación, primero debe completar el cronograma de la asignatura."
+          );
+
+          return;
+        }
+
+        datosPaso1 =
+          datosGuardados.datosGuia;
+
+        mostrarSistemaEvaluacion();
+
+      } catch (error) {
+
+        console.error(
+          "Error al recuperar el cronograma:",
+          error
+        );
+
+        mostrarError(
+          "No fue posible recuperar correctamente la información del cronograma."
+        );
+
+      }
+
+    }
+
+function prepararActividadesCronograma(){
+
+  const actividades = [];
+
+  datosPaso1.cronograma.forEach(semana => {
+
+    semana.propuesta?.clases?.forEach(clase => {
+
+      clase.metodologiasActividades?.forEach(item => {
+
+        actividades.push({
+          semana: semana.semana,
+          clase: clase.clase,
+          contenido: clase.contenido || "",
+          metodologia: item.metodologia || "",
+          actividadFormativa:
+            item.actividadFormativa || "",
+          rea:
+            item.codigosREA || []
+        });
+
+      });
+
+      clase.actividadesAdicionales?.forEach(item => {
+
+        actividades.push({
+          semana: semana.semana,
+          clase: clase.clase,
+          contenido: clase.contenido || "",
+          metodologia: "Actividad adicional",
+          actividadFormativa:
+            item.actividadFormativa ||
+            item.actividad ||
+            "",
+          rea:
+            item.codigosREA || []
+        });
+
+      });
+
+/* ==================================================
+INCORPORAR PRUEBA DIAGNÓSTICA DEL CRONOGRAMA
+================================================== */
+
+if (
+  clase.evaluacionDiagnostica &&
+  Number(semana.semana) === 1 &&
+  Number(clase.clase) === 1
+) {
+
+  const diagnostico =
+    clase.evaluacionDiagnostica;
+
+  actividades.push({
+    semana: 1,
+    clase: 1,
+    contenido:
+      clase.contenido || "",
+    metodologia:
+      diagnostico.metodologia || "",
+    actividadFormativa:
+      diagnostico.actividadDiagnostica || "",
+    rea: [],
+    evaluacionDiagnostica: {
+      nombre:
+        diagnostico.nombre ||
+        "Prueba Diagnóstica",
+      tipo: "D",
+      valor: 0,
+      instrumento:
+        "Prueba objetiva",
+      metodologia:
+        diagnostico.metodologia || "",
+      mediacionDocente:
+        diagnostico.mediacionDocente || "",
+      actividadDiagnostica:
+        diagnostico.actividadDiagnostica || ""
+    }
+  });
+
+}
+      
+    });
+
+  });
+
+  return actividades;
+
+}
+
+function obtenerActividadesCronogramaDelRubro(rubro){
+
+  const actividades =
+    prepararActividadesCronograma();
+
+  if(!rubro){
+    return [];
+  }
+
+  const semanaInicio =
+    Number(rubro.semanaInicio || 1);
+
+  const semanaFin =
+    Number(rubro.semanaFin || rubro.semana);
+
+  return actividades.filter(actividad =>
+    Number(actividad.semana) >= semanaInicio &&
+    Number(actividad.semana) <= semanaFin &&
+    actividad.actividadFormativa
+  );
+
+}
+    
+function extraerREADeTexto(texto){
+
+  if(!texto){
+    return [];
+  }
+
+  const coincidencias =
+    texto.match(/REA\d+/gi) || [];
+
+  return [
+    ...new Set(
+      coincidencias.map(
+        codigo => codigo.toUpperCase()
+      )
+    )
+  ];
+
+}
+    
+function obtenerClasesCronogramaDelRubro(rubro){
+
+  const actividades =
+    obtenerActividadesCronogramaDelRubro(rubro);
+
+  const clasesUnicas = [];
+
+  actividades.forEach(actividad => {
+
+    let claseExistente =
+      clasesUnicas.find(item =>
+        Number(item.semana) === Number(actividad.semana) &&
+        Number(item.clase) === Number(actividad.clase)
+      );
+
+    if(!claseExistente){
+
+      claseExistente = {
+        semana: actividad.semana,
+        clase: actividad.clase,
+        contenido: actividad.contenido,
+        rea: []
+      };
+
+      clasesUnicas.push(
+        claseExistente
+      );
+
+    }
+
+    const reaEncontrados = [
+  ...(Array.isArray(actividad.rea)
+    ? actividad.rea
+    : []),
+
+  ...extraerREADeTexto(
+    actividad.actividadFormativa
+  )
+];
+
+reaEncontrados.forEach(codigoREA => {
+
+  const codigo =
+    String(codigoREA)
+      .trim()
+      .toUpperCase();
+
+  if(
+    codigo &&
+    !claseExistente.rea.includes(codigo)
+  ){
+    claseExistente.rea.push(codigo);
+  }
+
+});
+
+  });
+
+  return clasesUnicas;
+
+}
+    
+function obtenerPrimerRubroEvaluacion(){
+
+  if (
+    !datosPaso1.evaluacion ||
+    !Array.isArray(datosPaso1.evaluacion.rubros) ||
+    datosPaso1.evaluacion.rubros.length === 0
+  ) {
+    return null;
+  }
+
+  return datosPaso1.evaluacion.rubros[0];
+
+}
+
+function obtenerSiguienteRubroEvaluacion(){
+
+  if(
+    !datosPaso1.evaluacion ||
+    !Array.isArray(datosPaso1.evaluacion.rubros)
+  ){
+    return null;
+  }
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  const indiceSiguiente =
+    rubrosAceptados.length;
+
+  return (
+    datosPaso1.evaluacion.rubros[indiceSiguiente] ||
+    null
+  );
+
+}
+
+function obtenerRubroAnteriorEvaluacion(){
+
+  if(
+    !datosPaso1.evaluacion ||
+    !Array.isArray(datosPaso1.evaluacion.rubros)
+  ){
+    return null;
+  }
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  const indiceSiguiente =
+    rubrosAceptados.length;
+
+  if(indiceSiguiente === 0){
+    return null;
+  }
+
+  return (
+    datosPaso1.evaluacion.rubros[indiceSiguiente - 1] ||
+    null
+  );
+
+}
+
+function prepararSiguienteRubroEvaluacion(){
+
+  const rubro =
+    obtenerSiguienteRubroEvaluacion();
+
+  if(!rubro){
+    return null;
+  }
+
+  const rubroAnterior =
+    obtenerRubroAnteriorEvaluacion();
+
+  return prepararPeriodoEvaluativo(
+    rubro,
+    rubroAnterior
+  );
+
+}
+    
+function prepararPeriodoEvaluativo(rubro, rubroAnterior = null){
+
+const todasLasActividades =
+  prepararActividadesCronograma();
+
+const esRubroUnico =
+  datosPaso1.evaluacion?.rubros?.length === 1 &&
+  String(rubro.nombre || "")
+    .trim()
+    .toLowerCase() === "rubro único";
+
+let semanaInicio;
+let semanaFin;
+
+if(esRubroUnico){
+
+  semanaInicio = 1;
+
+  semanaFin =
+    todasLasActividades.reduce(
+      (ultimaSemana, actividad) =>
+        Math.max(
+          ultimaSemana,
+          Number(actividad.semana || 0)
+        ),
+      0
+    );
+
+} else {
+
+  semanaInicio =
+    rubroAnterior
+      ? Number(rubroAnterior.semana) + 1
+      : 1;
+
+  semanaFin =
+    Number(rubro.semana);
+
+}
+
+const actividades =
+  todasLasActividades.filter(
+    actividad =>
+      Number(actividad.semana) >= semanaInicio &&
+      Number(actividad.semana) <= semanaFin
+  );
+
+  return {
+    rubro: rubro.nombre,
+    peso: Number(rubro.peso),
+    semanaInicio: semanaInicio,
+    semanaFin: semanaFin,
+    actividades: actividades
+  };
+
+}
+
+function prepararContextoIAEvaluacion(rubro, rubroAnterior = null){
+
+  const periodo =
+    prepararPeriodoEvaluativo(
+      rubro,
+      rubroAnterior
+    );
+
+  return {
+
+    asignatura: {
+      configuracion:
+        datosPaso1.configuracion || {}
+    },
+
+    rubro: {
+      nombre: periodo.rubro,
+      pesoFijo: periodo.peso,
+      semanaInicio: periodo.semanaInicio,
+      semanaCierre: periodo.semanaFin
+    },
+
+    reaOficiales:
+      datosPaso1.programa?.reaOficiales || [],
+
+    actividadesCronograma:
+      periodo.actividades
+
+  };
+
+}
+
+function prepararDatosInstrumentosEvaluacion(){
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  if(
+    rubrosConfigurados.length === 0 ||
+    rubrosAceptados.length !== rubrosConfigurados.length
+  ){
+    return null;
+  }
+
+  return {
+
+    asignatura: {
+      codigo:
+        datosPaso1.configuracion?.codigoAsignatura || "",
+
+      nombre:
+        datosPaso1.configuracion?.nombreAsignatura || ""
+    },
+
+    reaOficiales:
+      datosPaso1.programa?.reaOficiales || [],
+
+    cronograma:
+      datosPaso1.cronograma || [],
+
+    sistemaEvaluacion: {
+      rubrosAceptados:
+        JSON.parse(
+          JSON.stringify(rubrosAceptados)
+        )
+    }
+
+  };
+
+}
+    
+function mostrarTablaEvaluacion(propuesta){
+
+  const contenedor =
+    document.getElementById(
+      "contenidoSistemaEvaluacion"
+    );
+
+  if(
+    !propuesta ||
+    !Array.isArray(propuesta.actividades)
+  ){
+    contenedor.innerHTML =
+      "<p>No se recibió una propuesta de evaluación válida.</p>";
+    return;
+  }
+
+  propuestaEvaluacionActual = propuesta;
+
+const totalActual =
+  propuesta.actividades.reduce(
+    (total, actividad) =>
+      total + Number(actividad.valor || 0),
+    0
+  );
+
+const totalCorrecto =
+  totalActual === Number(propuesta.pesoTotal);
+
+const diferencia =
+  totalActual - Number(propuesta.pesoTotal);
+
+  let mensajeTotal = "";
+
+if(totalCorrecto){
+
+  mensajeTotal = `
+    <div style="margin-top:12px;">
+      <strong>
+        ✓ Total asignado:
+        ${totalActual} de ${propuesta.pesoTotal} puntos.
+      </strong>
+    </div>
+  `;
+
+} else if(diferencia > 0){
+
+  mensajeTotal = `
+    <div
+      style="
+        margin-top:12px;
+        padding:10px;
+        border:1px solid #999;
+      "
+    >
+      <strong>
+        Total actual:
+        ${totalActual} de ${propuesta.pesoTotal} puntos.
+      </strong>
+
+      <br><br>
+
+      El valor máximo de ${propuesta.rubro}
+      es ${propuesta.pesoTotal} puntos.
+      Debe modificar el valor de una o más
+      actividades evaluativas hasta que la suma
+      sea exactamente ${propuesta.pesoTotal} puntos.
+
+      <br><br>
+
+      <strong>
+        Debe redistribuir ${diferencia} punto(s).
+      </strong>
+    </div>
+  `;
+
+} else {
+
+  mensajeTotal = `
+    <div
+      style="
+        margin-top:12px;
+        padding:10px;
+        border:1px solid #999;
+      "
+    >
+      <strong>
+        Total actual:
+        ${totalActual} de ${propuesta.pesoTotal} puntos.
+      </strong>
+
+      <br><br>
+
+      Faltan ${Math.abs(diferencia)} punto(s)
+      por asignar para completar ${propuesta.rubro}.
+    </div>
+  `;
+
+}
+
+let filas = "";
+
+ propuesta.actividades.forEach((actividad, index) => {
+
+    const rea =
+      Array.isArray(actividad.codigosREA)
+        ? actividad.codigosREA.join(", ")
+        : "";
+
+    const instrumentos =
+      Array.isArray(actividad.instrumentos)
+        ? actividad.instrumentos.join(", ")
+        : "";
+
+    filas += `
+  <tr>
+    <td>${actividad.semana}</td>
+    <td>${actividad.tecnica || ""}</td>
+    <td>${rea}</td>
+    <td>${actividad.tipo || ""}</td>
+    <td>${instrumentos}</td>
+    <td>${actividad.valor ?? 0}</td>
+    <td>
+      <button
+        type="button"
+        onclick="editarActividadEvaluacion(${index})"
+      >
+        Editar
+      </button>
+    </td>
+  </tr>
+`;
+
+  });
+
+  filas += `
+    <tr>
+      <td colspan="6">
+        <strong>${propuesta.rubro}</strong>
+      </td>
+      <td>
+        <strong>${propuesta.pesoTotal}</strong>
+      </td>
+      
+      <td></td>
+      
+    </tr>
+  `;
+
+  contenedor.innerHTML = `
+    <h3>${propuesta.rubro}</h3>
+
+    <table border="1" cellspacing="0" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Semana</th>
+          <th>Técnica</th>
+          <th>REA(s)</th>
+          <th>Tipo (D, F o S)</th>
+          <th>Instrumento(s)</th>
+          <th>Valor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        ${filas}
+      </tbody>
+        </table>
+
+        ${mensajeTotal}
+
+<div style="margin-top:15px;">
+  <button
+    type="button"
+    onclick="agregarActividadEvaluacion()"
+  >
+    + Agregar técnica de evaluación
+  </button>
+
+<button
+  type="button"
+  onclick="regenerarRubroEvaluacion()"
+  style="margin-left:10px;"
+>
+  Regenerar con IA
+</button>
+
+  <button
+    type="button"
+    onclick="aceptarRubroEvaluacion()"
+    ${totalCorrecto ? "" : "disabled"}
+    style="margin-left:10px;"
+  >
+    Aceptar ${propuesta.rubro}
+  </button>
+</div>
+  `;
+
+}
+
+function regenerarRubroEvaluacion(){
+
+  if(
+    !propuestaEvaluacionActual ||
+    !propuestaEvaluacionActual.rubro
+  ){
+    return;
+  }
+
+  const nombreRubro =
+    propuestaEvaluacionActual.rubro;
+
+  const rubroActual =
+    datosPaso1.evaluacion?.rubros?.find(
+      rubro =>
+        rubro.nombre === nombreRubro
+    );
+
+  if(!rubroActual){
+    alert(
+      "No se encontró la configuración del rubro actual."
+    );
+    return;
+  }
+
+  const confirmar =
+    confirm(
+      "Se generará una nueva propuesta para " +
+      nombreRubro +
+      ".\n\n" +
+      "La propuesta actual será sustituida. " +
+      "Los rubros aceptados anteriormente no serán modificados.\n\n" +
+      "¿Desea continuar?"
+    );
+
+  if(!confirmar){
+    return;
+  }
+
+  generarRubroEvaluacion(
+    rubroActual
+  );
+
+}
+    
+function aceptarRubroEvaluacion(){
+
+  if(
+    !propuestaEvaluacionActual ||
+    !Array.isArray(propuestaEvaluacionActual.actividades)
+  ){
+    return;
+  }
+
+  const totalActual =
+    propuestaEvaluacionActual.actividades.reduce(
+      (total, actividad) =>
+        total + Number(actividad.valor || 0),
+      0
+    );
+
+  const pesoTotal =
+    Number(propuestaEvaluacionActual.pesoTotal);
+
+  if(totalActual !== pesoTotal){
+
+    alert(
+      "No puede aceptar este acumulado hasta que " +
+      "la suma de las actividades evaluativas sea " +
+      "exactamente " + pesoTotal + " puntos."
+    );
+
+    return;
+  }
+
+  alert(
+    propuestaEvaluacionActual.rubro +
+    " está correctamente distribuido y listo para ser aceptado."
+  );
+
+  datosPaso1.sistemaEvaluacion =
+  datosPaso1.sistemaEvaluacion || {};
+
+datosPaso1.sistemaEvaluacion.rubrosAceptados =
+  datosPaso1.sistemaEvaluacion.rubrosAceptados || [];
+
+  const editandoRubroAceptado =
+  datosPaso1.sistemaEvaluacion.editandoRubroAceptado === true;
+
+const indiceRubroEnEdicion =
+  Number(
+    datosPaso1.sistemaEvaluacion.indiceRubroEnEdicion
+  );
+
+const rubroYaAceptado =
+  datosPaso1.sistemaEvaluacion.rubrosAceptados.some(
+    rubro => rubro.rubro === propuestaEvaluacionActual.rubro
+  );
+
+if(rubroYaAceptado && !editandoRubroAceptado){
+
+  alert(
+    propuestaEvaluacionActual.rubro +
+    " ya fue aceptado previamente."
+  );
+
+  return;
+}
+
+const indiceRubroAceptado =
+  datosPaso1.sistemaEvaluacion.rubrosAceptados.length;
+
+if(
+  editandoRubroAceptado &&
+  Number.isInteger(indiceRubroEnEdicion) &&
+  indiceRubroEnEdicion >= 0 &&
+  indiceRubroEnEdicion <
+    datosPaso1.sistemaEvaluacion.rubrosAceptados.length
+){
+
+  // Reemplazar exactamente el rubro que se está modificando
+  datosPaso1.sistemaEvaluacion.rubrosAceptados[
+    indiceRubroEnEdicion
+  ] =
+    JSON.parse(
+      JSON.stringify(
+        propuestaEvaluacionActual
+      )
+    );
+
+  // Finalizar el modo de edición
+  datosPaso1.sistemaEvaluacion.editandoRubroAceptado =
+    false;
+
+  datosPaso1.sistemaEvaluacion.indiceRubroEnEdicion =
+    -1;
+
+  datosPaso1.sistemaEvaluacion.propuestaActual = null;
+
+datosPaso1.instrumentosEvaluacion =
+  datosPaso1.instrumentosEvaluacion || {};
+
+datosPaso1.instrumentosEvaluacion.fuente =
+  prepararDatosInstrumentosEvaluacion();
+
+datosPaso1.instrumentosEvaluacion.sistemaEvaluacionCompletado =
+  true;
+
+const respaldo =
+  JSON.parse(
+    localStorage.getItem("respaldoGuiaDocente")
+  );
+
+respaldo.datosGuia =
+  datosPaso1;
+
+localStorage.setItem(
+  "respaldoGuiaDocente",
+  JSON.stringify(respaldo)
+);
+
+mostrarVistaFinalSistemaEvaluacion();
+
+return;
+
+}else{
+
+  // Flujo normal: aceptar un rubro por primera vez
+  datosPaso1.sistemaEvaluacion.rubrosAceptados.push(
+    JSON.parse(
+      JSON.stringify(
+        propuestaEvaluacionActual
+      )
+    )
+  );
+
+}
+
+const respaldo =
+  JSON.parse(
+    localStorage.getItem("respaldoGuiaDocente")
+  );
+
+respaldo.datosGuia =
+  datosPaso1;
+
+localStorage.setItem(
+  "respaldoGuiaDocente",
+  JSON.stringify(respaldo)
+);
+
+// Preparar el siguiente rubro de evaluación
+const siguientePeriodo =
+  prepararSiguienteRubroEvaluacion();
+
+if(siguientePeriodo){
+
+  const siguienteRubro =
+    obtenerSiguienteRubroEvaluacion();
+
+  if(siguienteRubro){
+
+    generarRubroEvaluacion(
+      siguienteRubro
+    );
+
+  }
+
+} else {
+
+  console.log(
+    "Todos los rubros de evaluación han sido completados."
+  );
+
+  const datosInstrumentos =
+    prepararDatosInstrumentosEvaluacion();
+
+  if(datosInstrumentos){
+
+    datosPaso1.instrumentosEvaluacion =
+      datosPaso1.instrumentosEvaluacion || {};
+
+    datosPaso1.instrumentosEvaluacion.fuente =
+      datosInstrumentos;
+
+    datosPaso1.instrumentosEvaluacion.sistemaEvaluacionCompletado =
+      true;
+
+    const respaldoActualizado =
+      JSON.parse(
+        localStorage.getItem("respaldoGuiaDocente")
+      );
+
+    respaldoActualizado.datosGuia =
+      datosPaso1;
+
+    localStorage.setItem(
+      "respaldoGuiaDocente",
+      JSON.stringify(respaldoActualizado)
+    );
+
+  }
+
+  mostrarVistaFinalSistemaEvaluacion();
+
+}
+
+}
+ 
+function mostrarVistaFinalSistemaEvaluacion(){
+
+  const contenedor =
+    document.getElementById(
+      "contenidoSistemaEvaluacion"
+    );
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  if(
+    rubrosConfigurados.length === 0 ||
+    rubrosAceptados.length !== rubrosConfigurados.length
+  ){
+    alert(
+      "El sistema de evaluación todavía no está completo."
+    );
+    return;
+  }
+
+  let filas = "";
+  let totalGeneral = 0;
+
+  rubrosConfigurados.forEach(rubroConfigurado => {
+
+    const rubroAceptado =
+      rubrosAceptados.find(
+        item =>
+          item.rubro === rubroConfigurado.nombre
+      );
+
+    if(!rubroAceptado){
+      return;
+    }
+
+    const actividades =
+      Array.isArray(rubroAceptado.actividades)
+        ? rubroAceptado.actividades
+        : [];
+
+    actividades.forEach(actividad => {
+
+      const rea =
+        Array.isArray(actividad.codigosREA)
+          ? actividad.codigosREA.join(", ")
+          : "";
+
+      const instrumentos =
+        Array.isArray(actividad.instrumentos)
+          ? actividad.instrumentos.join(", ")
+          : "";
+
+      filas += `
+        <tr>
+          <td>${actividad.semana ?? ""}</td>
+          <td>${actividad.tecnica || ""}</td>
+          <td>${rea}</td>
+          <td>${actividad.tipo || ""}</td>
+          <td>${instrumentos}</td>
+          <td>${Number(actividad.valor || 0)}</td>
+        </tr>
+      `;
+
+    });
+
+    const pesoRubro =
+      Number(
+        rubroAceptado.pesoTotal ??
+        rubroConfigurado.peso ??
+        0
+      );
+
+    totalGeneral += pesoRubro;
+
+    const esRubroUnico =
+      rubrosConfigurados.length === 1 &&
+      String(rubroConfigurado.nombre)
+        .trim()
+        .toLowerCase() === "rubro único";
+
+    if(!esRubroUnico){
+
+      filas += `
+        <tr style="background:#e2efda;">
+          <td colspan="5">
+            <strong>
+              ${rubroConfigurado.nombre}
+            </strong>
+          </td>
+
+          <td>
+            <strong>
+              ${pesoRubro}
+            </strong>
+          </td>
+        </tr>
+      `;
+
+    }
+
+  });
+
+  const totalCorrecto =
+    Math.abs(totalGeneral - 100) < 0.001;
+
+  contenedor.innerHTML = `
+
+    <h3>
+      Sistema de Evaluación completo
+    </h3>
+
+    <table
+      border="1"
+      cellspacing="0"
+      cellpadding="6"
+      style="
+        border-collapse:collapse;
+        width:100%;
+      "
+    >
+
+      <thead>
+        <tr style="background:#70ad47;">
+          <th>Semana</th>
+          <th>Técnica</th>
+          <th>REA(s)</th>
+          <th style="min-width:80px; white-space:nowrap;">
+            Tipo<br>
+           (D, F, S)
+          </th>
+          <th>Instrumento(s)</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        ${filas}
+
+        <tr>
+          <td
+            colspan="5"
+            style="text-align:right;"
+          >
+            <strong>Total:</strong>
+          </td>
+
+          <td>
+            <strong>
+              ${totalGeneral}
+            </strong>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div style="margin-top:15px;">
+
+      ${
+        totalCorrecto
+          ? `
+              <strong>
+                ✓ Sistema de Evaluación completado:
+                ${totalGeneral} de 100 puntos.
+              </strong>
+            `
+          : `
+              <strong>
+                El Sistema de Evaluación suma
+                ${totalGeneral} de 100 puntos.
+                Revise la distribución antes de finalizar.
+              </strong>
+            `
+      }
+
+    </div>
+
+    <div style="margin-top:20px;">
+    
+<button
+  type="button"
+  onclick="volverAModificarSistemaEvaluacion()"
+>
+  ← Volver y modificar
+</button>
+    
+  <button
+    type="button"
+    onclick="descargarSistemaEvaluacionWord()"
+    ${totalCorrecto ? "" : "disabled"}
+  >
+    Descargar Word
+  </button>
+
+  <button
+  type="button"
+  onclick="descargarSistemaEvaluacionPDF()"
+  ${totalCorrecto ? "" : "disabled"}
+  style="margin-left:10px;"
+>
+  Descargar PDF
+</button>
+
+<button
+  type="button"
+  onclick="window.location.href='instrumentos.html'"
+  ${totalCorrecto ? "" : "disabled"}
+  style="margin-left:10px;"
+>
+  Continuar a Instrumentos de Evaluación →
+</button>
+
+</div>
+
+  `;
+
+}
+
+   function volverAModificarSistemaEvaluacion(){
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  if(rubrosAceptados.length === 0){
+
+    alert(
+      "No hay rubros aceptados para modificar."
+    );
+
+    return;
+  }
+
+  // Si solamente existe un rubro,
+  // abrirlo directamente.
+  if(rubrosConfigurados.length === 1){
+
+    abrirRubroParaModificar(
+      rubrosConfigurados[0].nombre
+    );
+
+    return;
+  }
+
+  mostrarSelectorRubrosModificar();
+
+}
+
+   function mostrarSelectorRubrosModificar(){
+
+  const contenedor =
+    document.getElementById(
+      "contenidoSistemaEvaluacion"
+    );
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  let opciones = "";
+
+  rubrosConfigurados.forEach(
+    (rubro, index) => {
+
+      const rubroAceptado =
+        rubrosAceptados.find(
+          item =>
+            item.rubro === rubro.nombre
+        );
+
+      if(!rubroAceptado){
+        return;
+      }
+
+      const peso =
+        Number(
+          rubroAceptado.pesoTotal ??
+          rubro.peso ??
+          0
+        );
+
+      opciones += `
+        <div
+          style="
+            margin-bottom:10px;
+            padding:10px;
+            border:1px solid #ccc;
+          "
+        >
+          <label>
+            <input
+              type="radio"
+              name="rubroModificar"
+              value="${index}"
+            >
+
+            <strong>
+              ${rubro.nombre}
+            </strong>
+
+            — ${peso} puntos
+          </label>
+        </div>
+      `;
+
+    }
+  );
+
+  contenedor.innerHTML = `
+
+    <h3>
+      Modificar Sistema de Evaluación
+    </h3>
+
+    <p>
+      Seleccione el rubro que desea modificar:
+    </p>
+
+    ${opciones}
+
+    <div style="margin-top:15px;">
+
+      <button
+        type="button"
+        onclick="confirmarRubroModificar()"
+      >
+        Modificar seleccionado
+      </button>
+
+      <button
+        type="button"
+        onclick="mostrarVistaFinalSistemaEvaluacion()"
+        style="margin-left:10px;"
+      >
+        Cancelar
+      </button>
+
+    </div>
+  `;
+
+} 
+
+    function confirmarRubroModificar(){
+
+  const seleccionado =
+    document.querySelector(
+      'input[name="rubroModificar"]:checked'
+    );
+
+  if(!seleccionado){
+
+    alert(
+      "Seleccione el rubro que desea modificar."
+    );
+
+    return;
+  }
+
+  const indice =
+    Number(seleccionado.value);
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubro =
+    rubrosConfigurados[indice];
+
+  if(!rubro){
+    alert("No fue posible identificar el rubro seleccionado.");
+    return;
+  }
+
+  abrirRubroParaModificar(
+    rubro.nombre
+  );
+
+}
+
+   function abrirRubroParaModificar(nombreRubro){
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  const indice =
+    rubrosAceptados.findIndex(
+      item =>
+        item.rubro === nombreRubro
+    );
+
+  if(indice === -1){
+
+    alert(
+      "No se encontró el rubro aceptado que desea modificar."
+    );
+
+    return;
+  }
+
+  propuestaEvaluacionActual =
+    JSON.parse(
+      JSON.stringify(
+        rubrosAceptados[indice]
+      )
+    );
+
+  datosPaso1.sistemaEvaluacion.propuestaActual =
+    propuestaEvaluacionActual;
+
+  datosPaso1.sistemaEvaluacion.indiceRubroEnEdicion =
+    indice;
+
+  datosPaso1.sistemaEvaluacion.editandoRubroAceptado =
+    true;
+
+  mostrarTablaEvaluacion(
+    propuestaEvaluacionActual
+  );
+
+} 
+    
+  function descargarSistemaEvaluacionWord(){
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  if(
+    rubrosConfigurados.length === 0 ||
+    rubrosAceptados.length !== rubrosConfigurados.length
+  ){
+    alert(
+      "El Sistema de Evaluación todavía no está completo."
+    );
+    return;
+  }
+
+  let filas = "";
+  let totalGeneral = 0;
+
+  rubrosConfigurados.forEach(rubroConfigurado => {
+
+    const rubroAceptado =
+      rubrosAceptados.find(
+        item =>
+          item.rubro === rubroConfigurado.nombre
+      );
+
+    if(!rubroAceptado){
+      return;
+    }
+
+    const actividades =
+      Array.isArray(rubroAceptado.actividades)
+        ? rubroAceptado.actividades
+        : [];
+
+    actividades.forEach(actividad => {
+
+      const rea =
+        Array.isArray(actividad.codigosREA)
+          ? actividad.codigosREA.join(", ")
+          : "";
+
+      const instrumentos =
+        Array.isArray(actividad.instrumentos)
+          ? actividad.instrumentos.join(", ")
+          : "";
+
+      filas += `
+        <tr>
+          <td>${actividad.semana ?? ""}</td>
+          <td>${actividad.tecnica || ""}</td>
+          <td>${rea}</td>
+          <td>${actividad.tipo || ""}</td>
+          <td>${instrumentos}</td>
+          <td>${Number(actividad.valor || 0)}</td>
+        </tr>
+      `;
+
+    });
+
+    const pesoRubro =
+      Number(
+        rubroAceptado.pesoTotal ??
+        rubroConfigurado.peso ??
+        0
+      );
+
+    totalGeneral += pesoRubro;
+
+    const esRubroUnico =
+      rubrosConfigurados.length === 1 &&
+      String(rubroConfigurado.nombre)
+        .trim()
+        .toLowerCase() === "rubro único";
+
+    if(!esRubroUnico){
+
+      filas += `
+        <tr class="subtotal">
+          <td colspan="5">
+            <strong>${rubroConfigurado.nombre}</strong>
+          </td>
+
+          <td>
+            <strong>${pesoRubro}</strong>
+          </td>
+        </tr>
+      `;
+
+    }
+
+  });
+
+  if(Math.abs(totalGeneral - 100) >= 0.001){
+    alert(
+      "El Sistema de Evaluación debe sumar exactamente 100 puntos antes de descargarlo."
+    );
+    return;
+  }
+
+  const nombreAsignatura =
+    datosPaso1.configuracion?.nombreAsignatura ||
+    "Asignatura";
+
+  const codigoAsignatura =
+    datosPaso1.configuracion?.codigoAsignatura ||
+    "";
+
+  const contenidoWord = `
+    <html
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40"
+    >
+
+      <head>
+
+        <meta charset="UTF-8">
+
+        <style>
+
+          @page {
+            size: portrait;
+            margin: 1.5cm;
+          }
+
+          body {
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          h2 {
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+            margin-bottom: 8px;
+          }
+
+          .datos {
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+            margin-bottom: 14px;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          th,
+          td {
+            border: 1px solid #000000;
+            padding: 4px;
+            vertical-align: middle;
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          th {
+            background: #70ad47;
+            text-align: center;
+            font-weight: bold;
+          }
+
+          th:nth-child(1),
+          td:nth-child(1) {
+            width: 8%;
+            text-align: center;
+          }
+
+          th:nth-child(2),
+          td:nth-child(2) {
+            width: 31%;
+          }
+
+          th:nth-child(3),
+          td:nth-child(3) {
+            width: 14%;
+            text-align: center;
+          }
+
+          th:nth-child(4),
+          td:nth-child(4) {
+            width: 17%;
+            text-align: center;
+          }
+
+          th:nth-child(5),
+          td:nth-child(5) {
+            width: 20%;
+          }
+
+          th:nth-child(6),
+          td:nth-child(6) {
+            width: 10%;
+            text-align: center;
+          }
+
+          .subtotal td {
+            background: #e2efda;
+            font-weight: bold;
+          }
+
+          .total td {
+            font-weight: bold;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th
+                colspan="6"
+                style="text-align:left;"
+              >
+                X. Sistema de Evaluación
+              </th>
+            </tr>
+
+            <tr>
+              <th>Semana</th>
+              <th>Técnica</th>
+              <th>REA(s)</th>
+              <th style="width:17%; text-align:center;">
+                Tipo (D, F, S)
+              </th>
+              <th>Instrumento(s)</th>
+              <th>Valor</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${filas}
+
+            <tr class="total">
+
+              <td
+                colspan="5"
+                style="text-align:right;"
+              >
+                <strong>Total:</strong>
+              </td>
+
+              <td>
+                <strong>${totalGeneral}</strong>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </body>
+
+    </html>
+  `;
+
+  const blob =
+    new Blob(
+      ["\ufeff", contenidoWord],
+      {
+        type:
+          "application/msword;charset=utf-8"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const enlace =
+    document.createElement("a");
+
+  enlace.href = url;
+
+  enlace.download =
+    "Sistema_de_Evaluacion_" +
+    String(nombreAsignatura)
+      .replace(
+        /[^\wáéíóúÁÉÍÓÚñÑ-]+/g,
+        "_"
+      ) +
+    ".doc";
+
+  document.body.appendChild(
+    enlace
+  );
+
+  enlace.click();
+
+  document.body.removeChild(
+    enlace
+  );
+
+  URL.revokeObjectURL(
+    url
+  );
+
+}  
+
+function descargarSistemaEvaluacionPDF(){
+
+  const rubrosConfigurados =
+    datosPaso1.evaluacion?.rubros || [];
+
+  const rubrosAceptados =
+    datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+  if(
+    rubrosConfigurados.length === 0 ||
+    rubrosAceptados.length !== rubrosConfigurados.length
+  ){
+    alert(
+      "El Sistema de Evaluación todavía no está completo."
+    );
+    return;
+  }
+
+  let filas = "";
+  let totalGeneral = 0;
+
+  rubrosConfigurados.forEach(rubroConfigurado => {
+
+    const rubroAceptado =
+      rubrosAceptados.find(
+        item =>
+          item.rubro === rubroConfigurado.nombre
+      );
+
+    if(!rubroAceptado){
+      return;
+    }
+
+    const actividades =
+      Array.isArray(rubroAceptado.actividades)
+        ? rubroAceptado.actividades
+        : [];
+
+    actividades.forEach(actividad => {
+
+      const rea =
+        Array.isArray(actividad.codigosREA)
+          ? actividad.codigosREA.join(", ")
+          : "";
+
+      const instrumentos =
+        Array.isArray(actividad.instrumentos)
+          ? actividad.instrumentos.join(", ")
+          : "";
+
+      filas += `
+        <tr>
+          <td>${actividad.semana ?? ""}</td>
+          <td>${actividad.tecnica || ""}</td>
+          <td>${rea}</td>
+          <td>${actividad.tipo || ""}</td>
+          <td>${instrumentos}</td>
+          <td>${Number(actividad.valor || 0)}</td>
+        </tr>
+      `;
+
+    });
+
+    const pesoRubro =
+      Number(
+        rubroAceptado.pesoTotal ??
+        rubroConfigurado.peso ??
+        0
+      );
+
+    totalGeneral += pesoRubro;
+
+    const esRubroUnico =
+      rubrosConfigurados.length === 1 &&
+      String(rubroConfigurado.nombre)
+        .trim()
+        .toLowerCase() === "rubro único";
+
+    if(!esRubroUnico){
+
+      filas += `
+        <tr class="subtotal">
+          <td colspan="5">
+            <strong>${rubroConfigurado.nombre}</strong>
+          </td>
+
+          <td>
+            <strong>${pesoRubro}</strong>
+          </td>
+        </tr>
+      `;
+
+    }
+
+  });
+
+  if(Math.abs(totalGeneral - 100) >= 0.001){
+
+    alert(
+      "El Sistema de Evaluación debe sumar exactamente 100 puntos antes de descargarlo."
+    );
+
+    return;
+  }
+
+  const ventanaPDF =
+    window.open("", "_blank");
+
+  if(!ventanaPDF){
+
+    alert(
+      "El navegador bloqueó la ventana para generar el PDF. Permita las ventanas emergentes e inténtelo nuevamente."
+    );
+
+    return;
+  }
+
+  ventanaPDF.document.write(`
+    <!DOCTYPE html>
+
+    <html lang="es">
+
+      <head>
+
+        <meta charset="UTF-8">
+
+        <title>
+          Sistema de Evaluación
+        </title>
+
+        <style>
+
+          @page {
+            size: A4 portrait;
+            margin: 0.8cm;
+          }
+
+          * {
+            box-sizing: border-box;
+           -webkit-print-color-adjust: exact !important;
+           print-color-adjust: exact !important;
+             }
+
+          body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          th,
+          td {
+            border: 1px solid #000000;
+            padding: 4px;
+            vertical-align: middle;
+            font-family: "Book Antiqua", serif;
+            font-size: 10pt;
+          }
+
+          th {
+             background: #70ad47 !important;
+             text-align: center;
+             font-weight: bold;
+          }
+
+         th:nth-child(1),
+td:nth-child(1) {
+  width: 9%;
+  text-align: center;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 40%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 14%;
+  text-align: center;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 12%;
+  text-align: center;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 17%;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  width: 8%;
+  text-align: center;
+}
+
+          .subtotal td {
+            background: #e2efda !important;
+            font-weight: bold;
+           }
+
+          .total td {
+            font-weight: bold;
+          }
+
+          tr {
+            page-break-inside: avoid;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th
+                colspan="6"
+                style="text-align:left;"
+              >
+                X. Sistema de Evaluación
+              </th>
+            </tr>
+
+            <tr>
+              <th>Semana</th>
+              <th>Técnica</th>
+              <th>REA(s)</th>
+              <th>Tipo (D, F, S)</th>
+              <th>Instrumento(s)</th>
+              <th>Valor</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${filas}
+
+            <tr class="total">
+
+              <td
+                colspan="5"
+                style="text-align:right;"
+              >
+                <strong>Total:</strong>
+              </td>
+
+              <td>
+                <strong>${totalGeneral}</strong>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </body>
+
+    </html>
+  `);
+
+  ventanaPDF.document.close();
+
+  ventanaPDF.focus();
+
+  setTimeout(
+    () => {
+      ventanaPDF.print();
+    },
+    500
+  );
+
+}
+    
+function agregarActividadEvaluacion(){
+
+  if(
+    !propuestaEvaluacionActual ||
+    !Array.isArray(
+      propuestaEvaluacionActual.actividades
+    )
+  ){
+    return;
+  }
+
+  const nuevaActividad = {
+    semana: 1,
+    tecnica: "",
+    codigosREA: [],
+    tipo: "F",
+    instrumentos: [
+      "Lista de cotejo"
+    ],
+    valor: 0
+  };
+
+  nuevaActividad.esNueva = true;
+
+  propuestaEvaluacionActual.actividades.push(
+    nuevaActividad
+  );
+
+  const nuevoIndex =
+    propuestaEvaluacionActual.actividades.length - 1;
+
+  mostrarTablaEvaluacion(
+    propuestaEvaluacionActual
+  );
+
+  editarActividadEvaluacion(
+    nuevoIndex
+  );
+
+}
+    
+function editarActividadEvaluacion(index){
+
+  const actividad =
+    propuestaEvaluacionActual?.actividades?.[index];
+
+  if(!actividad){
+    return;
+  }
+
+  const filas =
+    document.querySelectorAll(
+      "#contenidoSistemaEvaluacion tbody tr"
+    );
+
+  const fila = filas[index];
+
+  if(!fila){
+    return;
+  }
+
+const rubroActual =
+  datosPaso1.evaluacion.rubros.find(
+    rubro =>
+      rubro.nombre === propuestaEvaluacionActual.rubro
+  );
+
+const rubroAnterior =
+  datosPaso1.evaluacion.rubros[
+    datosPaso1.evaluacion.rubros.indexOf(rubroActual) - 1
+  ] || null;
+
+const periodoActual =
+  prepararPeriodoEvaluativo(
+    rubroActual,
+    rubroAnterior
+  );
+
+const clasesCronograma =
+  obtenerClasesCronogramaDelRubro(
+    {
+      semanaInicio: periodoActual.semanaInicio,
+      semanaFin: periodoActual.semanaFin
+    }
+  );
+
+const opcionesClasesCronograma =
+  clasesCronograma.map((item, posicion) => `
+    <option value="${posicion}">
+      Semana ${item.semana} - Clase ${item.clase}
+    </option>
+  `).join("");
+  
+const actividadesCronograma =
+  obtenerActividadesCronogramaDelRubro(
+    {
+      semanaInicio: periodoActual.semanaInicio,
+      semanaFin: periodoActual.semanaFin
+    }
+  );
+
+const opcionesActividadesCronograma =
+  actividadesCronograma.map((item, posicion) => `
+    <option value="${posicion}">
+      Semana ${item.semana} - Clase ${item.clase}: ${item.actividadFormativa}
+    </option>
+  `).join("");
+  
+  const instrumentosPermitidos = [
+    "Rúbrica",
+    "Lista de cotejo",
+    "Escala de estimación",
+    "Prueba objetiva"
+  ];
+
+  const instrumentoActual =
+    Array.isArray(actividad.instrumentos)
+      ? actividad.instrumentos[0] || ""
+      : "";
+
+  fila.innerHTML = `
+    <td>
+      <input
+        type="number"
+        value="${actividad.semana}"
+        min="1"
+        style="width:55px;"
+      >
+    </td>
+
+    <td>
+
+  <select
+    onchange="seleccionarActividadCronograma(this, ${index})"
+    style="width:95%; margin-bottom:8px;"
+  >
+    <option value="">
+      -- Sustituir por una actividad del cronograma --
+    </option>
+
+    ${opcionesActividadesCronograma}
+
+    <option value="nueva">
+      Otra actividad propuesta por el docente
+    </option>
+  </select>
+
+<select
+  id="claseReferencia-${index}"
+  onchange="seleccionarClaseReferencia(this, ${index})"
+  style="width:95%; margin-bottom:8px; display:none;"
+>
+  <option value="">
+    -- Seleccionar semana y clase de referencia --
+  </option>
+
+  ${opcionesClasesCronograma}
+</select>
+
+<div
+  id="contenidoReferencia-${index}"
+  style="
+    display:none;
+    width:95%;
+    margin-bottom:8px;
+    padding:8px;
+    background:#f5f5f5;
+    border:1px solid #ddd;
+    font-size:14px;
+  "
+></div>
+
+  <textarea
+    rows="5"
+    style="width:95%;"
+  >${actividad.tecnica || ""}</textarea>
+
+</td>
+
+    <td>
+      <input
+        type="text"
+        value="${
+          Array.isArray(actividad.codigosREA)
+            ? actividad.codigosREA.join(", ")
+            : ""
+        }"
+        style="width:90%;"
+      >
+    </td>
+
+    <td>
+      <select>
+        <option value="D" ${actividad.tipo === "D" ? "selected" : ""}>D</option>
+        <option value="F" ${actividad.tipo === "F" ? "selected" : ""}>F</option>
+        <option value="S" ${actividad.tipo === "S" ? "selected" : ""}>S</option>
+      </select>
+    </td>
+
+    <td>
+      <select>
+        ${instrumentosPermitidos.map(instrumento => `
+          <option
+            value="${instrumento}"
+            ${instrumento === instrumentoActual ? "selected" : ""}
+          >
+            ${instrumento}
+          </option>
+        `).join("")}
+      </select>
+    </td>
+
+    <td>
+      <input
+        type="number"
+        value="${actividad.valor ?? 0}"
+        min="0"
+        style="width:55px;"
+      >
+    </td>
+
+    <td>
+      <button
+        type="button"
+        onclick="guardarEdicionActividad(${index})"
+      >
+        Guardar
+      </button>
+
+      <button
+        type="button"
+        onclick="cancelarEdicionActividad(${index})"
+      >
+        Cancelar
+      </button>
+    </td>
+  `;
+}
+
+function sintetizarActividadEvaluativa(texto){
+
+  if(!texto){
+    return "";
+  }
+
+  let tecnica = texto.trim();
+
+  // Eliminar referencias REA al final
+  tecnica = tecnica.replace(
+    /\s*\(REA\d+(?:\s*,\s*REA\d+)*\)\s*$/i,
+    ""
+  );
+
+  // Eliminar expresiones introductorias
+  tecnica = tecnica.replace(
+    /^(los estudiantes|el estudiante|los alumnos|el alumno)\s+/i,
+    ""
+  );
+
+  // Colocar mayúscula inicial
+  tecnica =
+    tecnica.charAt(0).toUpperCase() +
+    tecnica.slice(1);
+
+  return tecnica.trim();
+
+}
+    
+function seleccionarActividadCronograma(select, index){
+
+  if(select.value === ""){
+    return;
+  }
+
+  const fila =
+    select.closest("tr");
+
+  if(!fila){
+    return;
+  }
+
+  const campos =
+    fila.querySelectorAll(
+      "input, textarea, select"
+    );
+
+  // Si el docente desea proponer una actividad nueva
+  if(select.value === "nueva"){
+
+  const selectorClase =
+    document.getElementById(
+      `claseReferencia-${index}`
+    );
+
+  if(selectorClase){
+    selectorClase.style.display = "block";
+  }
+
+  campos[3].value = "";
+  campos[3].focus();
+
+  return;
+}
+
+  const selectorClase =
+  document.getElementById(
+    `claseReferencia-${index}`
+  );
+
+if(selectorClase){
+  selectorClase.style.display = "none";
+  selectorClase.value = "";
+}
+
+  const contenidoReferencia =
+  document.getElementById(
+    `contenidoReferencia-${index}`
+  );
+
+if(contenidoReferencia){
+  contenidoReferencia.style.display = "none";
+  contenidoReferencia.innerHTML = "";
+}
+
+  const rubroActual =
+  datosPaso1.evaluacion.rubros.find(
+    rubro =>
+      rubro.nombre === propuestaEvaluacionActual.rubro
+  );
+
+const indiceRubro =
+  datosPaso1.evaluacion.rubros.indexOf(rubroActual);
+
+const rubroAnterior =
+  indiceRubro > 0
+    ? datosPaso1.evaluacion.rubros[indiceRubro - 1]
+    : null;
+
+const periodoActual =
+  prepararPeriodoEvaluativo(
+    rubroActual,
+    rubroAnterior
+  );
+
+const actividadesCronograma =
+  obtenerActividadesCronogramaDelRubro(
+    {
+      semanaInicio: periodoActual.semanaInicio,
+      semanaFin: periodoActual.semanaFin
+    }
+  );
+
+  const posicion =
+    Number(select.value);
+
+  const actividadSeleccionada =
+    actividadesCronograma[posicion];
+
+  if(!actividadSeleccionada){
+    return;
+  }
+
+  // Semana
+campos[0].value =
+  actividadSeleccionada.semana;
+
+// Técnica / actividad evaluativa
+campos[3].value =
+  sintetizarActividadEvaluativa(
+    actividadSeleccionada.actividadFormativa
+  );
+
+// REA asociados
+campos[4].value =
+  Array.isArray(actividadSeleccionada.rea)
+    ? actividadSeleccionada.rea.join(", ")
+    : "";
+
+}
+
+function seleccionarClaseReferencia(select, index){
+
+  if(select.value === ""){
+    return;
+  }
+
+ const rubroActual =
+  datosPaso1.evaluacion.rubros.find(
+    rubro =>
+      rubro.nombre === propuestaEvaluacionActual.rubro
+  );
+
+const indiceRubro =
+  datosPaso1.evaluacion.rubros.indexOf(rubroActual);
+
+const rubroAnterior =
+  indiceRubro > 0
+    ? datosPaso1.evaluacion.rubros[indiceRubro - 1]
+    : null;
+
+const periodoActual =
+  prepararPeriodoEvaluativo(
+    rubroActual,
+    rubroAnterior
+  );
+
+const clasesCronograma =
+  obtenerClasesCronogramaDelRubro(
+    {
+      semanaInicio: periodoActual.semanaInicio,
+      semanaFin: periodoActual.semanaFin
+    }
+  );
+
+  const posicion =
+    Number(select.value);
+
+  const claseSeleccionada =
+    clasesCronograma[posicion];
+
+  if(!claseSeleccionada){
+    return;
+  }
+
+  const fila =
+    select.closest("tr");
+
+  if(!fila){
+    return;
+  }
+
+  const campos =
+    fila.querySelectorAll(
+      "input, textarea, select"
+    );
+
+  // Semana correspondiente a la clase seleccionada
+  campos[0].value =
+    claseSeleccionada.semana;
+
+  // REA asociados a esa clase
+  campos[4].value =
+    Array.isArray(claseSeleccionada.rea)
+      ? claseSeleccionada.rea.join(", ")
+      : "";
+
+const contenidoReferencia =
+  document.getElementById(
+    `contenidoReferencia-${index}`
+  );
+
+if(contenidoReferencia){
+
+  contenidoReferencia.innerHTML =
+    "<strong>Contenido de referencia:</strong> " +
+    (claseSeleccionada.contenido ||
+      "No se especificó contenido para esta clase.");
+
+  contenidoReferencia.style.display =
+    "block";
+}
+  
+  // La técnica queda libre para que el docente
+  // redacte su nueva actividad evaluativa
+  campos[3].value = "";
+  campos[3].focus();
+
+}
+    
+function cancelarEdicionActividad(index){
+
+  const actividad =
+    propuestaEvaluacionActual?.actividades?.[index];
+
+  if(
+    actividad &&
+    actividad.esNueva === true
+  ){
+    propuestaEvaluacionActual.actividades.splice(
+      index,
+      1
+    );
+  }
+
+  mostrarTablaEvaluacion(
+    propuestaEvaluacionActual
+  );
+
+}
+
+function guardarEdicionActividad(index){
+
+  const filas =
+    document.querySelectorAll(
+      "#contenidoSistemaEvaluacion tbody tr"
+    );
+
+  const fila = filas[index];
+
+  if(!fila){
+    return;
+  }
+
+  const campos =
+    fila.querySelectorAll(
+      "input, textarea, select"
+    );
+
+  const semana =
+  Number(campos[0].value);
+
+const tecnica =
+  campos[3].value.trim();
+
+const codigosREA =
+  campos[4].value
+    .split(",")
+    .map(codigo => codigo.trim())
+    .filter(codigo => codigo !== "");
+
+const tipo =
+  campos[5].value;
+
+const instrumento =
+  campos[6].value;
+
+let valor =
+  Number(campos[7].value);
+
+  if(tipo === "D"){
+    valor = 0;
+  }
+
+  propuestaEvaluacionActual.actividades[index] = {
+    semana: semana,
+    tecnica: tecnica,
+    codigosREA: codigosREA,
+    tipo: tipo,
+    instrumentos: [instrumento],
+    valor: valor
+  };
+
+  propuestaEvaluacionActual.actividades.sort(
+  (a, b) => Number(a.semana) - Number(b.semana)
+);
+
+  datosPaso1.sistemaEvaluacion.propuestaActual =
+    propuestaEvaluacionActual;
+
+  const respaldo =
+    JSON.parse(
+      localStorage.getItem(
+        "respaldoGuiaDocente"
+      )
+    );
+
+  respaldo.datosGuia =
+    datosPaso1;
+
+  localStorage.setItem(
+    "respaldoGuiaDocente",
+    JSON.stringify(respaldo)
+  );
+
+  mostrarTablaEvaluacion(
+    propuestaEvaluacionActual
+  );
+
+}
+    
+async function generarPrimerRubroEvaluacion(){
+
+  const primerRubro = obtenerPrimerRubroEvaluacion();
+
+  if(!primerRubro){
+    mostrarError(
+      "No se encontró la configuración del primer rubro de evaluación."
+    );
+    return;
+  }
+
+  const contexto =
+    prepararContextoIAEvaluacion(primerRubro);
+
+  const contenedor =
+    document.getElementById("contenidoSistemaEvaluacion");
+
+  contenedor.innerHTML =
+    "<p>Generando propuesta del " +
+    primerRubro.nombre +
+    "...</p>";
+
+  try{
+
+    const respuesta = await fetch(
+      "https://guia-docente-unphu-api.jortega-cc4.workers.dev/generar-sistema-evaluacion",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(contexto)
+      }
+    );
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.correcto){
+      throw new Error(
+        resultado.error ||
+        "No fue posible generar la propuesta de evaluación."
+      );
+    }
+
+    console.log(
+      "Propuesta generada para " + primerRubro.nombre + ":",
+      resultado.propuesta
+    );
+
+datosPaso1.sistemaEvaluacion =
+  datosPaso1.sistemaEvaluacion || {};
+
+datosPaso1.sistemaEvaluacion.propuestaActual =
+  resultado.propuesta;
+
+const respaldo =
+  JSON.parse(
+    localStorage.getItem("respaldoGuiaDocente")
+  );
+
+respaldo.datosGuia =
+  datosPaso1;
+
+localStorage.setItem(
+  "respaldoGuiaDocente",
+  JSON.stringify(respaldo)
+);
+    
+    mostrarTablaEvaluacion(
+       resultado.propuesta
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Error al generar el sistema de evaluación:",
+      error
+    );
+
+    contenedor.innerHTML =
+      "<p>No fue posible generar la propuesta del sistema de evaluación.</p>";
+  }
+}
+
+async function generarRubroEvaluacion(rubro){
+
+  if(!rubro){
+    mostrarError(
+      "No se encontró la configuración del rubro de evaluación."
+    );
+    return;
+  }
+
+  const indiceRubro =
+  datosPaso1.evaluacion.rubros.findIndex(
+    item => item.nombre === rubro.nombre
+  );
+
+const rubroAnterior =
+  indiceRubro > 0
+    ? datosPaso1.evaluacion.rubros[indiceRubro - 1]
+    : null;
+
+const contexto =
+  prepararContextoIAEvaluacion(
+    rubro,
+    rubroAnterior
+  );
+
+  const contenedor =
+    document.getElementById("contenidoSistemaEvaluacion");
+
+  contenedor.innerHTML =
+    "<p>Generando propuesta del " +
+    rubro.nombre +
+    "...</p>";
+
+  try{
+
+    const respuesta = await fetch(
+      "https://guia-docente-unphu-api.jortega-cc4.workers.dev/generar-sistema-evaluacion",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(contexto)
+      }
+    );
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.correcto){
+      throw new Error(
+        resultado.error ||
+        "No fue posible generar la propuesta de evaluación."
+      );
+    }
+
+    console.log(
+      "Propuesta generada para " + rubro.nombre + ":",
+      resultado.propuesta
+    );
+
+    datosPaso1.sistemaEvaluacion =
+      datosPaso1.sistemaEvaluacion || {};
+
+    datosPaso1.sistemaEvaluacion.propuestaActual =
+      resultado.propuesta;
+
+    const respaldo =
+      JSON.parse(
+        localStorage.getItem("respaldoGuiaDocente")
+      );
+
+    respaldo.datosGuia =
+      datosPaso1;
+
+    localStorage.setItem(
+      "respaldoGuiaDocente",
+      JSON.stringify(respaldo)
+    );
+
+    mostrarTablaEvaluacion(
+      resultado.propuesta
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Error al generar el sistema de evaluación:",
+      error
+    );
+
+    contenedor.innerHTML =
+      "<p>No fue posible generar la propuesta del sistema de evaluación.</p>";
+  }
+}
+    
+    function mostrarSistemaEvaluacion(){
+
+      document
+        .getElementById("cargando")
+        .style.display = "none";
+
+      document
+        .getElementById("errorEvaluacion")
+        .style.display = "none";
+
+      document
+        .getElementById("sistemaEvaluacion")
+        .style.display = "block";
+
+      const rubrosConfigurados =
+         datosPaso1.evaluacion?.rubros || [];
+
+      const rubrosAceptadosGuardados =
+         datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+      if(
+  rubrosConfigurados.length > 0 &&
+  rubrosAceptadosGuardados.length === rubrosConfigurados.length
+){
+
+  if(
+    datosPaso1.instrumentosEvaluacion
+      ?.sistemaEvaluacionCompletado !== true
+  ){
+
+    const datosInstrumentos =
+      prepararDatosInstrumentosEvaluacion();
+
+    if(datosInstrumentos){
+
+      datosPaso1.instrumentosEvaluacion =
+        datosPaso1.instrumentosEvaluacion || {};
+
+      datosPaso1.instrumentosEvaluacion.fuente =
+        datosInstrumentos;
+
+      datosPaso1.instrumentosEvaluacion
+        .sistemaEvaluacionCompletado = true;
+
+      const respaldoActualizado =
+        JSON.parse(
+          localStorage.getItem("respaldoGuiaDocente")
+        );
+
+      respaldoActualizado.datosGuia =
+        datosPaso1;
+
+      localStorage.setItem(
+        "respaldoGuiaDocente",
+        JSON.stringify(respaldoActualizado)
+      );
+
+    }
+
+  }
+
+  mostrarVistaFinalSistemaEvaluacion();
+  return;
+
+}
+
+      const actividadesCronograma =
+        prepararActividadesCronograma();
+
+      console.log(
+         "Actividades recuperadas para el sistema de evaluación:",
+         actividadesCronograma
+       );
+
+      const primerRubro =
+        obtenerPrimerRubroEvaluacion();
+
+      console.log(
+       "Primer rubro de evaluación:",
+       primerRubro
+      );
+      const resumen = document.getElementById("resumenAsignatura");
+
+resumen.innerHTML = `
+  <p><strong>Asignatura:</strong> ${datosPaso1.configuracion?.nombreAsignatura || ""}</p>
+  <p><strong>Código:</strong> ${datosPaso1.configuracion?.codigoAsignatura || ""}</p>
+`;
+
+  const propuestaGuardada =
+  datosPaso1.sistemaEvaluacion?.propuestaActual || null;
+
+const rubrosAceptados =
+  datosPaso1.sistemaEvaluacion?.rubrosAceptados || [];
+
+const propuestaYaAceptada =
+  propuestaGuardada
+    ? rubrosAceptados.some(
+        rubro =>
+          rubro.rubro === propuestaGuardada.rubro
+      )
+    : false;
+
+if(
+  propuestaGuardada &&
+  !propuestaYaAceptada
+){
+
+  console.log(
+    "Mostrando propuesta de evaluación guardada."
+  );
+
+  mostrarTablaEvaluacion(
+    propuestaGuardada
+  );
+
+} else {
+
+  const siguienteRubro =
+    obtenerSiguienteRubroEvaluacion();
+
+  if(siguienteRubro){
+
+    console.log(
+      "Generando siguiente rubro:",
+      siguienteRubro.nombre
+    );
+
+    generarRubroEvaluacion(
+      siguienteRubro
+    );
+
+} else {
+
+  console.log(
+    "Todos los rubros de evaluación han sido completados."
+  );
+
+  mostrarVistaFinalSistemaEvaluacion();
+
+}
+
+}   
+      
+    }
+
+
+    function mostrarError(mensaje){
+
+      document
+        .getElementById("cargando")
+        .style.display = "none";
+
+      document
+        .getElementById("sistemaEvaluacion")
+        .style.display = "none";
+
+      document
+        .getElementById("errorEvaluacion")
+        .style.display = "block";
+
+      document
+        .getElementById("mensajeErrorEvaluacion")
+        .textContent = mensaje;
+
+    }
+
+
+    cargarDatosPaso1();
+
+  </script>
+
+</body>
+
+</html>
