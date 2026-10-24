@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Guía Docente UNPHU IA</title>
+
+  <style>
+    :root {
+      --verde-unphu: #006b54;
+      --verde-oscuro: #004c3f;
+      --verde-claro: #e9f4f1;
+      --blanco: #ffffff;
+      --gris-fondo: #f5f7f7;
+      --gris-texto: #4b5563;
+      --texto: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--gris-fondo);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ENCABEZADO */
+    header {
+      background: linear-gradient(
+        135deg,
+        var(--verde-oscuro),
+        var(--verde-unphu)
+      );
+      color: var(--blanco);
+      padding: 20px 8%;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .header-main {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo-unphu {
+      width: 190px;
+      height: auto;
+      background: var(--blanco);
+      padding: 8px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      border-left: 1px solid rgba(255, 255, 255, 0.45);
+      padding-left: 24px;
+    }
+
+    header h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    main {
+      max-width: 1250px;
+      margin: auto;
+      padding: 70px 25px;
+    }
+
+    .intro {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 50px;
+    }
+
+    .intro h2 {
+      color: var(--verde-oscuro);
+      font-size: 30px;
+      margin-bottom: 16px;
+    }
+
+    .intro p {
+      color: var(--gris-texto);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    /* TARJETAS */
+    .options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+       gap: 24px;
+    }
+
+    .card {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 36px;
+      border: 1px solid #e1e7e5;
+      box-shadow: 0 8px 24px rgba(0, 76, 63, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 76, 63, 0.14);
+    }
+
+    .card-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--verde-claro);
+      color: var(--verde-unphu);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      color: var(--verde-oscuro);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: var(--gris-texto);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--verde-unphu);
+      color: var(--blanco);
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    .button:hover {
+      background: var(--verde-oscuro);
+    }
+
+    /* PIE */
+  footer {
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 10px 20px 30px;
+  }
+
+    /* ADAPTACIÓN A CELULARES */
+    @media (max-width: 750px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .header-text {
+        border-left: none;
+        padding-left: 0;
+      }
+
+      .logo-unphu {
+        width: 165px;
+      }
+
+      header h1 {
+        font-size: 25px;
+      }
+
+      .intro h2 {
+        font-size: 25px;
+      }
+
+      main {
+        padding-top: 45px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-content">
+
+      <div class="header-main">
+
+        <img
+          src="logo-unphu.png"
+          alt="Universidad Nacional Pedro Henríquez Ureña"
+          class="logo-unphu"
+        >
+
+        <div class="header-text">
+          <h1>Guía Docente UNPHU IA</h1>
+
+          <p>
+            Asistente inteligente para la elaboración de guías docentes
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="intro">
+      <h2>¿Qué deseas realizar?</h2>
+
+      <p>
+        Desarrolla la guía docente de manera progresiva, desde la elaboración
+        del cronograma hasta la definición del sistema y los instrumentos
+        de evaluación, conforme a los lineamientos institucionales de la UNPHU.
+      </p>
+    </section>
+
+   <section class="options">
+
+  <!-- PASO 1 -->
+  <article class="card">
+    <div class="card-number">1</div>
+
+    <h3>Elaborar cronograma</h3>
+
+    <p>
+      Organiza los contenidos, metodologías de enseñanza,
+      actividades formativas, REA, recursos y bibliografía
+      de la asignatura por semana y clase.
+    </p>
+
+    <a
+      id="btnElaborarCronograma"
+      class="button"
+      href="elaborar.html?modo=nueva"
+    >
+      Iniciar cronograma
+    </a>
+  </article>
+
+  <!-- PASO 2 -->
+  <article class="card">
+    <div class="card-number">2</div>
+
+    <h3>Elaborar sistema de evaluación</h3>
+
+    <p>
+      Define el sistema de evaluación de la asignatura
+      tomando como referencia el cronograma completo
+      elaborado en el paso 1.
+    </p>
+
+    <a
+      id="btnSistemaEvaluacion"
+      class="button"
+      href="#"
+    >
+      Iniciar sistema de evaluación
+    </a>
+  </article>
+
+  <!-- PASO 3 -->
+  <article class="card">
+    <div class="card-number">3</div>
+
+    <h3>Elaborar instrumentos de evaluación</h3>
+
+    <p>
+      Diseña los instrumentos de evaluación correspondientes
+      tomando como referencia el sistema de evaluación
+      definido en el paso 2.
+    </p>
+
+    <a
+      id="btnInstrumentosEvaluacion"
+      class="button"
+      href="#"
+    >
+      Iniciar instrumentos
+    </a>
+  </article>
+
+       <!-- PASO 4 -->
+  <article class="card">
+    <div class="card-number">4</div>
+
+    <h3>Revisión y finalización</h3>
+
+    <p>
+      Revisa la coherencia integral de la Guía Docente,
+      verifica el cronograma, el sistema y los instrumentos
+      de evaluación antes de finalizarla.
+    </p>
+
+    <a
+      id="btnRevisionFinalizacion"
+      class="button"
+      href="#"
+    >
+      Revisar guía docente
+    </a>
+  </article>
+
+</section>
+
+    <section
+      style="
+        margin-top: 32px;
+        text-align: center;
+     "
+ >
+     
+  <a
+    id="btnMisGuias"
+    class="button"
+    href="mis-guias.html"
+  >
+    Mis guías finalizadas
+  </a>
+
+</section>
+
+  </main>
+
+ <footer>
+  <p>
+    Guía Docente UNPHU IA · Herramienta de apoyo académico
+  </p>
+
+  <p style="margin-top: 8px;">
+    Desarrollado por John Joseph Ortega Pérez ·
+    Universidad Nacional Pedro Henríquez Ureña (UNPHU)
+  </p>
+
+  <p style="margin-top: 6px;">
+    La inteligencia artificial apoya la elaboración de la guía docente;
+    las decisiones académicas permanecen bajo responsabilidad del docente.
+  </p>
+</footer>
+<script>
+  const respaldoGuia =
+    localStorage.getItem("respaldoGuiaDocente");
+
+  let existeGuiaEnProgreso = false;
+  let cronogramaCompletado = false;
+
+  if (respaldoGuia) {
+    try {
+      const datosGuardados =
+        JSON.parse(respaldoGuia);
+
+      if (datosGuardados.datosGuia) {
+        existeGuiaEnProgreso = true;
+        if (
+          datosGuardados.datosGuia.cronogramaCompletado === true
+         ) {
+           cronogramaCompletado = true;
+  }
+        
+      }
+    } catch (error) {
+      console.error(
+        "No fue posible comprobar el progreso guardado:",
+        error
+      );
+    }
+  }
+  const btnElaborarCronograma =
+  document.getElementById("btnElaborarCronograma");
+
+if (existeGuiaEnProgreso && btnElaborarCronograma) {
+  btnElaborarCronograma.textContent =
+    "Continuar cronograma";
+
+  btnElaborarCronograma.href =
+    "elaborar.html";
+}
+ const btnSistemaEvaluacion =
+  document.getElementById("btnSistemaEvaluacion");
+
+if (btnSistemaEvaluacion) {
+
+  if (cronogramaCompletado) {
+
+    btnSistemaEvaluacion.href =
+      "evaluacion.html";
+
+  } else {
+
+    btnSistemaEvaluacion.href = "#";
+
+    btnSistemaEvaluacion.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        alert(
+          "Para elaborar el sistema de evaluación, primero debe completar el cronograma de la asignatura."
+        );
+
+      }
+    );
+
+  }
+
+} 
+
+  const btnInstrumentosEvaluacion =
+  document.getElementById(
+    "btnInstrumentosEvaluacion"
+  );
+
+let sistemaEvaluacionCompletado = false;
+
+if (respaldoGuia) {
+
+  try {
+
+    const datosGuardados =
+      JSON.parse(respaldoGuia);
+
+    if (
+      datosGuardados
+        ?.datosGuia
+        ?.instrumentosEvaluacion
+        ?.sistemaEvaluacionCompletado === true
+    ) {
+
+      sistemaEvaluacionCompletado = true;
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "No fue posible comprobar el Sistema de Evaluación:",
+      error
+    );
+
+  }
+
+}
+
+if (btnInstrumentosEvaluacion) {
+
+  if (sistemaEvaluacionCompletado) {
+
+    btnInstrumentosEvaluacion.href =
+      "instrumentos.html";
+
+  } else {
+
+    btnInstrumentosEvaluacion.href =
+      "#";
+
+    btnInstrumentosEvaluacion.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        alert(
+          "Para elaborar los instrumentos de evaluación, primero debe completar el Sistema de Evaluación de la asignatura."
+        );
+
+      }
+    );
+
+  }
+
+}
+
+const btnRevisionFinalizacion =
+  document.getElementById(
+    "btnRevisionFinalizacion"
+  );
+
+let instrumentosCompletados = false;
+
+if (respaldoGuia) {
+
+  try {
+
+    const datosGuardados =
+      JSON.parse(respaldoGuia);
+
+    const datosGuia =
+      datosGuardados?.datosGuia;
+
+    const rubros =
+      datosGuia
+        ?.instrumentosEvaluacion
+        ?.fuente
+        ?.sistemaEvaluacion
+        ?.rubrosAceptados;
+
+    const elaborados =
+      datosGuia
+        ?.instrumentosEvaluacion
+        ?.elaborados;
+
+    let totalRequeridos = 0;
+
+    if (Array.isArray(rubros)) {
+
+      rubros.forEach(
+        rubro => {
+
+          const actividades =
+            Array.isArray(rubro?.actividades)
+              ? rubro.actividades
+              : [];
+
+          actividades.forEach(
+            actividad => {
+
+              const instrumentos =
+                Array.isArray(
+                  actividad?.instrumentos
+                )
+                  ? actividad.instrumentos
+                  : [];
+
+              totalRequeridos +=
+                instrumentos.length;
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+    if (
+      totalRequeridos > 0 &&
+      Array.isArray(elaborados) &&
+      elaborados.length === totalRequeridos
+    ) {
+
+      instrumentosCompletados = true;
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "No fue posible comprobar los instrumentos de evaluación:",
+      error
+    );
+
+  }
+
+}
+
+if (btnRevisionFinalizacion) {
+
+  if (instrumentosCompletados) {
+
+    btnRevisionFinalizacion.href =
+      "revision.html";
+
+  } else {
+
+    btnRevisionFinalizacion.href =
+      "#";
+
+    btnRevisionFinalizacion.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        alert(
+          "Para revisar y finalizar la Guía Docente, primero debe completar todos los instrumentos de evaluación requeridos."
+        );
+
+      }
+    );
+
+  }
+
+}
+  
+</script>
+</body>
+</html>
