@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Mis Guías Finalizadas | Guía Docente UNPHU IA
+  </title>
+
+  <style>
+
+    :root {
+      --verde-unphu: #006b54;
+      --verde-oscuro: #004c3f;
+      --verde-claro: #e9f4f1;
+      --blanco: #ffffff;
+      --gris-fondo: #f5f7f7;
+      --gris-texto: #4b5563;
+      --texto: #1f2937;
+    }
+
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    body {
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background:
+        var(--gris-fondo);
+
+      color:
+        var(--texto);
+
+      min-height: 100vh;
+    }
+
+
+    /* ENCABEZADO */
+
+    header {
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--verde-oscuro),
+          var(--verde-unphu)
+        );
+
+      color:
+        var(--blanco);
+
+      padding:
+        20px 8%;
+    }
+
+
+    .header-content {
+
+      max-width:
+        1200px;
+
+      margin:
+        auto;
+    }
+
+
+    .header-main {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        24px;
+    }
+
+
+    .logo-unphu {
+
+      width:
+        190px;
+
+      height:
+        auto;
+
+      background:
+        var(--blanco);
+
+      padding:
+        8px 10px;
+
+      border-radius:
+        6px;
+
+      flex-shrink:
+        0;
+    }
+
+
+    .header-text {
+
+      border-left:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.45
+        );
+
+      padding-left:
+        24px;
+    }
+
+
+    header h1 {
+
+      font-size:
+        30px;
+
+      margin-bottom:
+        6px;
+    }
+
+
+    header p {
+
+      font-size:
+        16px;
+
+      opacity:
+        0.95;
+    }
+
+
+    /* CONTENIDO */
+
+    main {
+
+      max-width:
+        1100px;
+
+      margin:
+        auto;
+
+      padding:
+        55px 25px;
+    }
+
+
+    .barra-superior {
+
+      margin-bottom:
+        30px;
+    }
+
+
+    .volver {
+
+      color:
+        var(--verde-unphu);
+
+      text-decoration:
+        none;
+
+      font-weight:
+        bold;
+    }
+
+
+    .volver:hover {
+
+      text-decoration:
+        underline;
+    }
+
+
+    .titulo-seccion {
+
+      margin-bottom:
+        32px;
+    }
+
+
+    .titulo-seccion h2 {
+
+      color:
+        var(--verde-oscuro);
+
+      font-size:
+        28px;
+
+      margin-bottom:
+        10px;
+    }
+
+
+    .titulo-seccion p {
+
+      color:
+        var(--gris-texto);
+
+      line-height:
+        1.6;
+    }
+
+
+    /* LISTA DE GUÍAS */
+
+    .lista-guias {
+
+      display:
+        grid;
+
+      gap:
+        20px;
+    }
+
+
+    .guia-card {
+
+      background:
+        var(--blanco);
+
+      border:
+        1px solid #e1e7e5;
+
+      border-radius:
+        14px;
+
+      padding:
+        26px;
+
+      box-shadow:
+        0 6px 18px
+        rgba(
+          0,
+          76,
+          63,
+          0.07
+        );
+    }
+
+
+    .guia-card h3 {
+
+      color:
+        var(--verde-oscuro);
+
+      margin-bottom:
+        14px;
+
+      font-size:
+        21px;
+    }
+
+
+    .guia-card p {
+
+      color:
+        var(--gris-texto);
+
+      margin-bottom:
+        8px;
+
+      line-height:
+        1.5;
+    }
+
+
+    .estado {
+
+      display:
+        inline-block;
+
+      margin-top:
+        8px;
+
+      padding:
+        6px 10px;
+
+      background:
+        var(--verde-claro);
+
+      color:
+        var(--verde-oscuro);
+
+      border-radius:
+        6px;
+
+      font-size:
+        13px;
+
+      font-weight:
+        bold;
+    }
+
+
+    .sin-guias {
+
+      background:
+        var(--blanco);
+
+      border:
+        1px solid #e1e7e5;
+
+      border-radius:
+        14px;
+
+      padding:
+        35px;
+
+      text-align:
+        center;
+
+      color:
+        var(--gris-texto);
+    }
+
+
+    /* PIE */
+
+    footer {
+
+      text-align:
+        center;
+
+      color:
+        #6b7280;
+
+      font-size:
+        13px;
+
+      padding:
+        30px 20px;
+    }
+
+
+    /* CELULARES */
+
+    @media (max-width: 750px) {
+
+      .header-main {
+
+        flex-direction:
+          column;
+
+        align-items:
+          flex-start;
+
+        gap:
+          16px;
+      }
+
+
+      .header-text {
+
+        border-left:
+          none;
+
+        padding-left:
+          0;
+      }
+
+
+      .logo-unphu {
+
+        width:
+          165px;
+      }
+
+
+      header h1 {
+
+        font-size:
+          25px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <header>
+
+    <div class="header-content">
+
+      <div class="header-main">
+
+        <img
+          src="logo-unphu.png"
+          alt="Universidad Nacional Pedro Henríquez Ureña"
+          class="logo-unphu"
+        >
+
+        <div class="header-text">
+
+          <h1>
+            Guía Docente UNPHU IA
+          </h1>
+
+          <p>
+            Guías docentes finalizadas
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <div class="barra-superior">
+
+      <a
+        href="index.html"
+        class="volver"
+      >
+        ← Volver al inicio
+      </a>
+
+    </div>
+
+
+    <section class="titulo-seccion">
+
+      <h2>
+        Mis guías finalizadas
+      </h2>
+
+      <p>
+        Consulta las Guías Docentes que han sido
+        revisadas y finalizadas.
+      </p>
+
+    </section>
+
+<section
+  id="listaGuias"
+  class="lista-guias"
+>
+</section>
+
+
+<section
+  id="detalleGuia"
+  style="display: none;"
+>
+</section>
+
+
+</main>
+
+
+
+  <footer>
+
+    Guía Docente UNPHU IA ·
+    Herramienta de apoyo académico
+
+  </footer>
+
+
+  <script>
+
+
+    function obtenerGuiasFinalizadas(){
+
+      try {
+
+        const guardadas =
+          localStorage.getItem(
+            "guiasDocentesFinalizadas"
+          );
+
+
+        if(!guardadas){
+          return [];
+        }
+
+
+        const guias =
+          JSON.parse(
+            guardadas
+          );
+
+
+        return Array.isArray(guias)
+          ? guias
+          : [];
+
+      }
+      catch(error){
+
+        console.error(
+          "No fue posible recuperar las guías finalizadas:",
+          error
+        );
+
+        return [];
+
+      }
+
+    }
+
+
+
+    function formatearFecha(fecha){
+
+      if(!fecha){
+        return "Fecha no disponible";
+      }
+
+
+      const fechaObjeto =
+        new Date(fecha);
+
+
+      if(
+        Number.isNaN(
+          fechaObjeto.getTime()
+        )
+      ){
+        return "Fecha no disponible";
+      }
+
+
+      return fechaObjeto
+        .toLocaleString(
+          "es-DO",
+          {
+            dateStyle:
+              "long",
+
+            timeStyle:
+              "short"
+          }
+        );
+
+    }
+
+function abrirGuiaFinalizada(idGuia){
+
+  const guias =
+    obtenerGuiasFinalizadas();
+
+
+  const guiaSeleccionada =
+    guias.find(
+      guia =>
+        guia?.id === idGuia
+    );
+
+
+  if(
+    !guiaSeleccionada ||
+    !guiaSeleccionada.datosGuia
+  ){
+
+    alert(
+      "No fue posible localizar la Guía Docente seleccionada."
+    );
+
+    return;
+
+  }
+
+
+  const datos =
+    guiaSeleccionada.datosGuia;
+
+
+  const asignatura =
+    datos
+      ?.instrumentosEvaluacion
+      ?.fuente
+      ?.asignatura;
+
+
+  const nombreAsignatura =
+    asignatura?.nombre ||
+    datos
+      ?.configuracion
+      ?.nombreAsignatura ||
+    "Guía Docente";
+
+
+  const codigoAsignatura =
+    asignatura?.codigo ||
+    datos
+      ?.configuracion
+      ?.codigoAsignatura ||
+    "No disponible";
+
+
+  const cronograma =
+  Array.isArray(
+    datos
+      ?.instrumentosEvaluacion
+      ?.fuente
+      ?.cronograma
+  )
+    ? datos
+        .instrumentosEvaluacion
+        .fuente
+        .cronograma
+    : [];
+
+
+  const rubros =
+  datos
+    ?.instrumentosEvaluacion
+    ?.fuente
+    ?.sistemaEvaluacion
+    ?.rubrosAceptados ||
+  [];
+
+
+  const instrumentos =
+    datos
+      ?.instrumentosEvaluacion
+      ?.elaborados ||
+    [];
+
+  const semanasOrdenadas =
+  [...cronograma].sort(
+    (a, b) =>
+      Number(a?.semana || 0) -
+      Number(b?.semana || 0)
+  );
+
+
+const escaparHTML =
+  valor =>
+    String(valor ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+
+const construirLista =
+  elementos => {
+
+    if(
+      !Array.isArray(elementos) ||
+      elementos.length === 0
+    ){
+      return `
+        <p style="color:#6b7280;">
+          No registrado.
+        </p>
+      `;
+    }
+
+    return `
+      <ul
+        style="
+          margin: 8px 0 0 20px;
+          padding: 0;
+          line-height: 1.6;
+        "
+      >
+        ${elementos
+          .map(
+            elemento => `
+              <li>
+                ${escaparHTML(elemento)}
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    `;
+  };
+
+
+const cronogramaHTML =
+  semanasOrdenadas
+    .map(
+      datosSemana => {
+
+        const clases =
+          Array.isArray(
+            datosSemana
+              ?.propuesta
+              ?.clases
+          )
+            ? datosSemana
+                .propuesta
+                .clases
+            : [];
+
+        const clasesHTML =
+          clases
+            .map(
+              clase => {
+
+                const metodologias =
+                  Array.isArray(
+                    clase
+                      ?.metodologiasActividades
+                  )
+                    ? clase
+                        .metodologiasActividades
+                    : [];
+
+                const diagnostico =
+  clase?.evaluacionDiagnostica;
+
+const diagnosticoHTML =
+  diagnostico
+    ? `
+      <div
+        style="
+          margin-bottom: 18px;
+          padding: 16px;
+          border: 1px solid #006b54;
+          border-radius: 8px;
+          background: #e9f4f1;
+        "
+      >
+        <p>
+          <strong>
+            Prueba Diagnóstica
+          </strong><br>
+          Tipo: D · Valor: 0 · Instrumento: Prueba objetiva
+        </p>
+
+        <p>
+          <strong>Metodología:</strong><br>
+          ${escaparHTML(
+            diagnostico?.metodologia
+          )}
+        </p>
+
+        <p>
+          <strong>Mediación docente:</strong><br>
+          ${escaparHTML(
+            diagnostico?.mediacionDocente
+          )}
+        </p>
+
+        <p>
+          <strong>Actividad diagnóstica:</strong><br>
+          ${escaparHTML(
+            diagnostico?.actividadDiagnostica
+          )}
+        </p>
+      </div>
+    `
+    : "";
+
+                const metodologiasHTML =
+                  metodologias
+                    .map(
+                      (item, indice) => `
+                        <div
+                          style="
+                            margin-bottom: 16px;
+                          "
+                        >
+                          <p>
+                            <strong>
+                              Metodología ${indice + 1}:
+                            </strong>
+                            ${escaparHTML(
+                              item?.metodologia
+                            )}
+                          </p>
+
+                          <p>
+                            <strong>
+                              Mediación docente:
+                            </strong>
+                            ${escaparHTML(
+                              item
+                                ?.explicacionMetodologia
+                            )}
+                          </p>
+
+                          <p>
+                            <strong>
+                              Actividad formativa:
+                            </strong>
+                            ${escaparHTML(
+                              item
+                                ?.actividadFormativa
+                            )}
+                          </p>
+                        </div>
+                      `
+                    )
+                    .join("");
+
+                return `
+
+                  <div
+                    style="
+                      border: 1px solid #e1e7e5;
+                      border-radius: 10px;
+                      padding: 20px;
+                      margin-top: 16px;
+                      background: #ffffff;
+                    "
+                  >
+
+                    <h4
+                      style="
+                        color: #004c3f;
+                        margin: 0 0 14px;
+                      "
+                    >
+                      Clase ${escaparHTML(
+                        clase?.clase
+                      )}
+                    </h4>
+
+                    <p>
+                      <strong>
+                        Contenido:
+                      </strong>
+                      ${escaparHTML(
+                        clase?.contenido
+                      )}
+                    </p>
+
+                    <div
+                      style="
+                        margin-top: 18px;
+                      "
+                    >
+                      <strong>
+                        Metodologías y actividades
+                      </strong>
+
+                      ${
+                         diagnosticoHTML +
+                            (
+                               metodologiasHTML ||
+                                (
+                                  diagnosticoHTML
+                                    ? ""
+                                    : `
+                                      <p style="color:#6b7280;">
+                                         No registradas.
+                                      </p>
+                                    `
+                                 )
+                               )
+                          }
+                    </div>
+
+                    <div
+                      style="
+                        margin-top: 18px;
+                      "
+                    >
+                      <strong>
+                        Recursos materiales
+                      </strong>
+
+                      ${construirLista(
+                        clase?.recursosMateriales
+                      )}
+                    </div>
+
+                    <div
+                      style="
+                        margin-top: 18px;
+                      "
+                    >
+                      <strong>
+                        Recursos virtuales
+                      </strong>
+
+                      ${construirLista(
+                        clase?.recursosVirtuales
+                      )}
+                    </div>
+
+                    <div
+                      style="
+                        margin-top: 18px;
+                      "
+                    >
+                      <strong>
+                        Bibliografía
+                      </strong>
+
+                      ${construirLista(
+                        clase?.bibliografia
+                      )}
+                    </div>
+
+                  </div>
+
+                `;
+              }
+            )
+            .join("");
+
+        return `
+
+          <section
+            style="
+              margin-top: 22px;
+              padding: 22px;
+              border-radius: 12px;
+              background: #f8fbfa;
+              border: 1px solid #dce8e4;
+            "
+          >
+
+            <h3
+              style="
+                margin: 0;
+                color: #006b54;
+              "
+            >
+              Semana ${escaparHTML(
+                datosSemana?.semana
+              )}
+            </h3>
+
+            ${
+              clasesHTML ||
+              `
+                <p
+                  style="
+                    margin-top: 14px;
+                    color: #6b7280;
+                  "
+                >
+                  No hay clases registradas
+                  para esta semana.
+                </p>
+              `
+            }
+
+          </section>
+
+        `;
+      }
+    )
+    .join("");
+
+  const sistemaEvaluacionHTML =
+  rubros
+    .map(
+      rubro => {
+
+        const actividades =
+          Array.isArray(
+            rubro?.actividades
+          )
+            ? rubro.actividades
+            : [];
+
+        const filasActividades =
+          actividades
+            .map(
+              actividad => {
+
+                const rea =
+                  Array.isArray(
+                    actividad?.codigosREA
+                  )
+                    ? actividad
+                        .codigosREA
+                        .join(", ")
+                    : "";
+
+                const instrumentosActividad =
+                  Array.isArray(
+                    actividad?.instrumentos
+                  )
+                    ? actividad
+                        .instrumentos
+                        .join(", ")
+                    : "";
+
+                return `
+                  <tr>
+                    <td>
+                      ${escaparHTML(
+                        actividad?.semana
+                      )}
+                    </td>
+
+                    <td>
+                      ${escaparHTML(
+                        actividad?.tecnica
+                      )}
+                    </td>
+
+                    <td>
+                      ${escaparHTML(rea)}
+                    </td>
+
+                    <td>
+                      ${escaparHTML(
+                        actividad?.tipo
+                      )}
+                    </td>
+
+                    <td>
+                      ${escaparHTML(
+                        instrumentosActividad
+                      )}
+                    </td>
+
+                    <td
+                      style="
+                        text-align:center;
+                        font-weight:700;
+                      "
+                    >
+                      ${escaparHTML(
+                        actividad?.valor
+                      )}
+                    </td>
+                  </tr>
+                `;
+              }
+            )
+            .join("");
+
+        return `
+
+          ${filasActividades}
+
+          <tr
+            style="
+              background:#e9f4f1;
+              font-weight:700;
+            "
+          >
+            <td colspan="5">
+              ${escaparHTML(
+                rubro?.rubro
+              )}
+            </td>
+
+            <td
+              style="
+                text-align:center;
+              "
+            >
+              ${escaparHTML(
+                rubro?.pesoTotal
+              )}
+            </td>
+          </tr>
+
+        `;
+      }
+    )
+    .join("");
+
+
+const totalSistemaEvaluacion =
+  rubros.reduce(
+    (total, rubro) =>
+      total +
+      Number(
+        rubro?.pesoTotal || 0
+      ),
+    0
+  );
+
+const instrumentosOrdenados = [];
+
+
+rubros.forEach(
+  rubro => {
+
+    const actividades =
+      Array.isArray(
+        rubro?.actividades
+      )
+        ? rubro.actividades
+        : [];
+
+
+    actividades.forEach(
+      (
+        actividad,
+        indiceActividad
+      ) => {
+
+        const instrumentosActividad =
+          Array.isArray(
+            actividad?.instrumentos
+          )
+            ? actividad.instrumentos
+            : [];
+
+
+        instrumentosActividad.forEach(
+          (
+            nombreInstrumento,
+            indiceInstrumento
+          ) => {
+
+            const elaborado =
+              instrumentos.find(
+                item =>
+
+                  item?.rubro ===
+                    rubro?.rubro &&
+
+                  Number(
+                    item?.indiceActividad
+                  ) ===
+                    Number(
+                      indiceActividad
+                    ) &&
+
+                  Number(
+                    item?.indiceInstrumento
+                  ) ===
+                    Number(
+                      indiceInstrumento
+                    )
+              );
+
+
+            if(elaborado){
+
+              instrumentosOrdenados.push({
+                ...elaborado,
+
+                nombreSistema:
+                  nombreInstrumento,
+
+                rubroSistema:
+                  rubro?.rubro || "",
+
+                semanaSistema:
+                  actividad?.semana ?? ""
+              });
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+  }
+);
+
+
+console.log(
+  "Instrumentos finalizados en orden:",
+  instrumentosOrdenados.length,
+  instrumentosOrdenados
+);
+ 
+  const detalle =
+    document.getElementById(
+      "detalleGuia"
+    );
+
+
+  const lista =
+    document.getElementById(
+      "listaGuias"
+    );
+
+
+  lista.style.display =
+    "none";
+
+
+  detalle.style.display =
+    "block";
+
+
+  detalle.innerHTML = `
+
+    <article class="guia-card">
+
+      <button
+        type="button"
+        id="btnVolverListado"
+        style="
+          background: transparent;
+          color: #006b54;
+          border: none;
+          padding: 0;
+          margin-bottom: 24px;
+          font-weight: 700;
+          cursor: pointer;
+        "
+      >
+        ← Volver a Mis guías
+      </button>
+
+
+      <h2
+        style="
+          color: #004c3f;
+          margin-bottom: 12px;
+        "
+      >
+        ${nombreAsignatura}
+      </h2>
+
+
+      <p>
+        <strong>Código:</strong>
+        ${codigoAsignatura}
+      </p>
+
+
+      <p>
+        <strong>Finalizada:</strong>
+        ${formatearFecha(
+          guiaSeleccionada.fechaFinalizacion
+        )}
+      </p>
+
+
+      <hr
+        style="
+          margin: 24px 0;
+          border: 0;
+          border-top: 1px solid #e1e7e5;
+        "
+      >
+
+
+      <h3>
+        Resumen de la Guía Docente
+      </h3>
+
+
+      <p>
+        <strong>Semanas del cronograma:</strong>
+        ${cronograma.length}
+      </p>
+
+
+      <p>
+        <strong>Rubros de evaluación:</strong>
+        ${rubros.length}
+      </p>
+
+<p>
+  <strong>Instrumentos elaborados:</strong>
+  ${instrumentos.length}
+</p>
+
+<hr
+  style="
+    margin: 32px 0;
+    border: 0;
+    border-top: 1px solid #e1e7e5;
+  "
+>
+
+<h2
+  style="
+    color: #004c3f;
+    margin-bottom: 18px;
+  "
+>
+  Cronograma de la asignatura
+</h2>
+
+${cronogramaHTML}
+
+<hr
+  style="
+    margin: 40px 0;
+    border: 0;
+    border-top: 1px solid #d8e3e0;
+  "
+>
+
+<h2
+  style="
+    color:#004c3f;
+    margin-bottom:18px;
+  "
+>
+  Sistema de Evaluación
+</h2>
+
+<div
+  style="
+    overflow-x:auto;
+  "
+>
+
+  <table
+    style="
+      width:100%;
+      border-collapse:collapse;
+      min-width:850px;
+    "
+  >
+
+    <thead>
+
+      <tr
+        style="
+          background:#006b54;
+          color:#ffffff;
+        "
+      >
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          Semana
+        </th>
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          Técnica
+        </th>
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          REA(s)
+        </th>
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          Tipo (D, F, S)
+        </th>
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          Instrumento(s)
+        </th>
+
+        <th
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+          "
+        >
+          Valor
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      ${sistemaEvaluacionHTML}
+
+      <tr
+        style="
+          font-weight:700;
+          background:#f5f7f7;
+        "
+      >
+
+        <td
+          colspan="5"
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+            text-align:right;
+          "
+        >
+          Total:
+        </td>
+
+        <td
+          style="
+            padding:12px;
+            border:1px solid #dce5e2;
+            text-align:center;
+          "
+        >
+          ${totalSistemaEvaluacion}
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<hr
+  style="
+    margin:32px 0;
+    border:none;
+    border-top:1px solid #d9e3df;
+  "
+>
+
+<section
+  style="
+    text-align:center;
+    padding:10px 0 20px;
+  "
+>
+
+  <h3>
+    Instrumentos de Evaluación
+  </h3>
+
+  <p>
+    Esta guía contiene
+    <strong>
+      ${instrumentosOrdenados.length}
+    </strong>
+    instrumento(s) de evaluación elaborado(s).
+  </p>
+
+  <button
+  type="button"
+  onclick="editarSistemaEvaluacionGuiaFinalizada('${idGuia}')"
+  style="
+    display:inline-block;
+    margin-top:12px;
+    margin-right:10px;
+    padding:10px 18px;
+    background:#006b54;
+    color:#ffffff;
+    border:none;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+  "
+>
+  Modificar sistema de evaluación
+</button>
+
+  <a
+    href="revision.html?guia=${encodeURIComponent(idGuia)}"
+    class="button"
+    style="
+      display:inline-block;
+      margin-top:12px;
+      text-decoration:none;
+    "
+  >
+   Ver y descargar guía finalizada →
+  </a>
+
+</section>
+
+</article>
+      
+
+  `;
+
+
+  document
+    .getElementById(
+      "btnVolverListado"
+    )
+    .addEventListener(
+      "click",
+      function(){
+
+        detalle.style.display =
+          "none";
+
+        detalle.innerHTML =
+          "";
+
+        lista.style.display =
+          "grid";
+
+      }
+    );
+
+}
+
+    function editarSistemaEvaluacionGuiaFinalizada(idGuia){
+
+  const guias =
+    obtenerGuiasFinalizadas();
+
+  const guiaSeleccionada =
+    guias.find(
+      guia =>
+        guia?.id === idGuia
+    );
+
+  if(
+    !guiaSeleccionada ||
+    !guiaSeleccionada.datosGuia
+  ){
+
+    alert(
+      "No fue posible recuperar la Guía Docente seleccionada."
+    );
+
+    return;
+  }
+
+  // Crear una copia independiente de la guía finalizada
+  const datosGuia =
+    JSON.parse(
+      JSON.stringify(
+        guiaSeleccionada.datosGuia
+      )
+    );
+
+  // Restaurar como guía activa
+  const respaldoActual =
+    JSON.parse(
+      localStorage.getItem(
+        "respaldoGuiaDocente"
+      ) || "{}"
+    );
+
+  respaldoActual.datosGuia =
+    datosGuia;
+
+  localStorage.setItem(
+    "respaldoGuiaDocente",
+    JSON.stringify(
+      respaldoActual
+    )
+  );
+
+  // Abrir el sistema de evaluación
+  window.location.href =
+    "evaluacion.html";
+
+}
+
+    function mostrarGuiasFinalizadas(){
+
+      const contenedor =
+        document.getElementById(
+          "listaGuias"
+        );
+
+
+      const guias =
+        obtenerGuiasFinalizadas();
+
+
+      if(guias.length === 0){
+
+        contenedor.innerHTML = `
+
+          <div class="sin-guias">
+
+            <p>
+              Todavía no hay Guías Docentes
+              finalizadas.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      contenedor.innerHTML = "";
+
+
+      const guiasOrdenadas =
+        [...guias].sort(
+          (a, b) =>
+            new Date(
+              b.fechaFinalizacion || 0
+            ) -
+            new Date(
+              a.fechaFinalizacion || 0
+            )
+        );
+
+
+      guiasOrdenadas.forEach(
+        guia => {
+
+
+          const datos =
+            guia?.datosGuia || {};
+
+
+          const asignatura =
+            datos
+              ?.instrumentosEvaluacion
+              ?.fuente
+              ?.asignatura;
+
+
+          const nombreAsignatura =
+            asignatura?.nombre ||
+            datos
+              ?.configuracion
+              ?.nombreAsignatura ||
+            "Guía Docente";
+
+
+          const codigoAsignatura =
+            asignatura?.codigo ||
+            datos
+              ?.configuracion
+              ?.codigoAsignatura ||
+            "No disponible";
+
+
+          const tarjeta =
+            document.createElement(
+              "article"
+            );
+
+
+          tarjeta.className =
+            "guia-card";
+
+
+          const titulo =
+            document.createElement(
+              "h3"
+            );
+
+
+          titulo.textContent =
+            nombreAsignatura;
+
+
+          const codigo =
+            document.createElement(
+              "p"
+            );
+
+
+          codigo.textContent =
+            "Código: " +
+            codigoAsignatura;
+
+
+          const fecha =
+            document.createElement(
+              "p"
+            );
+
+
+          fecha.textContent =
+            "Finalizada: " +
+            formatearFecha(
+              guia.fechaFinalizacion
+            );
+
+
+          const estado =
+            document.createElement(
+              "span"
+            );
+
+
+          estado.className =
+            "estado";
+
+
+          estado.textContent =
+            "Finalizada";
+
+          const acciones =
+  document.createElement(
+    "div"
+  );
+
+
+acciones.style.marginTop =
+  "20px";
+
+
+const btnAbrir =
+  document.createElement(
+    "button"
+  );
+
+
+btnAbrir.type =
+  "button";
+
+
+btnAbrir.textContent =
+  "Abrir guía";
+
+
+btnAbrir.className =
+  "button";
+
+btnAbrir.style.background =
+  "#006B54";
+
+btnAbrir.style.color =
+  "#ffffff";
+
+btnAbrir.style.border =
+  "none";
+
+btnAbrir.style.borderRadius =
+  "8px";
+
+btnAbrir.style.padding =
+  "10px 18px";
+
+btnAbrir.style.fontSize =
+  "14px";
+
+btnAbrir.style.fontWeight =
+  "600";
+
+btnAbrir.style.cursor =
+  "pointer";
+
+btnAbrir.style.textDecoration =
+  "none";
+
+
+btnAbrir.addEventListener(
+  "click",
+  function(){
+
+    abrirGuiaFinalizada(
+      guia.id
+    );
+
+  }
+);
+
+
+acciones.appendChild(
+  btnAbrir
+);
+
+
+          tarjeta.appendChild(
+            titulo
+          );
+
+
+          tarjeta.appendChild(
+            codigo
+          );
+
+
+          tarjeta.appendChild(
+            fecha
+          );
+
+
+          tarjeta.appendChild(
+            estado
+          );
+
+          tarjeta.appendChild(
+           acciones
+          );
+
+
+          contenedor.appendChild(
+            tarjeta
+          );
+
+        }
+      );
+
+    }
+
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      mostrarGuiasFinalizadas
+    );
+
+
+  </script>
+
+
+</body>
+
+</html>
