@@ -1,0 +1,7822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Elaborar Guía Docente | UNPHU IA</title>
+
+<script src="https://unpkg.com/docx@9.5.1/dist/index.iife.js"></script>
+
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+
+:root{
+  --verde-unphu:#006b54;
+  --verde-oscuro:#004c3f;
+  --verde-claro:#e9f4f1;
+  --blanco:#ffffff;
+  --fondo:#f5f7f7;
+  --texto:#263238;
+  --gris:#66736f;
+  --borde:#d8e2df;
+  --error:#a12622;
+  --error-fondo:#fff1f0;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--fondo);
+  color:var(--texto);
+}
+
+header{
+  background:linear-gradient(
+    135deg,
+    var(--verde-oscuro),
+    var(--verde-unphu)
+  );
+  color:white;
+  padding:24px 7%;
+}
+
+.header-main{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  max-width:1180px;
+  margin:auto;
+}
+
+.logo-unphu{
+  width:175px;
+  background:white;
+  padding:8px 10px;
+  border-radius:6px;
+}
+
+.header-text{
+  border-left:1px solid rgba(255,255,255,.45);
+  padding-left:24px;
+}
+
+.header-text h1{
+  margin:0 0 7px;
+  font-size:28px;
+}
+
+.header-text p{
+  margin:0;
+}
+
+main{
+  max-width:950px;
+  margin:35px auto;
+  padding:0 20px 50px;
+}
+
+.volver{
+  display:inline-block;
+  margin-bottom:18px;
+  color:var(--verde-unphu);
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.panel{
+  background:white;
+  border-radius:14px;
+  padding:30px;
+  box-shadow:0 5px 20px rgba(0,0,0,.07);
+  margin-bottom:24px;
+}
+
+.panel h2{
+  color:var(--verde-oscuro);
+  margin-top:0;
+}
+
+.descripcion{
+  color:var(--gris);
+  line-height:1.6;
+}
+
+.campo{
+  margin-top:22px;
+}
+
+label.titulo{
+  display:block;
+  font-weight:bold;
+  margin-bottom:9px;
+}
+
+  select,
+  input[type="text"],
+  input[type="number"]{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid var(--borde);
+  border-radius:8px;
+  font-size:15px;
+  background:white;
+}
+
+.opciones{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:8px;
+}
+
+.opcion{
+  border:1px solid var(--borde);
+  border-radius:8px;
+  padding:11px 14px;
+  background:#fafcfc;
+  cursor:pointer;
+}
+
+.oculto{
+  display:none;
+}
+
+.nota{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--gris);
+  line-height:1.45;
+}
+
+.resultado{
+  margin-top:20px;
+  padding:15px;
+  background:var(--verde-claro);
+  border-left:4px solid var(--verde-unphu);
+  border-radius:7px;
+  font-weight:bold;
+  color:var(--verde-oscuro);
+  line-height:1.5;
+}
+
+.error{
+  margin-top:20px;
+  padding:14px;
+  background:var(--error-fondo);
+  border-left:4px solid var(--error);
+  color:var(--error);
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.boton{
+  display:inline-block;
+  margin-top:25px;
+  padding:13px 22px;
+  border:none;
+  border-radius:8px;
+  background:var(--verde-unphu);
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.boton:hover{
+  background:var(--verde-oscuro);
+}
+
+.boton-secundario{
+  background:white;
+  color:var(--verde-unphu);
+  border:1px solid var(--verde-unphu);
+  margin-right:10px;
+}
+
+.boton-secundario:hover{
+  background:var(--verde-claro);
+}
+
+.etapa{
+  display:inline-block;
+  padding:6px 12px;
+  background:var(--verde-claro);
+  color:var(--verde-oscuro);
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+.resumen-esquema{
+  margin-top:20px;
+  padding:18px;
+  border:1px solid var(--borde);
+  border-radius:9px;
+  background:#fafcfc;
+  line-height:1.6;
+}
+
+.fila-evaluacion{
+  display:grid;
+  grid-template-columns:1fr 170px 170px;
+  gap:12px;
+  align-items:center;
+  margin-top:12px;
+}
+
+.fila-evaluacion strong{
+  color:var(--verde-oscuro);
+}
+
+.total{
+  margin-top:18px;
+  padding:13px;
+  background:var(--verde-claro);
+  border-radius:7px;
+  font-weight:bold;
+}
+
+footer{
+  text-align:center;
+  padding:22px;
+  color:var(--gris);
+  font-size:13px;
+}
+
+@media(max-width:650px){
+
+  .header-main{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .header-text{
+    border-left:0;
+    border-top:1px solid rgba(255,255,255,.45);
+    padding-left:0;
+    padding-top:16px;
+  }
+
+  .fila-evaluacion{
+    grid-template-columns:1fr;
+  }
+
+}
+/* ===== Cronograma institucional ===== */
+
+#tablaCronogramaInstitucional{
+  width:100%;
+  table-layout:fixed;
+  border-collapse:collapse;
+}
+
+#tablaCronogramaInstitucional th,
+#tablaCronogramaInstitucional td{
+  vertical-align:top;
+  text-align:left;
+  padding:16px;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+  border:1px solid var(--borde);
+}
+#tablaCronogramaInstitucional thead th{
+  background:var(--verde-claro);
+  color:var(--verde-oscuro);
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle;
+}
+  #tablaCronogramaInstitucional .fila-semana-institucional td{
+  background:var(--verde-claro);
+  color:var(--verde-oscuro);
+  text-align:center;
+  font-weight:bold;
+  padding:12px 16px;
+}
+/* Distribución de las cuatro columnas */
+#tablaCronogramaInstitucional th:nth-child(1),
+#tablaCronogramaInstitucional td:nth-child(1){
+  width:20%;
+}
+
+#tablaCronogramaInstitucional th:nth-child(2),
+#tablaCronogramaInstitucional td:nth-child(2){
+  width:27%;
+}
+
+#tablaCronogramaInstitucional th:nth-child(3),
+#tablaCronogramaInstitucional td:nth-child(3){
+  width:25%;
+}
+
+#tablaCronogramaInstitucional th:nth-child(4),
+#tablaCronogramaInstitucional td:nth-child(4){
+  width:28%;
+}
+</style>
+</head> 
+
+<body>
+
+<header>
+
+<div class="header-main">
+
+<img
+src="logo-unphu.png"
+alt="Universidad Nacional Pedro Henríquez Ureña"
+class="logo-unphu"
+>
+
+<div class="header-text">
+<h1>Elaborar Guía Docente</h1>
+<p>Configuración para la elaboración de la guía docente</p>
+</div>
+
+</div>
+
+</header>
+
+<main>
+
+
+<!-- ==================================================
+ETAPA 1
+================================================== -->
+
+<section id="etapa1" class="panel">
+
+<span class="etapa">Etapa 1 de 2</span>
+
+<h2>X. Cronograma</h2>
+
+<p class="descripcion">
+Complete la configuración inicial de la asignatura.
+Esta información permitirá adaptar el cronograma a su
+naturaleza, duración y organización académica.
+</p>
+
+<div class="campo">
+  <label class="titulo" for="codigoAsignatura">
+    Código de la asignatura
+  </label>
+
+  <input
+    type="text"
+    id="codigoAsignatura"
+    placeholder="Ej.: MAT-101"
+  >
+</div>
+
+<div class="campo">
+  <label class="titulo" for="nombreAsignatura">
+    Nombre de la asignatura
+  </label>
+
+  <input
+    type="text"
+    id="nombreAsignatura"
+    placeholder="Ej.: Matemática Básica"
+  >
+</div>
+<div class="campo">
+
+<label class="titulo" for="tipoAsignatura">
+¿A qué tipo de asignatura corresponde la guía docente?
+</label>
+
+<select id="tipoAsignatura" onchange="configurarTipo()">
+
+<option value="">Seleccione una opción</option>
+<option value="teoria">Teoría</option>
+<option value="rubroUnico">Rubro único</option>
+<option value="cienciasBasicas">Ciclo de Ciencias Básicas</option>
+<option value="cienciasClinicas">Ciclo de Ciencias Clínicas</option>
+
+</select>
+
+</div>
+
+
+<!-- TEORÍA -->
+
+<div id="configTeoria" class="oculto">
+
+<div class="campo">
+
+<label class="titulo">
+¿La asignatura tiene un programa de laboratorio asociado?
+</label>
+
+<div class="opciones">
+
+<label class="opcion">
+<input
+type="radio"
+name="programaLaboratorio"
+value="si"
+onchange="configurarTeoria()"
+>
+Sí
+</label>
+
+<label class="opcion">
+<input
+type="radio"
+name="programaLaboratorio"
+value="no"
+onchange="configurarTeoria()"
+>
+No
+</label>
+
+</div>
+
+<div class="nota">
+La respuesta permitirá determinar el método de evaluación
+que corresponde desarrollar en esta guía docente.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RUBRO ÚNICO -->
+
+<div id="configRubroUnico" class="oculto">
+
+<div class="campo">
+
+<label class="titulo">
+¿La asignatura corresponde a laboratorio o práctica?
+</label>
+
+<div class="opciones">
+
+<label class="opcion">
+<input
+type="radio"
+name="rubroPractica"
+value="si"
+onchange="configurarRubro()"
+>
+Sí
+</label>
+
+<label class="opcion">
+<input
+type="radio"
+name="rubroPractica"
+value="no"
+onchange="configurarRubro()"
+>
+No
+</label>
+
+</div>
+
+</div>
+
+
+<div id="areaRubro" class="campo oculto">
+
+<label class="titulo" for="carreraRubro">
+¿A qué área o carrera corresponde?
+</label>
+
+<select
+id="carreraRubro"
+onchange="determinarSemanasRubro()"
+>
+
+<option value="">Seleccione una opción</option>
+<option value="odontologia">Odontología</option>
+<option value="medicina">Medicina</option>
+<option value="otras">Otras carreras o áreas</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<!-- HOSPITALARIA -->
+
+<div id="configHospitalaria" class="oculto">
+
+<div class="campo">
+
+<label class="titulo" for="semanasHospitalaria">
+¿Cuántas semanas se desarrollará la asignatura?
+</label>
+
+<input
+type="number"
+id="semanasHospitalaria"
+min="1"
+placeholder="Indique el número de semanas"
+oninput="actualizarSemanasHospitalaria()"
+>
+
+<div class="nota">
+  Indique la duración académica correspondiente a la asignatura.
+</div>
+
+</div>
+
+</div>
+<!-- MODALIDAD DEL CICLO DE CIENCIAS CLÍNICAS -->
+
+<div id="configCienciasClinicas" class="campo oculto">
+
+  <label class="titulo">
+    ¿A qué modalidad del Ciclo de Ciencias Clínicas corresponde la asignatura?
+  </label>
+
+  <div class="opciones">
+
+    <label class="opcion">
+      <input
+        type="radio"
+        name="modalidadClinica"
+        value="preinternado"
+      >
+      Preinternado académico
+    </label>
+
+    <label class="opcion">
+      <input
+        type="radio"
+        name="modalidadClinica"
+        value="internado"
+      >
+      Internado académico
+    </label>
+
+  </div>
+
+</div>
+
+<!-- FRECUENCIA -->
+
+<div class="campo">
+
+<label class="titulo" for="frecuencia">
+¿Cuántas clases por semana se impartirá la asignatura?
+</label>
+
+<input
+type="number"
+id="frecuencia"
+min="1"
+placeholder="Ejemplo: 2"
+>
+
+<div class="nota">
+Esta información permitirá organizar cada semana en Clase 1,
+Clase 2, Clase 3... según corresponda y diversificar las
+metodologías y actividades.
+</div>
+
+</div>
+
+
+<!-- INVESTIGACIÓN -->
+
+<div class="campo">
+
+<label class="titulo">
+¿La asignatura contempla actividades de investigación?
+</label>
+
+<div class="opciones">
+
+<label class="opcion">
+<input type="radio" name="investigacion" value="si">
+Sí
+</label>
+
+<label class="opcion">
+<input type="radio" name="investigacion" value="no">
+No
+</label>
+
+</div>
+
+</div>
+
+
+<!-- VINCULACIÓN -->
+
+<div class="campo">
+
+<label class="titulo">
+¿La asignatura contempla actividades de vinculación?
+</label>
+
+<div class="opciones">
+
+<label class="opcion">
+<input type="radio" name="vinculacion" value="si">
+Sí
+</label>
+
+<label class="opcion">
+<input type="radio" name="vinculacion" value="no">
+No
+</label>
+
+</div>
+
+</div>
+
+
+<div
+id="resultadoSemanas"
+class="resultado oculto"
+></div>
+
+<div
+id="errorEtapa1"
+class="error oculto"
+></div>
+
+
+<button
+class="boton"
+type="button"
+onclick="continuarConfiguracion()"
+>
+Continuar configuración
+</button>
+
+</section>
+
+
+<!-- ==================================================
+ETAPA 2
+================================================== -->
+
+<section id="etapa2" class="panel oculto">
+
+<span class="etapa">Etapa 2 de 2</span>
+
+<h2>Configuración del sistema de evaluación</h2>
+
+<p class="descripcion">
+Indique la configuración evaluativa establecida por la
+Escuela o Departamento. Los pesos institucionales no serán
+propuestos ni modificados por la herramienta.
+</p>
+
+
+<!-- HOSPITALARIA: SELECCIÓN DEL ESQUEMA -->
+
+<div
+id="seleccionEsquemaHospitalario"
+class="oculto"
+>
+
+<div class="campo">
+
+<label class="titulo">
+Seleccione el método de evaluación que le corresponde a la asignatura:
+</label>
+
+<div class="opciones">
+
+<label class="opcion">
+<input
+type="radio"
+name="esquemaHospitalario"
+value="hospital1"
+onchange="crearEvaluacion()"
+>
+Acumulado 1 + Acumulado 2 + TP + Examen Final
+</label>
+
+<label class="opcion">
+<input
+type="radio"
+name="esquemaHospitalario"
+value="hospital2"
+onchange="crearEvaluacion()"
+>
+Acumulado 1 + Acumulado 2 + Acumulado 3 +
+Acumulado 4 + TP + Examen Final
+</label>
+<label class="opcion">
+<input
+type="radio"
+name="esquemaHospitalario"
+value="hospital3"
+onchange="crearEvaluacion()"
+>
+Acumulado 1 + Acumulado 2 + Acumulado 3 +
+TP + Examen Final
+</label>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INFORMACIÓN DEL ESQUEMA -->
+
+<div
+id="descripcionEvaluacion"
+class="resultado oculto"
+></div>
+
+
+<!-- CAMPOS DE EVALUACIÓN -->
+
+<div
+id="camposEvaluacion"
+class="oculto"
+>
+
+<div class="resumen-esquema">
+
+<strong>Complete los datos correspondientes:</strong>
+
+<div class="nota">
+Peso = porcentaje institucional asignado al rubro.
+Semana = semana de aplicación de la evaluación.
+</div>
+
+<div id="listaEvaluaciones"></div>
+
+<div id="totalPesos" class="total"></div>
+
+</div>
+
+</div>
+
+
+<!-- RUBRO ÚNICO -->
+
+<div
+id="evaluacionRubroUnico"
+class="oculto"
+>
+
+<div class="resultado">
+La asignatura se evaluará como Rubro único sobre 100 puntos.
+La calificación se construirá progresivamente mediante
+actividades evaluativas distribuidas a lo largo del período
+académico.
+</div>
+
+<p class="descripcion">
+La distribución de las actividades evaluativas se realizará
+posteriormente en coherencia con el cronograma. No se
+utilizarán Acumulados como estructura de evaluación.
+</p>
+
+</div>
+
+
+<div
+id="errorEtapa2"
+class="error oculto"
+></div>
+
+
+<button
+type="button"
+class="boton boton-secundario"
+onclick="volverEtapa1()"
+>
+← Volver
+</button>
+
+<button
+type="button"
+class="boton"
+onclick="finalizarConfiguracion()"
+>
+Continuar al cronograma
+</button>
+
+</section>
+<!-- ==================================================
+ETAPA 3 - PROGRAMA DE LA ASIGNATURA Y REA
+================================================== -->
+
+<section id="etapa3" class="panel oculto">
+
+  <span class="etapa">Etapa 3</span>
+
+  <h2>Programa de la Asignatura y REA</h2>
+
+  <p class="descripcion">
+    Para elaborar el cronograma es necesario disponer de los
+    Resultados de Aprendizaje de la Asignatura (REA) establecidos
+    en el Programa de la Asignatura.
+  </p>
+
+  <div class="resultado">
+    Los REA oficiales serán utilizados para establecer la
+    correspondencia entre los contenidos, las metodologías de
+    enseñanza y las actividades formativas de cada clase.
+  </div>
+
+
+  <!-- FORMA DE REGISTRO -->
+
+  <div class="campo">
+
+    <label class="titulo">
+      ¿Cómo desea proporcionar la información del Programa de la Asignatura?
+    </label>
+
+    <div class="opciones">
+
+      <label class="opcion">
+        <input
+          type="radio"
+          name="formaPrograma"
+          value="archivo"
+          onchange="configurarPrograma()"
+        >
+        Adjuntar Programa de la Asignatura
+      </label>
+
+      <label class="opcion">
+        <input
+          type="radio"
+          name="formaPrograma"
+          value="manual"
+          onchange="configurarPrograma()"
+        >
+        Introducir los REA y la bibliografía manualmente
+      </label>
+
+    </div>
+
+  </div>
+
+
+  <!-- ADJUNTAR PROGRAMA -->
+
+  <div id="opcionArchivoPrograma" class="campo oculto">
+
+    <label class="titulo" for="archivoPrograma">
+      Adjunte el Programa de la Asignatura
+    </label>
+
+    <input
+      type="file"
+      id="archivoPrograma"
+      accept=".pdf,.doc,.docx"
+    >
+
+    <div class="nota">
+      El programa permitirá identificar los REA oficiales y la
+      bibliografía que servirá de referencia para la elaboración
+      del cronograma.
+    </div>
+
+  </div>
+
+
+  <!-- REGISTRO MANUAL -->
+
+  <div id="opcionManualPrograma" class="oculto">
+
+    <div class="campo">
+
+      <label class="titulo">
+        Resultados de Aprendizaje de la Asignatura (REA)
+      </label>
+
+      <div class="nota">
+        Introduzca los REA exactamente como aparecen establecidos
+        en el Programa de la Asignatura. No deben reformularse.
+      </div>
+
+      <div id="listaREA">
+
+        <div class="campo">
+    <label class="titulo">Resultado de Aprendizaje</label>
+
+    <input
+        type="text"
+        class="reaCodigoManual"
+        placeholder="Código oficial. Ejemplo: REA 1"
+        oninput="guardarBorradorEtapa3()"
+    >
+
+    <textarea
+        class="reaManual"
+        rows="3"
+        placeholder="Escriba el texto del REA exactamente como aparece en el programa"
+        oninput="guardarBorradorEtapa3()"
+    ></textarea>
+</div>
+
+      </div>
+
+      <button
+        type="button"
+        class="boton boton-secundario"
+        onclick="agregarREA()"
+      >
+        + Agregar REA
+      </button>
+
+    </div>
+
+
+    <!-- BIBLIOGRAFÍA MANUAL -->
+
+    <div class="campo">
+
+      <label class="titulo">
+        Bibliografía del Programa de la Asignatura
+      </label>
+
+      <div class="nota">
+        Registre las referencias bibliográficas establecidas en
+        el programa. Durante la elaboración del cronograma se
+        seleccionarán como máximo dos textos pertinentes para
+        cada clase.
+      </div>
+
+      <div id="listaBibliografia">
+
+        <div class="campo">
+          <label class="titulo">Referencia 1</label>
+          <textarea
+            class="bibliografiaManual"
+            rows="3"
+            placeholder="Escriba la referencia bibliográfica"
+            oninput="guardarBorradorEtapa3()"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="boton boton-secundario"
+        onclick="agregarBibliografia()"
+      >
+        + Agregar referencia
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="errorEtapa3"
+    class="error oculto"
+  ></div>
+
+
+  <button
+    type="button"
+    class="boton boton-secundario"
+    onclick="volverEtapa2()"
+  >
+    ← Volver
+  </button>
+
+  <button
+    type="button"
+    class="boton"
+    onclick="continuarSemana1()"
+  >
+    Continuar a Semana 1
+  </button>
+
+</section>
+  <!-- ==================================================
+ETAPA 4 - ELABORACIÓN DEL CRONOGRAMA
+================================================== -->
+
+<section id="etapaCronograma" class="panel oculto">
+
+  <span class="etapa">X. Cronograma</span>
+
+  <h2 id="tituloSemana">
+    Semana 1
+  </h2>
+
+  <p class="descripcion">
+    Indique los contenidos que se desarrollarán en cada clase
+    de esta semana. A partir de estos contenidos se elaborará
+    la propuesta académica correspondiente.
+  </p>
+
+  <div class="resultado">
+    Las metodologías de enseñanza serán seleccionadas según la
+    naturaleza de los contenidos declarados para cada clase.
+    Las actividades formativas se asociarán con uno o más REA
+    pertinentes del Programa de la Asignatura.
+  </div>
+
+
+  <!-- INFORMACIÓN DE LA SEMANA -->
+
+  <div class="campo">
+
+   <label
+  id="tituloContenidosSemana"
+  class="titulo"
+>
+  Contenidos de la Semana 1
+</label>
+
+    <div class="nota">
+      Registre los contenidos que corresponde desarrollar en
+      cada clase. No es necesario indicar metodologías ni
+      actividades formativas; estas serán propuestas
+      posteriormente por la herramienta.
+    </div>
+
+  </div>
+
+
+  <!-- CLASES GENERADAS AUTOMÁTICAMENTE -->
+
+  <div id="clasesSemana"></div>
+
+
+  <!-- MENSAJE PARA SEMANA EVALUATIVA -->
+
+  <div
+    id="avisoSemanaEvaluativa"
+    class="resultado oculto"
+  ></div>
+
+
+  <div
+    id="errorCronograma"
+    class="error oculto"
+  ></div>
+<!-- PROPUESTA ACADÉMICA GENERADA POR IA -->
+
+<div
+  id="propuestaAcademica"
+  class="oculto"
+>
+  <h3>Propuesta académica de la semana</h3>
+
+  <div
+    id="contenidoPropuestaAcademica"
+    class="resumen-esquema"
+  ></div>
+</div>
+
+  <button
+    id="btnVolverEtapa3"
+    type="button"
+    class="boton boton-secundario"
+    onclick="volverEtapa3()"
+  >
+    ← Volver
+  </button>
+
+  <button
+  id="btnSemanaAnterior"
+  type="button"
+  class="boton boton-secundario"
+  onclick="irSemanaAnterior()"
+  style="display:none;"
+>
+  ← Semana anterior
+</button>
+
+<button
+  id="btnVolverCronogramaCompleto"
+  type="button"
+  class="boton boton-secundario"
+  onclick="mostrarVistaFinalCronograma()"
+  style="display:none;"
+>
+  Ver cronograma completo
+</button>
+  
+ <button
+  id="btnGenerarSemana"
+    type="button"
+    class="boton"
+    onclick="generarPropuestaSemana()"
+  >
+    Generar propuesta de Semana 1
+  </button>
+
+</section>
+ <div
+  id="modalEdicionLista"
+  class="oculto"
+  style="
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 40px 20px;
+    overflow-y: auto;
+  "
+>
+ <div
+  class="panel"
+  style="
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+  "
+>
+    <h3 id="tituloEdicionLista">Editar información</h3>
+
+    <p id="instruccionEdicionLista">
+      Escriba un elemento por línea.
+    </p>
+
+    <textarea
+      id="campoEdicionLista"
+      rows="8"
+      style="width:100%;"
+    ></textarea>
+
+    <div style="margin-top:16px;">
+      <button
+        type="button"
+        class="boton"
+        id="botonGuardarEdicionLista"
+      >
+        Guardar cambios
+      </button>
+
+      <button
+        type="button"
+        class="boton boton-secundario"
+        onclick="cerrarEdicionLista()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+ <!-- ==================================================
+VISTA FINAL DEL CRONOGRAMA
+================================================== -->
+
+<section id="vistaFinalCronograma" class="panel oculto">
+<a href="index.html" class="volver">
+  ← Volver al inicio
+</a>
+  <span class="etapa">X. Cronograma</span>
+
+  <h2>Cronograma completo de la asignatura</h2>
+
+  <p class="descripcion">
+    Revise la propuesta académica completa antes de finalizar
+    la guía docente.
+  </p>
+
+  <div class="resultado">
+    El cronograma presenta la organización académica de todas
+    las semanas de la asignatura, integrando contenidos,
+    metodologías de enseñanza, actividades formativas, REA,
+    recursos y bibliografía.
+  </div>
+
+  <div id="contenidoCronogramaCompleto"></div>
+  <div id="accionesDescargaCronograma">
+    <button
+      type="button"
+      id="btnDescargarWord"
+      class="btn-principal"
+    >
+    Descargar Word
+    </button>
+
+    <button
+      type="button"
+      id="btnDescargarPDF"
+      class="btn-principal"
+    >
+    Descargar PDF
+    </button>
+
+<button
+  type="button"
+  id="btnVolverSemanaCronograma"
+  class="btn-principal"
+  onclick="mostrarSelectorSemanaCronograma()"
+>
+  Volver a una semana
+</button>
+
+<span
+  id="selectorSemanaCronograma"
+  style="display:none;"
+>
+  <select id="semanaCronogramaSeleccionada">
+    <option value="">Seleccionar semana</option>
+    <option value="1">Semana 1</option>
+    <option value="2">Semana 2</option>
+    <option value="3">Semana 3</option>
+    <option value="4">Semana 4</option>
+    <option value="5">Semana 5</option>
+    <option value="6">Semana 6</option>
+    <option value="7">Semana 7</option>
+    <option value="8">Semana 8</option>
+    <option value="9">Semana 9</option>
+    <option value="10">Semana 10</option>
+    <option value="11">Semana 11</option>
+    <option value="12">Semana 12</option>
+    <option value="13">Semana 13</option>
+    <option value="14">Semana 14</option>
+    <option value="15">Semana 15</option>
+  </select>
+
+  <button
+    type="button"
+    onclick="irASemanaDesdeCronograma()"
+  >
+    Ir a la semana
+  </button>
+</span>
+    
+    <button
+  type="button"
+  id="btnContinuarSistemaEvaluacion"
+  class="btn-principal"
+  onclick="window.location.href='evaluacion.html'"
+>
+  Continuar al Sistema de Evaluación →
+</button>
+    
+</div>
+</section> 
+</main>
+
+
+<footer>
+Guía Docente UNPHU IA · Herramienta de apoyo académico
+</footer>
+
+
+<script>
+
+let semanas = null;
+
+  /* ==================================================
+LECTURA DEL PROGRAMA DE LA ASIGNATURA
+================================================== */
+
+async function extraerTextoPrograma(archivo) {
+
+  const nombre =
+    archivo.name.toLowerCase();
+
+  /* =========================
+  ARCHIVO DOCX
+  ========================= */
+
+  if (nombre.endsWith(".docx")) {
+
+    const arrayBuffer =
+      await archivo.arrayBuffer();
+
+    const resultado =
+      await mammoth.extractRawText({
+        arrayBuffer: arrayBuffer
+      });
+
+    return resultado.value.trim();
+  }
+
+
+  /* =========================
+  ARCHIVO PDF
+  ========================= */
+
+  if (nombre.endsWith(".pdf")) {
+
+    const arrayBuffer =
+      await archivo.arrayBuffer();
+
+    const pdfjsLib =
+      await import(
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
+      );
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+    const pdf =
+      await pdfjsLib.getDocument({
+        data: arrayBuffer
+      }).promise;
+
+    let texto = "";
+
+    for (
+      let numeroPagina = 1;
+      numeroPagina <= pdf.numPages;
+      numeroPagina++
+    ) {
+
+      const pagina =
+        await pdf.getPage(numeroPagina);
+
+      const contenido =
+        await pagina.getTextContent();
+
+      const textoPagina =
+        contenido.items
+          .map(item => item.str)
+          .join(" ");
+
+      texto += textoPagina + "\n";
+    }
+
+    return texto.trim();
+  }
+
+
+  /* =========================
+  ARCHIVO DOC ANTIGUO
+  ========================= */
+
+  if (nombre.endsWith(".doc")) {
+
+    throw new Error(
+      "Los archivos .doc antiguos no pueden procesarse directamente. Guarde el programa como .docx o PDF y vuelva a adjuntarlo."
+    );
+  }
+
+
+  throw new Error(
+    "Formato de archivo no compatible."
+  );
+}
+
+  /* ==================================================
+ENVIAR PROGRAMA AL WORKER PARA EXTRAER REA Y BIBLIOGRAFÍA
+================================================== */
+
+async function extraerDatosProgramaConIA(textoPrograma) {
+
+  const respuesta =
+    await fetch(
+     "https://guia-docente-unphu-api.jortega-cc4.workers.dev/extraer-programa",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          textoPrograma: textoPrograma
+        })
+      }
+    );
+
+  let resultado;
+
+  try {
+
+    resultado =
+      await respuesta.json();
+
+  } catch {
+
+    throw new Error(
+      "El servidor no devolvió una respuesta válida."
+    );
+  }
+
+
+  if (
+    !respuesta.ok ||
+    !resultado.correcto
+  ) {
+
+    throw new Error(
+      resultado.error ||
+      "No fue posible extraer los REA y la bibliografía del Programa de la Asignatura."
+    );
+  }
+
+
+  if (
+    !resultado.programa ||
+    !Array.isArray(
+      resultado.programa.reaOficiales
+    ) ||
+    !Array.isArray(
+      resultado.programa.bibliografia
+    )
+  ) {
+
+    throw new Error(
+      "La información extraída del programa no tiene la estructura esperada."
+    );
+  }
+
+
+  return resultado.programa;
+}
+  
+/* ==================================================
+DATOS GENERALES DE LA GUÍA DOCENTE
+================================================== */
+
+let datosGuia = {
+
+  configuracion: {
+    codigoAsignatura: "",
+    nombreAsignatura: "",
+    tipoAsignatura: "",
+    semanas: null,
+    clasesPorSemana: null,
+    investigacion: "",
+    vinculacion: "",
+    programaLaboratorio: "",
+    rubroPractica: "",
+    carreraRubro: "",
+    modalidadClinica: ""
+  },
+
+  evaluacion: {
+    esquema: "",
+    rubros: []
+  },
+
+  programa: {
+    formaIngreso: "",
+    reaOficiales: [],
+    bibliografia: [],
+    archivoNombre: ""
+  },
+
+  cronograma: [],
+
+  sistemaEvaluacion: {
+  generado: false,
+  actividades: []
+}
+
+};
+
+/* ==================================================
+TIPO DE ASIGNATURA
+================================================== */
+
+function configurarTipo(){
+
+  const tipo =
+    document.getElementById("tipoAsignatura").value;
+
+  document
+    .getElementById("configTeoria")
+    .classList.add("oculto");
+
+  document
+    .getElementById("configRubroUnico")
+    .classList.add("oculto");
+
+  document
+    .getElementById("configHospitalaria")
+    .classList.add("oculto");
+
+  document
+  .getElementById("configCienciasClinicas")
+  .classList.add("oculto");
+
+  document
+    .getElementById("resultadoSemanas")
+    .classList.add("oculto");
+
+  semanas = null;
+
+  reiniciarTeoria();
+  reiniciarRubro();
+
+  document.getElementById("semanasHospitalaria").value="";
+
+
+  if(tipo==="teoria"){
+
+    semanas=15;
+
+    document
+      .getElementById("configTeoria")
+      .classList.remove("oculto");
+
+    mostrarSemanas(
+      "Asignatura teórica: el cronograma se configurará para 15 semanas. " +
+      "Indique si tiene un programa de laboratorio asociado."
+    );
+
+  }
+
+
+  else if(tipo==="rubroUnico"){
+
+    document
+      .getElementById("configRubroUnico")
+      .classList.remove("oculto");
+
+  }
+
+
+ else if(
+  tipo==="cienciasBasicas" ||
+  tipo==="cienciasClinicas"
+){
+
+  document
+    .getElementById("configHospitalaria")
+    .classList.remove("oculto");
+
+  if(tipo==="cienciasClinicas"){
+
+    document
+      .getElementById("configCienciasClinicas")
+      .classList.remove("oculto");
+
+  }
+
+}
+
+}
+
+
+/* ==================================================
+TEORÍA
+================================================== */
+
+function reiniciarTeoria(){
+
+  document
+    .querySelectorAll(
+      'input[name="programaLaboratorio"]'
+    )
+    .forEach(radio=>radio.checked=false);
+
+}
+
+
+function configurarTeoria(){
+
+  const seleccion =
+    document.querySelector(
+      'input[name="programaLaboratorio"]:checked'
+    );
+
+  if(!seleccion) return;
+
+  semanas=15;
+
+
+  if(seleccion.value==="no"){
+
+    mostrarSemanas(
+      "Asignatura teórica sin programa de laboratorio: " +
+      "el cronograma se configurará para 15 semanas. " +
+      "La guía trabajará Acumulado 1, Acumulado 2, " +
+      "Acumulado 3 y Evaluación Final."
+    );
+
+  }
+
+
+  else{
+
+    mostrarSemanas(
+      "Asignatura teórica con programa de laboratorio: " +
+      "el cronograma se configurará para 15 semanas. " +
+      "La guía teórica trabajará Acumulado 1, Acumulado 2 " +
+      "y Evaluación Final. El TP sustituye al Acumulado 3 " +
+      "y corresponde al docente que imparte el laboratorio. " +
+      "La guía docente para el programa de laboratorio se " +
+      "elabora desde Rubro único."
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+RUBRO ÚNICO
+================================================== */
+
+function reiniciarRubro(){
+
+  document
+    .querySelectorAll(
+      'input[name="rubroPractica"]'
+    )
+    .forEach(radio=>radio.checked=false);
+
+  document
+    .getElementById("areaRubro")
+    .classList.add("oculto");
+
+  document.getElementById("carreraRubro").value="";
+
+}
+
+
+function configurarRubro(){
+
+  const seleccion =
+    document.querySelector(
+      'input[name="rubroPractica"]:checked'
+    );
+
+  if(!seleccion) return;
+
+
+  if(seleccion.value==="si"){
+
+    semanas=null;
+
+    document
+      .getElementById("areaRubro")
+      .classList.remove("oculto");
+
+    document
+      .getElementById("resultadoSemanas")
+      .classList.add("oculto");
+
+  }
+
+
+  else{
+
+    semanas=15;
+
+    document
+      .getElementById("areaRubro")
+      .classList.add("oculto");
+
+    mostrarSemanas(
+      "Asignatura de Rubro único: el cronograma se " +
+      "configurará para 15 semanas y la evaluación " +
+      "se desarrollará sobre 100 puntos."
+    );
+
+  }
+
+}
+
+
+function determinarSemanasRubro(){
+
+  const carrera =
+    document.getElementById("carreraRubro").value;
+
+
+  if(carrera==="odontologia"){
+
+    semanas=14;
+
+    mostrarSemanas(
+      "Laboratorio o práctica de Rubro único de Odontología: " +
+      "14 semanas. Evaluación sobre 100 puntos."
+    );
+
+  }
+
+
+  else if(carrera==="medicina"){
+
+    semanas=15;
+
+    mostrarSemanas(
+      "Práctica de Rubro único de Medicina: " +
+      "15 semanas. Evaluación sobre 100 puntos."
+    );
+
+  }
+
+
+  else if(carrera==="otras"){
+
+    semanas=13;
+
+    mostrarSemanas(
+      "Laboratorio o práctica de Rubro único: " +
+      "13 semanas. Evaluación sobre 100 puntos."
+    );
+
+  }
+
+
+  else{
+
+    semanas=null;
+
+    document
+      .getElementById("resultadoSemanas")
+      .classList.add("oculto");
+
+  }
+
+}
+
+
+/* ==================================================
+HOSPITALARIA
+================================================== */
+
+function actualizarSemanasHospitalaria(){
+
+  const tipo =
+    document.getElementById("tipoAsignatura").value;
+
+  const valor =
+    parseInt(
+      document.getElementById(
+        "semanasHospitalaria"
+      ).value
+    );
+
+
+  if(!valor || valor<1){
+
+    semanas=null;
+
+    document
+      .getElementById("resultadoSemanas")
+      .classList.add("oculto");
+
+    return;
+
+  }
+
+
+  semanas=valor;
+
+
+ if(tipo==="cienciasBasicas"){
+
+  mostrarSemanas(
+    "Ciclo de Ciencias Básicas: el cronograma se " +
+    "configurará para " + semanas + " semanas."
+  );
+
+}
+
+else if(tipo==="cienciasClinicas"){
+
+  const modalidadClinica =
+    document.querySelector(
+      'input[name="modalidadClinica"]:checked'
+    );
+
+  if(modalidadClinica){
+
+    const nombreModalidad =
+      modalidadClinica.value==="preinternado"
+        ? "Preinternado académico"
+        : "Internado académico";
+
+    mostrarSemanas(
+      nombreModalidad + ": el cronograma se " +
+      "configurará para " + semanas + " semanas."
+    );
+
+  }
+
+  else{
+
+    mostrarSemanas(
+      "Ciclo de Ciencias Clínicas: el cronograma se " +
+      "configurará para " + semanas + " semanas."
+    );
+
+  }
+
+}
+}
+
+
+/* ==================================================
+MENSAJE DE DURACIÓN
+================================================== */
+
+function mostrarSemanas(texto){
+
+  const resultado =
+    document.getElementById("resultadoSemanas");
+
+  resultado.textContent=texto;
+
+  resultado.classList.remove("oculto");
+
+}
+
+
+/* ==================================================
+VALIDACIÓN ETAPA 1
+================================================== */
+
+function continuarConfiguracion(){
+
+  const codigoAsignatura =
+    document.getElementById("codigoAsignatura").value.trim();
+
+  const nombreAsignatura =
+    document.getElementById("nombreAsignatura").value.trim();
+  
+  const tipo =
+    document.getElementById("tipoAsignatura").value;
+
+  const frecuencia =
+    parseInt(
+      document.getElementById("frecuencia").value
+    );
+
+  const investigacion =
+    document.querySelector(
+      'input[name="investigacion"]:checked'
+    );
+
+  const vinculacion =
+    document.querySelector(
+      'input[name="vinculacion"]:checked'
+    );
+
+  const error =
+    document.getElementById("errorEtapa1");
+
+  error.classList.add("oculto");
+
+    if(!codigoAsignatura){
+
+    mostrarError1(
+      "Ingrese el código de la asignatura."
+    );
+
+    return;
+  }
+
+  if(!nombreAsignatura){
+
+    mostrarError1(
+      "Ingrese el nombre de la asignatura."
+    );
+
+    return;
+  }
+
+  if(!tipo){
+
+    mostrarError1(
+      "Seleccione el tipo de asignatura."
+    );
+
+    return;
+
+  }
+
+
+  if(tipo==="teoria"){
+
+    const laboratorio =
+      document.querySelector(
+        'input[name="programaLaboratorio"]:checked'
+      );
+
+    if(!laboratorio){
+
+      mostrarError1(
+        "Indique si la asignatura tiene un programa de laboratorio asociado."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(tipo==="rubroUnico"){
+
+    const practica =
+      document.querySelector(
+        'input[name="rubroPractica"]:checked'
+      );
+
+    if(!practica){
+
+      mostrarError1(
+        "Indique si el Rubro único corresponde a laboratorio o práctica."
+      );
+
+      return;
+
+    }
+
+
+    if(practica.value==="si"){
+
+      const carrera =
+        document.getElementById("carreraRubro").value;
+
+      if(!carrera){
+
+        mostrarError1(
+          "Seleccione el área o carrera correspondiente."
+        );
+
+        return;
+
+      }
+
+    }
+
+  }
+
+
+ if(
+  (tipo==="cienciasBasicas" ||
+   tipo==="cienciasClinicas") &&
+  !semanas
+){
+
+  mostrarError1(
+    "Indique cuántas semanas se desarrollará la asignatura."
+  );
+
+  return;
+
+}
+
+
+if(tipo==="cienciasClinicas"){
+
+  const modalidadClinica =
+    document.querySelector(
+      'input[name="modalidadClinica"]:checked'
+    );
+
+  if(!modalidadClinica){
+
+    mostrarError1(
+      "Seleccione si la asignatura corresponde a Preinternado académico o Internado académico."
+    );
+
+    return;
+
+  }
+
+}
+
+
+  if(!frecuencia || frecuencia<1){
+
+    mostrarError1(
+      "Indique cuántas clases por semana se impartirá la asignatura."
+    );
+
+    return;
+
+  }
+
+
+  if(!investigacion){
+
+    mostrarError1(
+      "Indique si la asignatura contempla actividades de investigación."
+    );
+
+    return;
+
+  }
+
+
+  if(!vinculacion){
+
+    mostrarError1(
+      "Indique si la asignatura contempla actividades de vinculación."
+    );
+
+    return;
+
+  }
+
+  /* GUARDAR CONFIGURACIÓN VALIDADA DE LA ETAPA 1 */
+  datosGuia.configuracion.codigoAsignatura = codigoAsignatura;
+  datosGuia.configuracion.nombreAsignatura = nombreAsignatura;
+  datosGuia.configuracion.tipoAsignatura = tipo;
+  datosGuia.configuracion.semanas = semanas;
+  datosGuia.configuracion.clasesPorSemana = frecuencia;
+  datosGuia.configuracion.investigacion = investigacion.value;
+  datosGuia.configuracion.vinculacion = vinculacion.value;
+
+  datosGuia.configuracion.programaLaboratorio = "";
+  datosGuia.configuracion.rubroPractica = "";
+  datosGuia.configuracion.carreraRubro = "";
+  datosGuia.configuracion.modalidadClinica = "";
+
+if(tipo==="cienciasClinicas"){
+
+  const modalidadClinica =
+    document.querySelector(
+      'input[name="modalidadClinica"]:checked'
+    );
+
+  datosGuia.configuracion.modalidadClinica =
+    modalidadClinica.value;
+
+}
+  
+  if(tipo==="teoria"){
+
+    const laboratorio =
+      document.querySelector(
+        'input[name="programaLaboratorio"]:checked'
+      );
+
+    datosGuia.configuracion.programaLaboratorio =
+      laboratorio.value;
+
+  }
+
+  if(tipo==="rubroUnico"){
+
+    const practica =
+      document.querySelector(
+        'input[name="rubroPractica"]:checked'
+      );
+
+    datosGuia.configuracion.rubroPractica =
+      practica.value;
+
+    if(practica.value==="si"){
+
+      datosGuia.configuracion.carreraRubro =
+        document.getElementById("carreraRubro").value;
+
+    }
+
+  }
+  etapaActual = "etapa2";
+  guardarProgreso();
+  prepararEtapa2();
+  restaurarBorradorEtapa2();
+
+}
+
+
+function mostrarError1(texto){
+
+  const error =
+    document.getElementById("errorEtapa1");
+
+  error.textContent=texto;
+
+  error.classList.remove("oculto");
+
+}
+
+
+/* ==================================================
+PREPARAR ETAPA 2
+================================================== */
+
+function prepararEtapa2(){
+
+ const tipo =
+    document.getElementById("tipoAsignatura").value ||
+    datosGuia.configuracion.tipoAsignatura;
+
+  document
+    .getElementById("etapa1")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa2")
+    .classList.remove("oculto");
+
+  document
+    .getElementById("seleccionEsquemaHospitalario")
+    .classList.add("oculto");
+
+  document
+    .getElementById("camposEvaluacion")
+    .classList.add("oculto");
+
+  document
+    .getElementById("evaluacionRubroUnico")
+    .classList.add("oculto");
+
+  document
+    .getElementById("descripcionEvaluacion")
+    .classList.add("oculto");
+
+
+  if(tipo==="teoria"){
+
+    crearEvaluacion();
+
+  }
+
+
+  else if(tipo==="rubroUnico"){
+
+    document
+      .getElementById("evaluacionRubroUnico")
+      .classList.remove("oculto");
+
+  }
+
+
+  else{
+
+    document
+      .getElementById("seleccionEsquemaHospitalario")
+      .classList.remove("oculto");
+
+  }
+
+
+  window.scrollTo(0,0);
+
+}
+
+
+/* ==================================================
+CREAR ESQUEMA DE EVALUACIÓN
+================================================== */
+
+function crearEvaluacion(){
+
+  const tipo =
+    document.getElementById("tipoAsignatura").value ||
+    datosGuia.configuracion.tipoAsignatura;
+
+  let rubros=[];
+
+  let descripcion="";
+
+
+  if(tipo==="teoria"){
+
+    const laboratorioSeleccionado =
+      document.querySelector(
+        'input[name="programaLaboratorio"]:checked'
+  );
+
+const laboratorio =
+  laboratorioSeleccionado
+    ? laboratorioSeleccionado.value
+    : datosGuia.configuracion.programaLaboratorio;
+
+
+    if(laboratorio==="no"){
+
+      rubros=[
+        ["Acumulado 1",true],
+        ["Acumulado 2",true],
+        ["Acumulado 3",true],
+        ["Evaluación Final",true]
+      ];
+
+      descripcion=
+        "Teoría sin programa de laboratorio: " +
+        "Acumulado 1 + Acumulado 2 + Acumulado 3 + Evaluación Final.";
+
+    }
+
+
+    else{
+
+      rubros=[
+        ["Acumulado 1",true],
+        ["Acumulado 2",true],
+        ["TP",false],
+        ["Evaluación Final",true]
+      ];
+
+      descripcion=
+        "Teoría con programa de laboratorio: " +
+        "Acumulado 1 + Acumulado 2 + TP + Evaluación Final. " +
+        "El TP sustituye al Acumulado 3 y es desarrollado y reportado " +
+        "por el docente del laboratorio; no se diseña en esta guía teórica.";
+
+    }
+
+  }
+
+
+  else{
+
+    const esquema =
+      document.querySelector(
+        'input[name="esquemaHospitalario"]:checked'
+      );
+
+    if(!esquema) return;
+
+
+    if(esquema.value==="hospital1"){
+
+      rubros=[
+        ["Acumulado 1",true],
+        ["Acumulado 2",true],
+        ["TP",false],
+        ["Examen Final",true]
+      ];
+
+      descripcion=
+        "Método de evaluación: Acumulado 1 + Acumulado 2 + TP + Examen Final.";
+
+    }
+
+
+    else if(esquema.value==="hospital2"){
+
+      rubros=[
+        ["Acumulado 1",true],
+        ["Acumulado 2",true],
+        ["Acumulado 3",true],
+        ["Acumulado 4",true],
+        ["TP",false],
+        ["Examen Final",true]
+      ];
+
+      descripcion=
+        "Método de evaluación: Acumulado 1 + Acumulado 2 + " +
+        "Acumulado 3 + Acumulado 4 + TP + Examen Final.";
+
+    }
+
+else if(esquema.value==="hospital3"){
+
+  rubros=[
+    ["Acumulado 1",true],
+    ["Acumulado 2",true],
+    ["Acumulado 3",true],
+    ["TP",false],
+    ["Examen Final",true]
+  ];
+
+  descripcion=
+    "Método de evaluación: Acumulado 1 + Acumulado 2 + " +
+    "Acumulado 3 + TP + Examen Final.";
+
+}
+    
+  }
+
+
+  mostrarCamposEvaluacion(rubros,descripcion);
+
+}
+
+
+/* ==================================================
+MOSTRAR CAMPOS
+================================================== */
+
+function mostrarCamposEvaluacion(rubros,descripcion){
+
+  const lista =
+    document.getElementById("listaEvaluaciones");
+
+  lista.innerHTML="";
+
+
+  rubros.forEach((rubro,index)=>{
+
+    const nombre=rubro[0];
+    const solicitaSemana=rubro[1];
+
+    const fila=document.createElement("div");
+
+    fila.className="fila-evaluacion";
+    fila.setAttribute(
+     "data-nombre",
+      nombre
+);
+
+
+    let campoSemana="";
+
+
+    if(solicitaSemana){
+
+      campoSemana=
+        '<input type="number" ' +
+        'class="semanaEvaluacion" ' +
+        'min="1" max="' + semanas + '" ' +
+        'placeholder="Semana" ' +
+        'oninput="guardarBorradorEtapa2()">';
+
+    }
+
+    else{
+
+      campoSemana=
+        '<span class="nota">Componente externo</span>';
+
+    }
+
+
+    fila.innerHTML=
+      '<strong>' + nombre + '</strong>' +
+
+      '<input type="number" ' +
+      'class="pesoEvaluacion" ' +
+      'min="0" max="100" step="0.01" ' +
+      'placeholder="Peso (%)" ' +
+      'oninput="calcularTotal(); guardarBorradorEtapa2()">' +
+
+      campoSemana;
+
+
+    lista.appendChild(fila);
+
+  });
+
+
+  document
+    .getElementById("descripcionEvaluacion")
+    .textContent=descripcion;
+
+  document
+    .getElementById("descripcionEvaluacion")
+    .classList.remove("oculto");
+
+  document
+    .getElementById("camposEvaluacion")
+    .classList.remove("oculto");
+
+
+  calcularTotal();
+
+}
+
+
+/* ==================================================
+TOTAL DE PESOS
+================================================== */
+
+function calcularTotal(){
+
+  const pesos =
+    document.querySelectorAll(".pesoEvaluacion");
+
+  let total=0;
+
+
+  pesos.forEach(campo=>{
+
+    const valor=parseFloat(campo.value);
+
+    if(!isNaN(valor)){
+      total+=valor;
+    }
+
+  });
+
+
+  document.getElementById("totalPesos").textContent=
+    "Total registrado: " +
+    total.toFixed(2) +
+    "% de 100%.";
+
+}
+
+
+/* ==================================================
+VOLVER
+================================================== */
+
+function volverEtapa1(){
+
+  document
+    .getElementById("etapa2")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa1")
+    .classList.remove("oculto");
+
+  etapaActual = "etapa1";
+  guardarProgreso();
+
+  const tipoAsignatura =
+  document.getElementById("tipoAsignatura");
+
+if (tipoAsignatura) {
+  tipoAsignatura.value =
+    datosGuia.configuracion.tipoAsignatura || "";
+
+  configurarTipo();
+}
+
+  if (datosGuia.configuracion.programaLaboratorio) {
+
+  const radioLaboratorio =
+    document.querySelector(
+      'input[name="programaLaboratorio"][value="' +
+      datosGuia.configuracion.programaLaboratorio +
+      '"]'
+    );
+
+  if (radioLaboratorio) {
+    radioLaboratorio.checked = true;
+  }
+
+}
+
+  if (datosGuia.configuracion.modalidadClinica) {
+
+  const radioModalidadClinica =
+    document.querySelector(
+      'input[name="modalidadClinica"][value="' +
+      datosGuia.configuracion.modalidadClinica +
+      '"]'
+    );
+
+  if (radioModalidadClinica) {
+    radioModalidadClinica.checked = true;
+  }
+
+}
+
+if(
+  datosGuia.configuracion.tipoAsignatura==="cienciasBasicas" ||
+  datosGuia.configuracion.tipoAsignatura==="cienciasClinicas"
+){
+
+  semanas =
+    datosGuia.configuracion.semanas;
+
+  document.getElementById("semanasHospitalaria").value =
+    datosGuia.configuracion.semanas || "";
+
+  actualizarSemanasHospitalaria();
+
+}
+  
+  window.scrollTo(0,0);
+
+}
+
+
+/* ==================================================
+FINALIZAR CONFIGURACIÓN
+================================================== */
+
+function finalizarConfiguracion(){
+
+  const tipo =
+    document.getElementById("tipoAsignatura").value ||
+    datosGuia.configuracion.tipoAsignatura;
+
+  const error =
+    document.getElementById("errorEtapa2");
+
+  error.classList.add("oculto");
+
+
+  if(
+  tipo==="cienciasBasicas" ||
+  tipo==="cienciasClinicas"
+  ){
+
+    const esquema =
+      document.querySelector(
+        'input[name="esquemaHospitalario"]:checked'
+      );
+
+    if(!esquema){
+
+      mostrarError2(
+       "Seleccione el método de evaluación que le corresponde a la asignatura."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(tipo!=="rubroUnico"){
+
+    const pesos =
+      document.querySelectorAll(".pesoEvaluacion");
+
+    let total=0;
+
+
+    for(const campo of pesos){
+
+      if(campo.value===""){
+
+        mostrarError2(
+          "Complete todos los pesos establecidos para los rubros de evaluación."
+        );
+
+        return;
+
+      }
+
+      total+=parseFloat(campo.value);
+
+    }
+
+
+    if(Math.abs(total-100)>0.01){
+
+      mostrarError2(
+        "Los pesos registrados deben sumar 100%. Actualmente suman " +
+        total.toFixed(2) +
+        "%."
+      );
+
+      return;
+
+    }
+
+
+    const semanasEvaluacion =
+      document.querySelectorAll(".semanaEvaluacion");
+
+
+    for(const campo of semanasEvaluacion){
+
+      const valor=parseInt(campo.value);
+
+      if(!valor){
+
+        mostrarError2(
+          "Indique las semanas de aplicación de las evaluaciones."
+        );
+
+        return;
+
+      }
+
+
+      if(valor<1 || valor>semanas){
+
+        mostrarError2(
+          "Las semanas de evaluación deben estar comprendidas " +
+          "entre la semana 1 y la semana " + semanas + "."
+        );
+
+        return;
+
+      }
+
+    }
+
+  }
+
+  /* GUARDAR SISTEMA DE EVALUACIÓN VALIDADO */
+
+  datosGuia.evaluacion.rubros = [];
+
+ if(tipo==="rubroUnico"){
+
+    datosGuia.evaluacion.esquema = "rubroUnico";
+
+    datosGuia.evaluacion.rubros.push({
+        nombre: "Rubro único",
+        peso: 100,
+        semana: null,
+        componenteExterno: false
+    });
+
+}
+
+  else{
+
+   if(tipo==="teoria"){
+
+  const laboratorioSeleccionado =
+    document.querySelector(
+      'input[name="programaLaboratorio"]:checked'
+    );
+
+  const laboratorio =
+    laboratorioSeleccionado
+      ? laboratorioSeleccionado.value
+      : datosGuia.configuracion.programaLaboratorio;
+
+  datosGuia.evaluacion.esquema =
+    laboratorio==="si"
+      ? "teoriaConLaboratorio"
+      : "teoriaSinLaboratorio";
+}
+
+    else{
+
+      const esquemaHospitalario =
+        document.querySelector(
+          'input[name="esquemaHospitalario"]:checked'
+        );
+
+      datosGuia.evaluacion.esquema =
+        esquemaHospitalario.value;
+
+    }
+
+
+    const filas =
+      document.querySelectorAll(".fila-evaluacion");
+
+    filas.forEach(fila=>{
+
+      const nombre =
+        fila.querySelector("strong").textContent.trim();
+
+      const peso =
+        parseFloat(
+          fila.querySelector(".pesoEvaluacion").value
+        );
+
+      const campoSemana =
+        fila.querySelector(".semanaEvaluacion");
+
+      datosGuia.evaluacion.rubros.push({
+
+        nombre: nombre,
+
+        peso: peso,
+
+        semana: campoSemana
+          ? parseInt(campoSemana.value)
+          : null,
+
+        componenteExterno:
+          nombre==="TP"
+
+      });
+
+    });
+
+  }
+
+  etapaActual = "etapa3";
+  guardarProgreso();
+  
+ document
+  .getElementById("etapa2")
+  .classList.add("oculto");
+
+document
+  .getElementById("etapa3")
+  .classList.remove("oculto");
+
+  if (datosGuia.programa.formaIngreso) {
+
+  const radioFormaPrograma =
+    document.querySelector(
+      'input[name="formaPrograma"][value="' +
+      datosGuia.programa.formaIngreso +
+      '"]'
+    );
+
+  if (radioFormaPrograma) {
+    radioFormaPrograma.checked = true;
+    configurarPrograma();
+  }
+
+}
+
+restaurarBorradorEtapa3();
+
+window.scrollTo(0,0);
+ 
+}
+
+
+function mostrarError2(texto){
+
+  const error =
+    document.getElementById("errorEtapa2");
+
+  error.textContent=texto;
+
+  error.classList.remove("oculto");
+
+}
+/* ==================================================
+ETAPA 3 - PROGRAMA DE LA ASIGNATURA Y REA
+================================================== */
+
+let contadorREA = 1;
+let contadorBibliografia = 1;
+
+
+/* ==================================================
+CONFIGURAR FORMA DE INGRESO DEL PROGRAMA
+================================================== */
+
+function configurarPrograma(){
+
+  const seleccion =
+    document.querySelector(
+      'input[name="formaPrograma"]:checked'
+    );
+
+  const archivo =
+    document.getElementById("opcionArchivoPrograma");
+
+  const manual =
+    document.getElementById("opcionManualPrograma");
+
+  archivo.classList.add("oculto");
+  manual.classList.add("oculto");
+
+  if(!seleccion) return;
+
+  datosGuia.programa.formaIngreso =
+    seleccion.value;
+
+  guardarProgreso();
+  
+  if(seleccion.value==="archivo"){
+
+    archivo.classList.remove("oculto");
+
+  }
+
+  else if(seleccion.value==="manual"){
+
+    manual.classList.remove("oculto");
+
+  }
+
+}
+
+
+/* ==================================================
+AGREGAR REA
+================================================== */
+
+function agregarREA(){
+
+  contadorREA++;
+
+  const contenedor =
+    document.getElementById("listaREA");
+
+  const bloque =
+    document.createElement("div");
+
+  bloque.className="campo";
+
+ bloque.innerHTML =
+  '<label class="titulo">Resultado de Aprendizaje</label>' +
+
+  '<input ' +
+  'type="text" ' +
+  'class="reaCodigoManual" ' +
+  'placeholder="Código oficial. Ejemplo: REA 1" ' +
+  'oninput="guardarBorradorEtapa3()"' +
+  '>' +
+
+  '<textarea ' +
+  'class="reaManual" ' +
+  'rows="3" ' +
+  'placeholder="Escriba el texto del REA exactamente como aparece en el programa" ' +
+  'oninput="guardarBorradorEtapa3()">' +
+  '</textarea>';
+
+  contenedor.appendChild(bloque);
+
+}
+
+
+/* ==================================================
+AGREGAR BIBLIOGRAFÍA
+================================================== */
+
+function agregarBibliografia(){
+
+  contadorBibliografia++;
+
+  const contenedor =
+    document.getElementById("listaBibliografia");
+
+  const bloque =
+    document.createElement("div");
+
+  bloque.className="campo";
+
+  bloque.innerHTML=
+    '<label class="titulo">Referencia ' +
+    contadorBibliografia +
+    '</label>' +
+
+   '<textarea ' +
+   'class="bibliografiaManual" ' +
+   'rows="3" ' +
+   'placeholder="Escriba la referencia bibliográfica" ' +
+   'oninput="guardarBorradorEtapa3()">' +
+   '</textarea>';
+
+  contenedor.appendChild(bloque);
+
+}
+
+
+/* ==================================================
+VOLVER A ETAPA 2
+================================================== */
+
+function volverEtapa2(){
+
+  document
+    .getElementById("etapa3")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa2")
+    .classList.remove("oculto");
+
+  etapaActual = "etapa2";
+  guardarProgreso();
+
+ prepararEtapa2();
+
+ restaurarBorradorEtapa2();
+
+}
+
+
+/* ==================================================
+VALIDAR ETAPA 3
+================================================== */
+
+async function continuarSemana1(){
+
+  const seleccion =
+    document.querySelector(
+      'input[name="formaPrograma"]:checked'
+    );
+
+  const error =
+    document.getElementById("errorEtapa3");
+
+  error.classList.add("oculto");
+
+
+  if(!seleccion){
+
+    mostrarError3(
+      "Indique cómo proporcionará la información del Programa de la Asignatura."
+    );
+
+    return;
+
+  }
+
+
+  /* PROGRAMA ADJUNTO */
+
+  if(seleccion.value==="archivo"){
+
+    const archivo =
+      document.getElementById("archivoPrograma");
+
+    if(!archivo.files.length){
+
+      mostrarError3(
+        "Adjunte el Programa de la Asignatura antes de continuar."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  /* REGISTRO MANUAL */
+
+  if(seleccion.value==="manual"){
+
+    const camposREA =
+  document.querySelectorAll(".reaManual");
+
+const camposCodigoREA =
+  document.querySelectorAll(".reaCodigoManual");
+
+let existeREA = false;
+let reaIncompleto = false;
+
+for (let i = 0; i < camposREA.length; i++) {
+
+  const texto =
+    camposREA[i].value.trim();
+
+  const codigo =
+    camposCodigoREA[i].value.trim();
+
+  if (texto !== "" || codigo !== "") {
+
+    if (texto === "" || codigo === "") {
+      reaIncompleto = true;
+      break;
+    }
+
+    existeREA = true;
+  }
+}
+
+if (reaIncompleto) {
+  mostrarError3(
+    "Cada REA debe incluir su código oficial y su texto exactamente como aparecen en el Programa de la Asignatura."
+  );
+  return;
+}
+
+if (!existeREA) {
+  mostrarError3(
+    "Introduzca al menos un REA del Programa de la Asignatura."
+  );
+  return;
+}
+
+    const camposBibliografia =
+      document.querySelectorAll(
+        ".bibliografiaManual"
+      );
+
+    let existeBibliografia=false;
+
+    for(const campo of camposBibliografia){
+
+      if(campo.value.trim()!==""){
+        existeBibliografia=true;
+        break;
+      }
+
+    }
+
+    if(!existeBibliografia){
+
+      mostrarError3(
+        "Introduzca la bibliografía establecida en el Programa de la Asignatura."
+      );
+
+      return;
+
+    }
+
+  }
+
+  /* GUARDAR INFORMACIÓN VALIDADA DEL PROGRAMA */
+
+  datosGuia.programa.formaIngreso = seleccion.value;
+  datosGuia.programa.reaOficiales = [];
+  datosGuia.programa.bibliografia = [];
+  datosGuia.programa.archivoNombre = "";
+
+
+  if(seleccion.value==="archivo"){
+
+  const inputArchivo =
+    document.getElementById("archivoPrograma");
+
+  const archivo =
+    inputArchivo.files[0];
+
+  try {
+
+    const textoPrograma =
+      await extraerTextoPrograma(archivo);
+
+    if(!textoPrograma){
+
+      mostrarError3(
+        "No fue posible obtener texto del Programa de la Asignatura."
+      );
+
+      return;
+    }
+
+    const programaExtraido =
+      await extraerDatosProgramaConIA(textoPrograma);
+
+    datosGuia.programa.reaOficiales =
+      programaExtraido.reaOficiales;
+
+    datosGuia.programa.bibliografia =
+      programaExtraido.bibliografia;
+
+    datosGuia.programa.archivoNombre =
+      archivo.name;
+
+  } catch(errorPrograma) {
+
+    console.error(
+      "Error al procesar el Programa de la Asignatura:",
+      errorPrograma
+    );
+
+    mostrarError3(
+      errorPrograma.message ||
+      "No fue posible procesar el Programa de la Asignatura."
+    );
+
+    return;
+  }
+
+}
+
+
+  if(seleccion.value==="manual"){
+
+   const camposREA =
+  document.querySelectorAll(".reaManual");
+
+const camposCodigoREA =
+  document.querySelectorAll(".reaCodigoManual");
+
+camposREA.forEach((campo, index) => {
+
+  const texto = campo.value.trim();
+  const codigo = camposCodigoREA[index].value.trim();
+
+  if (texto !== "" && codigo !== "") {
+    datosGuia.programa.reaOficiales.push({
+      codigo: codigo,
+      texto: texto
+    });
+  }
+
+});
+
+
+    const camposBibliografia =
+      document.querySelectorAll(".bibliografiaManual");
+
+    camposBibliografia.forEach(campo=>{
+
+      const texto = campo.value.trim();
+
+      if(texto!==""){
+        datosGuia.programa.bibliografia.push(texto);
+      }
+
+    });
+
+  }
+
+  etapaActual = "cronograma";
+  guardarProgreso();
+  
+ abrirSemanaGuardada(semanaActual);
+ guardarProgreso();
+
+}
+
+
+/* ==================================================
+MOSTRAR ERROR ETAPA 3
+================================================== */
+
+function mostrarError3(texto){
+
+  const error =
+    document.getElementById("errorEtapa3");
+
+  error.textContent=texto;
+
+  error.classList.remove("oculto");
+
+}
+ /* ==================================================
+SEMANA 1 - INICIO DEL CRONOGRAMA
+================================================== */
+
+let semanaActual = 1;
+let etapaActual = "etapa1";
+
+  /* ==================================================
+GUARDAR Y RECUPERAR PROGRESO
+================================================== */
+
+function guardarProgreso() {
+  localStorage.setItem(
+    "respaldoGuiaDocente",
+    JSON.stringify({
+      datosGuia: datosGuia,
+      semanaActual: semanaActual,
+      etapaActual: etapaActual
+    })
+  );
+}
+  function guardarContenidoSemanaActual() {
+
+  const campos =
+    document.querySelectorAll(".contenidoClase");
+
+    if (!campos.length) {
+  return;
+}
+
+  const clases = [];
+
+  campos.forEach(campo => {
+
+    const numeroClase =
+      parseInt(
+        campo.getAttribute("data-clase")
+      );
+
+    clases.push({
+      clase: numeroClase,
+      contenido: campo.value
+    });
+
+  });
+
+  const indiceSemana =
+    datosGuia.cronograma.findIndex(
+      semana => semana.semana === semanaActual
+    );
+
+  if (indiceSemana === -1) {
+
+    datosGuia.cronograma.push({
+      semana: semanaActual,
+      clases: clases
+    });
+
+  } else {
+
+    datosGuia.cronograma[indiceSemana].clases =
+      clases;
+  }
+
+  guardarProgreso();
+}
+  
+  function guardarBorradorEtapa2() {
+
+  if (etapaActual !== "etapa2") {
+    return;
+  }
+
+  const filas =
+    document.querySelectorAll(
+      "#camposEvaluacion .fila-evaluacion"
+    );
+
+  if (!filas.length) {
+    return;
+  }
+
+  const rubros = [];
+
+  filas.forEach(fila => {
+
+    const nombre =
+      fila.getAttribute("data-nombre");
+
+    const peso =
+      fila.querySelector(".pesoEvaluacion");
+
+    const semana =
+      fila.querySelector(".semanaEvaluacion");
+
+    rubros.push({
+      nombre: nombre,
+      peso: peso ? peso.value : "",
+      semana: semana ? semana.value : ""
+    });
+
+  });
+
+  datosGuia.evaluacion.rubros = rubros;
+
+  guardarProgreso();
+}
+
+  function guardarBorradorEtapa3() {
+
+  if (etapaActual !== "etapa3") {
+    return;
+  }
+
+  const codigos =
+    document.querySelectorAll(".reaCodigoManual");
+
+  const textos =
+    document.querySelectorAll(".reaManual");
+
+  const reaOficiales = [];
+
+  codigos.forEach((codigo, indice) => {
+
+    reaOficiales.push({
+      codigo: codigo.value,
+      texto: textos[indice]
+        ? textos[indice].value
+        : ""
+    });
+
+  });
+
+  datosGuia.programa.reaOficiales =
+    reaOficiales;
+const camposBibliografia =
+  document.querySelectorAll(
+    ".bibliografiaManual"
+  );
+
+const bibliografia = [];
+
+camposBibliografia.forEach(campo => {
+
+  bibliografia.push(
+    campo.value
+  );
+
+});
+
+datosGuia.programa.bibliografia =
+  bibliografia;
+  guardarProgreso();
+}
+  function restaurarBorradorEtapa3() {
+
+  if (
+    !datosGuia.programa ||
+    !Array.isArray(datosGuia.programa.reaOficiales) ||
+    datosGuia.programa.reaOficiales.length === 0
+  ) {
+    return;
+  }
+const cantidadGuardada =
+  datosGuia.programa.reaOficiales.length;
+
+let cantidadVisible =
+  document.querySelectorAll(
+    ".reaCodigoManual"
+  ).length;
+
+while (cantidadVisible < cantidadGuardada) {
+
+  agregarREA();
+
+  cantidadVisible++;
+
+}
+  const codigos =
+    document.querySelectorAll(".reaCodigoManual");
+
+  const textos =
+    document.querySelectorAll(".reaManual");
+
+  datosGuia.programa.reaOficiales.forEach(
+    (rea, indice) => {
+
+      if (codigos[indice]) {
+        codigos[indice].value =
+          rea.codigo || "";
+      }
+
+      if (textos[indice]) {
+        textos[indice].value =
+          rea.texto || "";
+      }
+
+    }
+  );
+const cantidadBibliografiaGuardada =
+  datosGuia.programa.bibliografia.length;
+
+let cantidadBibliografiaVisible =
+  document.querySelectorAll(
+    ".bibliografiaManual"
+  ).length;
+
+while (
+  cantidadBibliografiaVisible <
+  cantidadBibliografiaGuardada
+) {
+
+  agregarBibliografia();
+
+  cantidadBibliografiaVisible++;
+
+}
+const camposBibliografia =
+  document.querySelectorAll(
+    ".bibliografiaManual"
+  );
+
+datosGuia.programa.bibliografia.forEach(
+  (referencia, indice) => {
+
+    if (camposBibliografia[indice]) {
+      camposBibliografia[indice].value =
+        referencia || "";
+    }
+
+  }
+);    
+}
+  function restaurarBorradorEtapa2() {
+
+if (
+  datosGuia.evaluacion &&
+  datosGuia.evaluacion.esquema
+) {
+
+  const radioEsquema =
+    document.querySelector(
+      'input[name="esquemaHospitalario"][value="' +
+      datosGuia.evaluacion.esquema +
+      '"]'
+    );
+
+  if (radioEsquema) {
+    radioEsquema.checked = true;
+    crearEvaluacion();
+  }
+
+}
+    
+  if (
+    !datosGuia.evaluacion ||
+    !Array.isArray(datosGuia.evaluacion.rubros) ||
+    datosGuia.evaluacion.rubros.length === 0
+  ) {
+    return;
+  }
+
+  const filas =
+    document.querySelectorAll(
+      "#camposEvaluacion .fila-evaluacion"
+    );
+
+  filas.forEach(fila => {
+
+    const nombre =
+      fila.getAttribute("data-nombre");
+
+    const rubroGuardado =
+      datosGuia.evaluacion.rubros.find(
+        rubro => rubro.nombre === nombre
+      );
+
+    if (!rubroGuardado) {
+      return;
+    }
+
+    const peso =
+      fila.querySelector(".pesoEvaluacion");
+
+    const semana =
+      fila.querySelector(".semanaEvaluacion");
+
+    if (peso) {
+      peso.value =
+        rubroGuardado.peso ?? "";
+    }
+
+    if (semana) {
+      semana.value =
+        rubroGuardado.semana ?? "";
+    }
+
+  });
+
+  calcularTotal();
+}
+/* ==================================================
+RECUPERAR PROGRESO
+================================================== */
+
+function recuperarProgreso() {
+
+  const respaldo =
+    localStorage.getItem("respaldoGuiaDocente");
+
+  if (!respaldo) {
+    return false;
+  }
+
+  try {
+
+    const datosGuardados =
+      JSON.parse(respaldo);
+
+    if (!datosGuardados.datosGuia) {
+      return false;
+    }
+
+    datosGuia = datosGuardados.datosGuia;
+
+    semanaActual =
+      datosGuardados.semanaActual || 1;
+
+    etapaActual =
+      datosGuardados.etapaActual || "etapa1";
+
+    semanas =
+      datosGuia.configuracion.semanas;
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "No fue posible recuperar el progreso:",
+      error
+    );
+
+    return false;
+  }
+}
+ /* ==================================================
+RESTAURAR INTERFAZ DESPUÉS DE RECARGAR
+================================================== */
+
+function restaurarInterfazProgreso() {
+
+  const recuperado = recuperarProgreso();
+
+  if (!recuperado) {
+    return;
+  }
+
+  /* Regresar directamente al cronograma completo
+   desde el Sistema de Evaluación */
+const volverCronogramaCompleto =
+  localStorage.getItem("volverCronogramaCompleto");
+
+if (
+  volverCronogramaCompleto === "si" &&
+  datosGuia.cronogramaCompletado === true
+) {
+  localStorage.removeItem("volverCronogramaCompleto");
+  mostrarVistaFinalCronograma();
+  return;
+}
+  
+    /* Restaurar código y nombre de la asignatura */
+  const codigoAsignatura =
+    document.getElementById("codigoAsignatura");
+
+  const nombreAsignatura =
+    document.getElementById("nombreAsignatura");
+
+  if (codigoAsignatura) {
+    codigoAsignatura.value =
+      datosGuia.configuracion.codigoAsignatura || "";
+  }
+
+  if (nombreAsignatura) {
+    nombreAsignatura.value =
+      datosGuia.configuracion.nombreAsignatura || "";
+  }
+/* Restaurar frecuencia de clases */
+const frecuencia =
+  document.getElementById("frecuencia");
+
+if (frecuencia) {
+  frecuencia.value =
+    datosGuia.configuracion.clasesPorSemana;
+}
+  if (
+  datosGuia.configuracion.investigacion
+) {
+
+  const radioInvestigacion =
+    document.querySelector(
+      'input[name="investigacion"][value="' +
+      datosGuia.configuracion.investigacion +
+      '"]'
+    );
+
+  if (radioInvestigacion) {
+    radioInvestigacion.checked = true;
+  }
+}
+  if (
+  datosGuia.configuracion.vinculacion
+) {
+
+  const radioVinculacion =
+    document.querySelector(
+      'input[name="vinculacion"][value="' +
+      datosGuia.configuracion.vinculacion +
+      '"]'
+    );
+
+  if (radioVinculacion) {
+    radioVinculacion.checked = true;
+  }
+}
+  if (etapaActual === "etapa1") {
+
+  const tipoAsignatura =
+    document.getElementById("tipoAsignatura");
+    
+document
+  .getElementById("etapa1")
+  .classList.remove("oculto");
+
+document
+  .getElementById("etapa2")
+  .classList.add("oculto");
+
+document
+  .getElementById("etapa3")
+  .classList.add("oculto");
+
+document
+  .getElementById("etapaCronograma")
+  .classList.add("oculto");
+  if (tipoAsignatura) {
+    tipoAsignatura.value =
+      datosGuia.configuracion.tipoAsignatura || "";
+  }
+  if (
+  datosGuia.configuracion.tipoAsignatura === "teoria"
+) {
+  document
+    .getElementById("configTeoria")
+    .classList.remove("oculto");
+}
+
+if (
+  datosGuia.configuracion.tipoAsignatura === "rubroUnico"
+) {
+  document
+    .getElementById("configRubroUnico")
+    .classList.remove("oculto");
+
+  if (
+    datosGuia.configuracion.rubroPractica === "si"
+  ) {
+    document
+      .getElementById("areaRubro")
+      .classList.remove("oculto");
+  }
+}
+
+if (
+  datosGuia.configuracion.tipoAsignatura === "cienciasBasicas" ||
+  datosGuia.configuracion.tipoAsignatura === "cienciasClinicas"
+) {
+
+  document
+    .getElementById("configHospitalaria")
+    .classList.remove("oculto");
+
+  if (
+    datosGuia.configuracion.tipoAsignatura === "cienciasClinicas"
+  ) {
+
+    document
+      .getElementById("configCienciasClinicas")
+      .classList.remove("oculto");
+
+  }
+
+} 
+if (
+  datosGuia.configuracion.programaLaboratorio
+) {
+
+  const radioLaboratorio =
+    document.querySelector(
+      'input[name="programaLaboratorio"][value="' +
+      datosGuia.configuracion.programaLaboratorio +
+      '"]'
+    );
+
+  if (radioLaboratorio) {
+    radioLaboratorio.checked = true;
+  }
+}
+    if (
+  datosGuia.configuracion.rubroPractica
+) {
+
+  const radioPractica =
+    document.querySelector(
+      'input[name="rubroPractica"][value="' +
+      datosGuia.configuracion.rubroPractica +
+      '"]'
+    );
+
+  if (radioPractica) {
+    radioPractica.checked = true;
+  }
+}
+   const carreraRubro =
+  document.getElementById("carreraRubro");
+
+if (carreraRubro) {
+  carreraRubro.value =
+    datosGuia.configuracion.carreraRubro || "";
+} 
+    const semanasHospitalaria =
+  document.getElementById("semanasHospitalaria");
+
+if (
+  semanasHospitalaria &&
+  (
+    datosGuia.configuracion.tipoAsignatura === "cienciasBasicas" ||
+    datosGuia.configuracion.tipoAsignatura === "cienciasClinicas"
+  )
+) {
+
+  semanasHospitalaria.value =
+    datosGuia.configuracion.semanas || "";
+
+}
+    if (
+  datosGuia.configuracion.tipoAsignatura === "teoria"
+) {
+
+  configurarTeoria();
+
+}
+   if (
+  datosGuia.configuracion.tipoAsignatura === "rubroUnico" &&
+  datosGuia.configuracion.rubroPractica === "no"
+) {
+
+  mostrarSemanas(
+    "Asignatura de Rubro único: el cronograma se " +
+    "configurará para 15 semanas y la evaluación " +
+    "se desarrollará sobre 100 puntos."
+  );
+
+} 
+   if (
+  datosGuia.configuracion.tipoAsignatura === "rubroUnico" &&
+  datosGuia.configuracion.rubroPractica === "si" &&
+  datosGuia.configuracion.carreraRubro
+) {
+
+  determinarSemanasRubro();
+
+} 
+    if (
+  datosGuia.configuracion.tipoAsignatura === "cienciasBasicas" ||
+  datosGuia.configuracion.tipoAsignatura === "cienciasClinicas"
+) {
+
+  actualizarSemanasHospitalaria();
+
+}
+  return;
+}
+ if (etapaActual === "etapa2") {
+
+  document
+    .getElementById("etapa1")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa2")
+    .classList.remove("oculto");
+
+   const tipoAsignatura =
+  document.getElementById("tipoAsignatura");
+
+if (tipoAsignatura) {
+  tipoAsignatura.value =
+    datosGuia.configuracion.tipoAsignatura || "";
+}
+   if (
+  datosGuia.configuracion.programaLaboratorio
+) {
+
+  const radioLaboratorio =
+    document.querySelector(
+      'input[name="programaLaboratorio"][value="' +
+      datosGuia.configuracion.programaLaboratorio +
+      '"]'
+    );
+
+  if (radioLaboratorio) {
+    radioLaboratorio.checked = true;
+  }
+  }
+
+   if (
+  datosGuia.configuracion.modalidadClinica
+) {
+
+  const radioModalidadClinica =
+    document.querySelector(
+      'input[name="modalidadClinica"][value="' +
+      datosGuia.configuracion.modalidadClinica +
+      '"]'
+    );
+
+  if (radioModalidadClinica) {
+    radioModalidadClinica.checked = true;
+  }
+
+}
+
+  if (
+    datosGuia.configuracion.rubroPractica
+  ) {
+
+    const radioPractica =
+      document.querySelector(
+        'input[name="rubroPractica"][value="' +
+        datosGuia.configuracion.rubroPractica +
+        '"]'
+      );
+
+    if (radioPractica) {
+      radioPractica.checked = true;
+    }
+  }
+   const carreraRubro =
+  document.getElementById("carreraRubro");
+
+if (carreraRubro) {
+  carreraRubro.value =
+    datosGuia.configuracion.carreraRubro || "";
+}
+
+  prepararEtapa2();
+
+  restaurarBorradorEtapa2();
+
+  return;
+} 
+  if (etapaActual === "etapa3") {
+
+  document
+    .getElementById("etapa1")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa2")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa3")
+    .classList.remove("oculto");
+    
+if (datosGuia.programa.formaIngreso) {
+
+  const radioFormaPrograma =
+    document.querySelector(
+      'input[name="formaPrograma"][value="' +
+      datosGuia.programa.formaIngreso +
+      '"]'
+    );
+
+  if (radioFormaPrograma) {
+    radioFormaPrograma.checked = true;
+    configurarPrograma();
+  }
+
+}
+  restaurarBorradorEtapa3();
+  return;
+}
+
+if (etapaActual === "vistaFinalCronograma") {
+  mostrarVistaFinalCronograma();
+  return;
+}
+  
+/* Si la guía todavía no ha sido configurada,
+   permanecer en la Etapa 1 */
+if (
+  !datosGuia.configuracion.tipoAsignatura ||
+  !datosGuia.configuracion.semanas ||
+  !datosGuia.configuracion.clasesPorSemana
+) {
+  return;
+}
+  
+  /* Restaurar cantidad de semanas */
+  semanas =
+    datosGuia.configuracion.semanas;
+
+  /* Mostrar el cronograma */
+  document
+    .getElementById("etapa1")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa2")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa3")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapaCronograma")
+    .classList.remove("oculto");
+
+  /* Actualizar títulos */
+  document.getElementById("tituloSemana").textContent =
+    "Semana " + semanaActual;
+
+  const tituloContenidosSemana =
+    document.getElementById("tituloContenidosSemana");
+
+  if (tituloContenidosSemana) {
+    tituloContenidosSemana.textContent =
+      "Contenidos de la Semana " + semanaActual;
+  }
+
+  /* Crear las clases de la semana */
+  crearClasesSemana();
+
+  /* Buscar los datos guardados de la semana actual */
+  const datosSemana =
+    datosGuia.cronograma.find(
+      semana => semana.semana === semanaActual
+    );
+
+  if (datosSemana) {
+
+  /* Restaurar contenidos de las clases */
+  const campos =
+    document.querySelectorAll(".contenidoClase");
+
+  campos.forEach(campo => {
+
+    const numeroClase =
+      parseInt(
+        campo.getAttribute("data-clase")
+      );
+
+    const claseGuardada =
+      datosSemana.clases?.find(
+        clase => clase.clase === numeroClase
+      );
+
+    if (claseGuardada) {
+      campo.value =
+        claseGuardada.contenido || "";
+    }
+
+  });
+
+  /* Restaurar propuesta académica */
+  if (datosSemana.propuesta) {
+
+    mostrarPropuestaAcademica(
+      datosSemana.propuesta
+    );
+  }
+  }
+
+  /* Configurar botón */
+  const btnSemanaAnterior =
+  document.getElementById("btnSemanaAnterior");
+
+if (btnSemanaAnterior) {
+  btnSemanaAnterior.style.display =
+    semanaActual > 1 ? "" : "none";
+}
+
+/* Mostrar acceso al cronograma completo
+   cuando ya fue finalizado */
+const btnVolverCronogramaCompleto =
+  document.getElementById("btnVolverCronogramaCompleto");
+
+if (btnVolverCronogramaCompleto) {
+  btnVolverCronogramaCompleto.style.display =
+    datosGuia.cronogramaCompletado === true
+      ? ""
+      : "none";
+}
+  
+const btnVolverEtapa3 =
+  document.getElementById("btnVolverEtapa3");
+
+if (btnVolverEtapa3) {
+  btnVolverEtapa3.style.display =
+    semanaActual === 1 ? "" : "none";
+}
+  const btnGenerarSemana =
+    document.getElementById("btnGenerarSemana");
+
+  if (btnGenerarSemana) {
+
+  btnGenerarSemana.disabled = false;
+
+  if (datosSemana?.propuesta) {
+
+    if (semanaActual < semanas) {
+
+      btnGenerarSemana.textContent =
+        "Continuar a la Semana " +
+        (semanaActual + 1);
+
+      btnGenerarSemana.onclick =
+        function () {
+          continuarSiguienteSemana();
+        };
+
+    } else {
+
+btnGenerarSemana.textContent =
+    "Ver cronograma completo";
+
+btnGenerarSemana.disabled = false;
+
+btnGenerarSemana.onclick =
+  function () {
+    mostrarVistaFinalCronograma();
+  };
+    }
+
+  } else {
+
+    btnGenerarSemana.textContent =
+      "Generar propuesta de Semana " +
+      semanaActual;
+
+    btnGenerarSemana.onclick =
+      function () {
+        generarPropuestaSemana();
+      };
+  }
+}
+  window.scrollTo(0,0);
+} 
+/* ==================================================
+ABRIR SEMANA 1
+================================================== */
+
+function iniciarSemana1(){
+
+  semanaActual = 1;
+
+  document
+    .getElementById("etapa3")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapaCronograma")
+    .classList.remove("oculto");
+
+  document.getElementById("tituloSemana").textContent =
+    "Semana " + semanaActual;
+
+  const tituloContenidosSemana =
+  document.getElementById("tituloContenidosSemana");
+
+  if (tituloContenidosSemana) {
+    tituloContenidosSemana.textContent =
+     "Contenidos de la Semana " + semanaActual;
+}
+crearClasesSemana();
+
+ const btnGenerarSemana =
+  document.getElementById("btnGenerarSemana");
+
+if (btnGenerarSemana) {
+
+  btnGenerarSemana.disabled = false;
+
+  btnGenerarSemana.textContent =
+    "Generar propuesta de Semana " +
+    semanaActual;
+
+  btnGenerarSemana.onclick =
+    function () {
+      generarPropuestaSemana();
+    };
+} 
+
+window.scrollTo(0,0);
+
+}
+
+  function abrirSemanaGuardada(numeroSemana) {
+
+  semanaActual = numeroSemana;
+
+  document
+    .getElementById("etapa3")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapaCronograma")
+    .classList.remove("oculto");
+
+document.getElementById("tituloSemana").textContent =
+  "Semana " + semanaActual;
+
+const tituloContenidosSemana =
+  document.getElementById("tituloContenidosSemana");
+
+if (tituloContenidosSemana) {
+  tituloContenidosSemana.textContent =
+    "Contenidos de la Semana " + semanaActual;
+}
+
+crearClasesSemana();
+    
+ const datosSemana =
+  datosGuia.cronograma.find(
+    semana => semana.semana === semanaActual
+  );
+
+if (datosSemana) {
+
+  const campos =
+    document.querySelectorAll(".contenidoClase");
+
+  campos.forEach(campo => {
+
+    const numeroClase =
+      parseInt(
+        campo.getAttribute("data-clase")
+      );
+
+    const claseGuardada =
+      datosSemana.clases?.find(
+        clase => clase.clase === numeroClase
+      );
+
+    if (claseGuardada) {
+      campo.value =
+        claseGuardada.contenido || "";
+    }
+
+  });
+
+} 
+    if (datosSemana?.propuesta) {
+
+     mostrarPropuestaAcademica(
+      datosSemana.propuesta
+  );
+
+}
+ const btnGenerarSemana =
+  document.getElementById("btnGenerarSemana");
+
+if (btnGenerarSemana) {
+
+  btnGenerarSemana.disabled = false;
+
+  if (datosSemana?.propuesta) {
+
+    if (semanaActual < semanas) {
+
+      btnGenerarSemana.textContent =
+        "Continuar a la Semana " +
+        (semanaActual + 1);
+
+      btnGenerarSemana.onclick =
+        function () {
+          continuarSiguienteSemana();
+        };
+
+    } else {
+
+      btnGenerarSemana.textContent =
+        "Ver cronograma completo";
+
+      btnGenerarSemana.onclick =
+        function () {
+          mostrarVistaFinalCronograma();
+        };
+
+    }
+
+  } else {
+
+    btnGenerarSemana.textContent =
+      "Generar propuesta de Semana " +
+      semanaActual;
+
+    btnGenerarSemana.onclick =
+      function () {
+        generarPropuestaSemana();
+      };
+
+  }
+
+}   
+}
+
+/* ==================================================
+CREAR CLASES SEGÚN FRECUENCIA
+================================================== */
+
+function obtenerEvaluacionesSemana(numeroSemana) {
+
+  if (
+    !datosGuia.evaluacion ||
+    !Array.isArray(datosGuia.evaluacion.rubros)
+  ) {
+    return [];
+  }
+
+  return datosGuia.evaluacion.rubros.filter(
+    rubro =>
+      !rubro.componenteExterno &&
+      rubro.semana === numeroSemana
+  );
+}
+function actualizarAvisoSemanaEvaluativa() {
+
+  const aviso =
+    document.getElementById("avisoSemanaEvaluativa");
+
+  if (!aviso) {
+    return;
+  }
+
+  const evaluaciones =
+    obtenerEvaluacionesSemana(semanaActual);
+
+  if (evaluaciones.length === 0) {
+
+    aviso.textContent = "";
+    aviso.classList.add("oculto");
+
+    return;
+  }
+
+  const nombres =
+    evaluaciones.map(
+      evaluacion => evaluacion.nombre
+    );
+
+  aviso.textContent =
+    "Esta semana corresponde al cierre de: " +
+    nombres.join(", ") +
+    ".";
+
+  aviso.classList.remove("oculto");
+}
+  /* ==================================================
+IDENTIFICAR EVALUACIONES DE LA SEMANA
+================================================== */
+  
+function crearClasesSemana(){
+
+  const frecuencia =
+    parseInt(
+      document.getElementById("frecuencia").value
+    );
+
+  const contenedor =
+    document.getElementById("clasesSemana");
+
+  contenedor.innerHTML = "";
+
+  actualizarAvisoSemanaEvaluativa();
+  
+  for(let i=1; i<=frecuencia; i++){
+
+    const bloque =
+      document.createElement("div");
+
+    bloque.className = "resumen-esquema";
+
+    bloque.innerHTML =
+
+      '<h3>Clase ' + i + '</h3>' +
+
+      '<div class="campo">' +
+
+        '<label class="titulo">' +
+          'Contenido(s) de la Clase ' + i +
+        '</label>' +
+
+        '<textarea ' +
+          'class="contenidoClase" ' +
+          'data-clase="' + i + '" ' +
+          'rows="4" ' +
+          'placeholder="Indique los contenidos que se desarrollarán en esta clase">' +
+        '</textarea>' +
+
+        '<div class="nota">' +
+          'Registre únicamente los contenidos. ' +
+          'Las metodologías, actividades formativas, REA y recursos ' +
+          'se establecerán posteriormente a partir de estos contenidos.' +
+        '</div>' +
+
+      '</div>';
+
+    contenedor.appendChild(bloque);
+    const campoContenido =
+      bloque.querySelector(".contenidoClase");
+
+    campoContenido.addEventListener("input", function () {
+
+    guardarContenidoSemanaActual();
+
+});
+     }
+  }
+  /* ==================================================
+MOSTRAR VISTA FINAL DEL CRONOGRAMA
+================================================== */
+
+/* ==================================================
+VOLVER A UNA SEMANA DESDE EL CRONOGRAMA COMPLETO
+================================================== */
+
+function mostrarSelectorSemanaCronograma() {
+
+  const selector =
+    document.getElementById("selectorSemanaCronograma");
+
+  if (!selector) {
+    return;
+  }
+
+  selector.style.display =
+    selector.style.display === "none"
+      ? "inline"
+      : "none";
+}
+
+
+function irASemanaDesdeCronograma() {
+
+  const selector =
+    document.getElementById("semanaCronogramaSeleccionada");
+
+  if (!selector || !selector.value) {
+    alert("Seleccione la semana que desea revisar.");
+    return;
+  }
+
+  const semanaSeleccionada =
+    Number(selector.value);
+
+  const semanaExiste =
+    datosGuia.cronograma.some(
+      item => Number(item.semana) === semanaSeleccionada
+    );
+
+  if (!semanaExiste) {
+    alert("La semana seleccionada no está disponible en el cronograma.");
+    return;
+  }
+
+  semanaActual = semanaSeleccionada;
+etapaActual = "cronograma";
+
+/* Ocultar la vista del cronograma completo
+   antes de mostrar la semana seleccionada */
+const vistaFinal =
+  document.getElementById("vistaFinalCronograma");
+
+if (vistaFinal) {
+  vistaFinal.classList.add("oculto");
+}
+
+guardarProgreso();
+
+restaurarInterfazProgreso();
+}
+
+  
+function mostrarVistaFinalCronograma() {
+
+  guardarContenidoSemanaActual();
+
+  // PASO 1 COMPLETADO
+  datosGuia.cronogramaCompletado = true;
+
+  datosGuia.sistemaEvaluacion.fuenteCronograma =
+  prepararDatosSistemaEvaluacion();
+  
+  etapaActual = "vistaFinalCronograma";
+  guardarProgreso();
+
+document
+  .getElementById("etapa1")
+  .classList.add("oculto");
+
+document
+  .getElementById("etapa2")
+  .classList.add("oculto");
+
+document
+  .getElementById("etapa3")
+  .classList.add("oculto");
+  
+document
+    .getElementById("etapaCronograma")
+    .classList.add("oculto");
+
+  document
+    .getElementById("vistaFinalCronograma")
+    .classList.remove("oculto");
+
+  const contenedor =
+    document.getElementById("contenidoCronogramaCompleto");
+
+  contenedor.innerHTML = "";
+
+  const tablaCronograma = document.createElement("table");
+tablaCronograma.id = "tablaCronogramaInstitucional";
+tablaCronograma.style.width = "100%";
+tablaCronograma.style.borderCollapse = "collapse";
+
+tablaCronograma.innerHTML =
+  "<thead>" +
+    "<tr>" +
+      "<th>Contenido</th>" +
+      "<th>Metodologías de Enseñanza</th>" +
+      "<th>Actividades Formativas y REA(s)</th>" +
+      "<th>Recursos y Bibliografías</th>" +
+    "</tr>" +
+  "</thead>" +
+  "<tbody id='cuerpoCronogramaInstitucional'></tbody>";
+
+contenedor.appendChild(tablaCronograma);
+  
+  const semanasOrdenadas =
+    [...datosGuia.cronograma].sort(
+      (a, b) => a.semana - b.semana
+    );
+
+  semanasOrdenadas.forEach(datosSemana => {
+
+    const cuerpoCronograma =
+  document.getElementById("cuerpoCronogramaInstitucional");
+
+const filaSemana = document.createElement("tr");
+
+filaSemana.className = "fila-semana-institucional";
+
+filaSemana.innerHTML =
+  "<td colspan='4'>" +
+    "Semana " +
+    datosSemana.semana +
+  "</td>";
+
+cuerpoCronograma.appendChild(filaSemana);
+    
+      const propuesta = datosSemana.propuesta;
+
+    if (propuesta && Array.isArray(propuesta.clases)) {
+
+      propuesta.clases.forEach(clase => {
+
+const diagnostico =
+  clase.evaluacionDiagnostica;
+
+const diagnosticoMetodologiaHTML =
+  diagnostico
+    ? "<strong>Prueba Diagnóstica:</strong><br>" +
+      (diagnostico.metodologia || "") +
+      "<br><br>" +
+      "<strong>Mediación docente:</strong><br>" +
+      (diagnostico.mediacionDocente || "") +
+      "<br><br>"
+    : "";
+
+const diagnosticoActividadHTML =
+  diagnostico
+    ? "<strong>Prueba Diagnóstica (valor: 0 puntos)</strong><br>" +
+      "Tipo: D · Instrumento: Prueba objetiva<br>" +
+      (diagnostico.actividadDiagnostica || "") +
+      "<br><br>"
+    : "";
+        
+const metodologiasInstitucionales =
+  Array.isArray(clase.metodologiasActividades)
+    ? clase.metodologiasActividades
+        .map((item, index) =>
+          "<strong>Metodología " +
+          (index + 1) +
+          ":</strong><br>" +
+          (item.metodologia || "") +
+          "<br><br>" +
+          "<strong>Mediación docente:</strong><br>" +
+          (item.explicacionMetodologia || "")
+        )
+        .join("<br><br>")
+       : "";
+
+const metodologiasInstitucionalesCompletas =
+  diagnosticoMetodologiaHTML +
+  metodologiasInstitucionales;
+
+const actividadesInstitucionales =
+  Array.isArray(clase.metodologiasActividades)
+    ? clase.metodologiasActividades
+        .map((item, index) =>
+          "<strong>Actividad formativa " +
+          (index + 1) +
+          ":</strong><br>" +
+          (item.actividadFormativa || "")
+        )
+        .join("<br><br>")
+    : "";
+
+      const actividadesInstitucionalesCompletas =
+  diagnosticoActividadHTML +
+  actividadesInstitucionales;  
+
+        const recursosInstitucionales =
+  "<strong>Recursos materiales:</strong><br>" +
+  (
+    Array.isArray(clase.recursosMateriales) &&
+    clase.recursosMateriales.length > 0
+      ? clase.recursosMateriales.join("<br>")
+      : ""
+  ) +
+
+  "<br><br><strong>Recursos virtuales:</strong><br>" +
+  (
+    Array.isArray(clase.recursosVirtuales) &&
+    clase.recursosVirtuales.length > 0
+      ? clase.recursosVirtuales.join("<br>")
+      : ""
+  ) +
+
+  "<br><br><strong>Bibliografía:</strong><br>" +
+  (
+    Array.isArray(clase.bibliografia) &&
+    clase.bibliografia.length > 0
+      ? clase.bibliografia.join("<br>")
+      : ""
+  );
+        
+        const filaClaseInstitucional =
+  document.createElement("tr");
+
+filaClaseInstitucional.innerHTML =
+  "<td>" +
+    "<strong>Clase " +
+    clase.clase +
+    "</strong><br>" +
+    (clase.contenido || "") +
+  "</td>" +
+  
+  "<td>" +
+    metodologiasInstitucionalesCompletas +
+  "</td>" +
+  
+  "<td>" +
+     actividadesInstitucionalesCompletas +
+  "</td>" +
+  
+  "<td>" +
+    recursosInstitucionales +
+  "</td>";
+
+cuerpoCronograma.appendChild(filaClaseInstitucional);
+               
+      });
+
+    }
+
+  });
+
+  window.scrollTo(0, 0);
+}
+
+/* ==================================================
+PREPARAR DATOS PARA EL SISTEMA DE EVALUACIÓN
+================================================== */
+
+function prepararDatosSistemaEvaluacion(){
+
+  if (!datosGuia.cronogramaCompletado) {
+    return null;
+  }
+
+  return {
+
+    configuracion: datosGuia.configuracion,
+
+    evaluacionInstitucional: datosGuia.evaluacion,
+
+    programa: {
+      reaOficiales: datosGuia.programa.reaOficiales,
+      bibliografia: datosGuia.programa.bibliografia
+    },
+
+    cronograma: datosGuia.cronograma
+
+  };
+
+}
+  
+function continuarSiguienteSemana(){
+  if (semanaActual >= semanas) {
+    return;
+  }
+
+  guardarContenidoSemanaActual();
+  
+  semanaActual++;
+  guardarProgreso();
+
+  const btnSemanaAnterior =
+  document.getElementById("btnSemanaAnterior");
+
+if (btnSemanaAnterior) {
+  btnSemanaAnterior.style.display =
+    semanaActual > 1 ? "" : "none";
+}
+
+  const btnVolverEtapa3 =
+  document.getElementById("btnVolverEtapa3");
+
+if (btnVolverEtapa3) {
+  btnVolverEtapa3.style.display =
+    semanaActual === 1 ? "" : "none";
+}
+  
+  document.getElementById("tituloSemana").textContent =
+    "Semana " + semanaActual;
+  const tituloContenidosSemana =
+    document.getElementById("tituloContenidosSemana");
+
+if (tituloContenidosSemana) {
+  tituloContenidosSemana.textContent =
+    "Contenidos de la Semana " + semanaActual;
+}
+  crearClasesSemana();
+  const datosSemanaExistente =
+  datosGuia.cronograma.find(
+    semana => semana.semana === semanaActual
+  );
+
+if (datosSemanaExistente) {
+
+  const campos =
+    document.querySelectorAll(".contenidoClase");
+
+  campos.forEach(campo => {
+
+    const numeroClase =
+      parseInt(
+        campo.getAttribute("data-clase")
+      );
+
+    const claseGuardada =
+      datosSemanaExistente.clases?.find(
+        clase => clase.clase === numeroClase
+      );
+
+    if (claseGuardada) {
+      campo.value =
+        claseGuardada.contenido || "";
+    }
+
+  });
+}
+  if (datosSemanaExistente?.propuesta) {
+
+  mostrarPropuestaAcademica(
+    datosSemanaExistente.propuesta
+  );
+}
+const errorCronograma =
+  document.getElementById("errorCronograma");
+
+if (errorCronograma) {
+  errorCronograma.textContent = "";
+  errorCronograma.classList.add("oculto");
+}
+ const btnGenerarSemana =
+  document.getElementById("btnGenerarSemana");
+
+if (btnGenerarSemana) {
+
+  btnGenerarSemana.disabled = false;
+
+  if (datosSemanaExistente?.propuesta) {
+
+    if (semanaActual < semanas) {
+
+      btnGenerarSemana.textContent =
+        "Continuar a la Semana " +
+        (semanaActual + 1);
+
+      btnGenerarSemana.onclick =
+        function () {
+          continuarSiguienteSemana();
+        };
+
+    } else {
+
+btnGenerarSemana.textContent =
+  "Ver cronograma completo";
+
+btnGenerarSemana.disabled = false;
+
+btnGenerarSemana.onclick =
+  function () {
+    mostrarVistaFinalCronograma();
+  };
+    }
+
+  } else {
+
+    btnGenerarSemana.textContent =
+      "Generar propuesta de Semana " +
+      semanaActual;
+
+    btnGenerarSemana.onclick =
+      function () {
+        generarPropuestaSemana();
+      };
+  }
+}
+
+  const propuestaAcademica =
+  document.getElementById("propuestaAcademica");
+
+if (
+  propuestaAcademica &&
+  !datosSemanaExistente?.propuesta
+) {
+
+  const contenidoPropuestaAcademica =
+    document.getElementById("contenidoPropuestaAcademica");
+
+  if (contenidoPropuestaAcademica) {
+    contenidoPropuestaAcademica.innerHTML = "";
+  }
+
+  propuestaAcademica.classList.add("oculto");
+}
+}
+function irSemanaAnterior() {
+
+  if (semanaActual <= 1) {
+    return;
+  }
+
+  guardarContenidoSemanaActual();
+  
+  semanaActual--;
+
+  guardarProgreso();
+
+  document.getElementById("tituloSemana").textContent =
+    "Semana " + semanaActual;
+
+  const tituloContenidosSemana =
+    document.getElementById("tituloContenidosSemana");
+
+  if (tituloContenidosSemana) {
+    tituloContenidosSemana.textContent =
+      "Contenidos de la Semana " + semanaActual;
+  }
+
+  crearClasesSemana();
+
+  const datosSemana =
+    datosGuia.cronograma.find(
+      semana => semana.semana === semanaActual
+    );
+
+  /* Restaurar contenidos */
+  if (datosSemana) {
+
+    const campos =
+      document.querySelectorAll(".contenidoClase");
+
+    campos.forEach(campo => {
+
+      const numeroClase =
+        parseInt(
+          campo.getAttribute("data-clase")
+        );
+
+      const claseGuardada =
+        datosSemana.clases?.find(
+          clase => clase.clase === numeroClase
+        );
+
+      if (claseGuardada) {
+        campo.value =
+          claseGuardada.contenido || "";
+      }
+
+    });
+  }
+
+  /* Restaurar propuesta */
+  const propuestaAcademica =
+    document.getElementById("propuestaAcademica");
+
+  const contenidoPropuestaAcademica =
+    document.getElementById("contenidoPropuestaAcademica");
+
+  if (datosSemana?.propuesta) {
+
+    mostrarPropuestaAcademica(
+      datosSemana.propuesta
+    );
+
+  } else {
+
+    if (contenidoPropuestaAcademica) {
+      contenidoPropuestaAcademica.innerHTML = "";
+    }
+
+    if (propuestaAcademica) {
+      propuestaAcademica.classList.add("oculto");
+    }
+  }
+
+  /* Configurar botón principal */
+  const btnGenerarSemana =
+    document.getElementById("btnGenerarSemana");
+
+  if (btnGenerarSemana) {
+
+    btnGenerarSemana.disabled = false;
+
+    if (datosSemana?.propuesta) {
+
+      btnGenerarSemana.textContent =
+        "Continuar a la Semana " +
+        (semanaActual + 1);
+
+      btnGenerarSemana.onclick =
+        function () {
+          continuarSiguienteSemana();
+        };
+
+    } else {
+
+      btnGenerarSemana.textContent =
+        "Generar propuesta de Semana " +
+        semanaActual;
+
+      btnGenerarSemana.onclick =
+        function () {
+          generarPropuestaSemana();
+        };
+    }
+  }
+
+  /* Mostrar u ocultar Semana anterior */
+  const btnSemanaAnterior =
+    document.getElementById("btnSemanaAnterior");
+
+  if (btnSemanaAnterior) {
+
+    btnSemanaAnterior.style.display =
+      semanaActual > 1 ? "" : "none";
+  }
+
+  const btnVolverEtapa3 =
+  document.getElementById("btnVolverEtapa3");
+
+if (btnVolverEtapa3) {
+  btnVolverEtapa3.style.display =
+    semanaActual === 1 ? "" : "none";
+}
+  
+  window.scrollTo(0,0);
+}
+
+/* ==================================================
+VOLVER A ETAPA 3
+================================================== */
+
+function volverEtapa3(){
+
+  document
+    .getElementById("etapaCronograma")
+    .classList.add("oculto");
+
+  document
+    .getElementById("etapa3")
+    .classList.remove("oculto");
+
+  etapaActual = "etapa3";
+  guardarProgreso();
+
+  if (datosGuia.programa.formaIngreso) {
+
+  const radioFormaPrograma =
+    document.querySelector(
+      'input[name="formaPrograma"][value="' +
+      datosGuia.programa.formaIngreso +
+      '"]'
+    );
+
+  if (radioFormaPrograma) {
+    radioFormaPrograma.checked = true;
+    configurarPrograma();
+  }
+
+}
+
+restaurarBorradorEtapa3();
+  window.scrollTo(0,0);
+
+}
+
+
+/* ==================================================
+VALIDAR CONTENIDOS DE LA SEMANA
+================================================== */
+/* ==================================================
+VALIDAR PUNTUACIONES DE LA PROPUESTA ACADÉMICA
+================================================== */
+
+function validarEvaluacionPropuesta(
+  propuesta,
+  sistemaEvaluacion,
+  historialEvaluacion,
+  evaluacionesSemana
+) {
+
+  if (!propuesta || !Array.isArray(propuesta.clases)) {
+    return {
+      valido: false,
+      mensaje: "La propuesta académica no contiene una estructura de clases válida."
+    };
+  }
+
+  if (!Array.isArray(sistemaEvaluacion)) {
+    return {
+      valido: false,
+      mensaje: "No se encontró un sistema de evaluación válido."
+    };
+  }
+
+  const historial = Array.isArray(historialEvaluacion)
+    ? historialEvaluacion
+    : [];
+
+  const cierresSemana = Array.isArray(evaluacionesSemana)
+    ? evaluacionesSemana
+    : [];
+
+  const puntuacionAnterior = {};
+  const puntuacionSemanaActual = {};
+
+  /* Sumar puntuaciones de semanas anteriores */
+
+  historial.forEach(actividad => {
+
+    if (
+      actividad.rubroEvaluacion &&
+      Number(actividad.puntuacion) > 0
+    ) {
+
+      const rubro = actividad.rubroEvaluacion;
+
+      puntuacionAnterior[rubro] =
+        (puntuacionAnterior[rubro] || 0) +
+        Number(actividad.puntuacion);
+    }
+  });
+
+  /* Revisar todas las actividades de la propuesta actual */
+
+  for (const clase of propuesta.clases) {
+
+    const actividades = [
+      ...(Array.isArray(clase.metodologiasActividades)
+        ? clase.metodologiasActividades
+        : []),
+
+      ...(Array.isArray(clase.actividadesAdicionales)
+        ? clase.actividadesAdicionales
+        : [])
+    ];
+
+    for (const actividad of actividades) {
+
+      if (actividad.esEvaluativa !== true) {
+        continue;
+      }
+
+      const rubro = actividad.rubroEvaluacion;
+      const puntuacion = Number(actividad.puntuacion);
+
+      if (!rubro) {
+        return {
+          valido: false,
+          mensaje:
+            "Se encontró una actividad evaluativa sin rubro de evaluación."
+        };
+      }
+
+     /* La puntuación de las actividades evaluativas
+   se definirá posteriormente en
+   X. Sistema de Evaluación. */
+
+      const rubroOficial =
+        sistemaEvaluacion.find(
+          item =>
+            item.nombre === rubro &&
+            item.componenteExterno !== true
+        );
+
+      if (!rubroOficial) {
+        return {
+          valido: false,
+          mensaje:
+            `La propuesta utiliza el rubro "${rubro}", pero este no corresponde a un rubro evaluativo gestionado en esta guía.`
+        };
+      }
+
+      puntuacionSemanaActual[rubro] =
+        (puntuacionSemanaActual[rubro] || 0) +
+        puntuacion;
+    }
+  }
+
+  /* Comprobar que ningún rubro exceda su peso */
+
+  for (const rubro of sistemaEvaluacion) {
+
+    if (rubro.componenteExterno === true) {
+      continue;
+    }
+
+    if (rubro.nombre === "Rubro único") {
+      continue;
+    }
+
+    const peso = Number(rubro.peso);
+
+    const anterior =
+      puntuacionAnterior[rubro.nombre] || 0;
+
+    const actual =
+      puntuacionSemanaActual[rubro.nombre] || 0;
+
+    const total = anterior + actual;
+
+    if (total > peso + 0.001) {
+      return {
+        valido: false,
+        mensaje:
+          `Las actividades evaluativas de "${rubro.nombre}" acumulan ${total} puntos, pero el peso establecido es ${peso}.`
+      };
+    }
+  }
+
+/* Validar cierre del Rubro único en la última semana */
+
+
+  return {
+    valido: true,
+    mensaje: ""
+  };
+}
+async function generarPropuestaSemana(){
+const historialMetodologias = datosGuia.cronograma
+  .filter(item => item.semana < semanaActual && item.propuesta)
+  .flatMap(item =>
+    (item.propuesta.clases || []).flatMap(clase =>
+      (clase.metodologiasActividades || []).map(metodo => ({
+        semana: item.semana,
+        metodologia: metodo.metodologia
+      }))
+    )
+  );
+ const historialEvaluacion = datosGuia.cronograma
+  .filter(item => item.semana < semanaActual && item.propuesta)
+  .flatMap(item =>
+    (item.propuesta.clases || []).flatMap(clase => {
+
+      const actividadesObligatorias =
+        clase.metodologiasActividades || [];
+
+      const actividadesAdicionales =
+        clase.actividadesAdicionales || [];
+
+      return [
+        ...actividadesObligatorias,
+        ...actividadesAdicionales
+      ]
+        .filter(actividad => actividad.esEvaluativa === true)
+        .map(actividad => ({
+          semana: item.semana,
+          clase: clase.clase,
+          rubroEvaluacion: actividad.rubroEvaluacion,
+          puntuacion: Number(actividad.puntuacion) || 0
+        }));
+
+    })
+  );
+  const evaluacionesSemana =
+  obtenerEvaluacionesSemana(semanaActual);
+  
+  const contenidos =
+    document.querySelectorAll(".contenidoClase");
+
+  const error =
+    document.getElementById("errorCronograma");
+
+  error.classList.add("oculto");
+
+
+  for(const campo of contenidos){
+
+    if(campo.value.trim()===""){
+
+      const numeroClase =
+        campo.getAttribute("data-clase");
+
+      mostrarErrorCronograma(
+        "Indique los contenidos correspondientes a la Clase " +
+        numeroClase +
+        "."
+      );
+
+      return;
+
+    }
+
+  }
+
+  /* GUARDAR CONTENIDOS DE LA SEMANA */
+
+  const clasesSemana = [];
+
+  contenidos.forEach(campo=>{
+
+    clasesSemana.push({
+
+      clase:
+        parseInt(
+          campo.getAttribute("data-clase")
+        ),
+
+      contenido:
+        campo.value.trim()
+
+    });
+
+  });
+
+
+  const indiceSemana =
+    datosGuia.cronograma.findIndex(
+      semana=>semana.semana===semanaActual
+    );
+
+
+  const datosSemana = {
+
+    semana: semanaActual,
+
+    clases: clasesSemana
+
+  };
+
+
+  if(indiceSemana===-1){
+
+    datosGuia.cronograma.push(datosSemana);
+
+  }
+
+  else{
+
+  datosGuia.cronograma[indiceSemana].clases =
+    clasesSemana;
+
+}
+
+ guardarProgreso();
+  
+ try {
+
+  const respuesta = await fetch(
+    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/generar-semana",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        semana: semanaActual,
+        
+diagnosticoObligatorio:
+  semanaActual === 1
+    ? {
+        requerido: true,
+        clase: 1,
+        tipo: "D",
+        valor: 0,
+        instrumento: "Prueba objetiva",
+        nombre: "Prueba Diagnóstica",
+        instruccion:
+          "Incluir obligatoriamente en la Clase 1 de la Semana 1 una evaluación diagnóstica de conocimientos previos. La evaluación debe adaptarse a la naturaleza y contenidos de la asignatura. Debe proponer metodología de enseñanza, mediación docente y actividad diagnóstica. Tiene valor 0 y no sustituye los contenidos ni las actividades formativas ordinarias de la Clase 1."
+      }
+    : {
+        requerido: false
+      },
+        
+        clases: clasesSemana,
+        reaOficiales: datosGuia.programa.reaOficiales,
+        bibliografia: datosGuia.programa.bibliografia,
+        configuracion: datosGuia.configuracion,
+        evaluacionesSemana: evaluacionesSemana,
+        sistemaEvaluacion: datosGuia.evaluacion.rubros,
+        historialEvaluacion: historialEvaluacion,
+        historialMetodologias: historialMetodologias,
+        totalSemanas: semanas
+      })
+    }
+  );
+
+  const resultado = await respuesta.json();
+
+  console.log("Respuesta IA:", resultado);
+
+  if (!respuesta.ok || !resultado.correcto) {
+  throw new Error(
+    resultado.error || "No fue posible generar la propuesta académica."
+  );
+}
+    const validacionEvaluacion =
+  validarEvaluacionPropuesta(
+    resultado.propuesta,
+    datosGuia.evaluacion.rubros,
+    historialEvaluacion,
+    evaluacionesSemana
+  );
+
+if (!validacionEvaluacion.valido) {
+  throw new Error(
+    "La propuesta generada presenta una inconsistencia en el sistema de evaluación: " +
+    validacionEvaluacion.mensaje
+  );
+}
+  
+  datosGuia.cronograma[indiceSemana === -1
+  ? datosGuia.cronograma.length - 1
+  : indiceSemana
+].propuesta = resultado.propuesta;
+
+const propuestaGuardada =
+  datosGuia.cronograma[indiceSemana === -1
+    ? datosGuia.cronograma.length - 1
+    : indiceSemana
+  ].propuesta;
+  guardarProgreso();
+ console.log("Propuesta académica:", propuestaGuardada);
+   
+   try {
+  mostrarPropuestaAcademica(propuestaGuardada);
+ } catch (errorVisualizacion) {
+  console.error(
+    "La propuesta fue generada y guardada, pero ocurrió un error al mostrarla:",
+    errorVisualizacion
+  );
+}
+const btnGenerarSemana =
+  document.getElementById("btnGenerarSemana");
+
+if (btnGenerarSemana) {
+
+  if (semanaActual < semanas) {
+
+    btnGenerarSemana.textContent =
+      "Continuar a la Semana " + (semanaActual + 1);
+
+    btnGenerarSemana.onclick = function () {
+      continuarSiguienteSemana();
+    };
+
+  } else {
+
+    btnGenerarSemana.textContent =
+  "Ver cronograma completo";
+
+btnGenerarSemana.disabled = false;
+
+btnGenerarSemana.onclick =
+  function () {
+    mostrarVistaFinalCronograma();
+  };
+
+  }
+}
+  alert(
+    "La propuesta académica de la Semana " +
+    semanaActual +
+    " fue generada correctamente."
+  );
+
+} catch (error) {
+
+  console.error("Error al generar la propuesta:", error);
+
+  mostrarErrorCronograma(
+    "No fue posible generar la propuesta académica. Intente nuevamente."
+  );
+
+}
+
+}
+
+
+/* ==================================================
+MOSTRAR ERROR DEL CRONOGRAMA
+================================================== */
+
+ function mostrarPropuestaAcademica(propuesta) {
+
+  const contenedor = document.getElementById("propuestaAcademica");
+  const contenido = document.getElementById("contenidoPropuestaAcademica");
+
+  if (!propuesta || !Array.isArray(propuesta.clases)) {
+    return;
+  }
+
+  let html = "";
+
+  propuesta.clases.forEach((clase) => {
+
+   const metodologiasActividades =
+  Array.isArray(clase.metodologiasActividades)
+    ? clase.metodologiasActividades
+    : [];
+
+let metodologiasHTML = "";
+
+    const diagnostico =
+  clase.evaluacionDiagnostica;
+
+if (diagnostico) {
+
+  metodologiasHTML += `
+    <div
+      style="
+        margin-bottom:18px;
+        padding:16px;
+        border:1px solid #006b54;
+        border-radius:8px;
+        background:#e9f4f1;
+      "
+    >
+      <p>
+        <strong>Prueba Diagnóstica (valor: 0 puntos)</strong><br>
+        Tipo: D · Instrumento: Prueba objetiva
+      </p>
+
+      <p>
+        <strong>Metodología:</strong><br>
+        ${diagnostico.metodologia || ""}
+      </p>
+
+      <p>
+        <strong>Mediación docente:</strong><br>
+        ${diagnostico.mediacionDocente || ""}
+      </p>
+
+      <p>
+        <strong>Actividad diagnóstica:</strong><br>
+        ${diagnostico.actividadDiagnostica || ""}
+      </p>
+    </div>
+  `;
+
+}
+
+metodologiasActividades.forEach((item, index) => {
+
+  const codigosREA =
+  Array.isArray(item.codigosREA)
+    ? item.codigosREA.join(", ")
+    : "";
+  const actividadLimpia =
+  (item.actividadFormativa || "")
+    .replace(/\s*\(REA\s*\d+(?:\s*,\s*REA\s*\d+)*\)\s*$/i, "")
+    .replace(/\s*\(REA\d+(?:\s*,\s*REA\d+)*\)\s*$/i, "")
+    .trim();
+ 
+  metodologiasHTML += `
+    <div style="margin-bottom:18px;">
+      <p>
+        <strong>Metodología ${index + 1}:</strong><br>
+        ${item.metodologia || ""}
+      </p>
+
+      <button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarMetodologiaClase(${clase.clase}, ${index})"
+>
+  Editar metodología
+</button>
+
+      <p>
+        <strong>Mediación docente:</strong><br>
+        ${item.explicacionMetodologia || ""}
+      </p>
+
+      <button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarMediacionClase(${clase.clase}, ${index})"
+>
+  Editar mediación
+</button>
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="modificarMediacionConIA(${clase.clase}, ${index})"
+>
+  Modificar con IA
+</button>
+     <p>
+        <strong>Actividad formativa ${index + 1}:</strong><br>
+        ${actividadLimpia}${codigosREA ? ` (${codigosREA})` : ""}
+    </p>
+
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarActividadFormativa(${clase.clase}, ${index})"
+>
+  Editar actividad
+</button>
+
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="modificarActividadConIA(${clase.clase}, ${index})"
+>
+  Modificar con IA
+</button>
+    
+</div>
+  `;
+}); 
+const recursosMaterialesTexto =
+  Array.isArray(clase.recursosMateriales)
+    ? clase.recursosMateriales.join("<br>")
+    : "";
+
+const recursosVirtualesTexto =
+  Array.isArray(clase.recursosVirtuales)
+    ? clase.recursosVirtuales.join("<br>")
+    : "";
+    const bibliografiaTexto =
+  Array.isArray(clase.bibliografia)
+    ? clase.bibliografia.join("<br>")
+    : "";
+    const actividadesAdicionales =
+  Array.isArray(clase.actividadesAdicionales)
+    ? clase.actividadesAdicionales
+    : [];
+
+let actividadesAdicionalesHTML = "";
+
+actividadesAdicionales.forEach((actividad, index) => {
+
+  const codigosREA =
+  Array.isArray(actividad.codigosREA)
+    ? actividad.codigosREA.join(", ")
+    : "";
+
+const actividadLimpia =
+  (actividad.actividadFormativa || "")
+    .replace(/\s*\(REA\s*\d+(?:\s*,\s*REA\s*\d+)*\)\s*$/i, "")
+    .replace(/\s*\(REA\d+(?:\s*,\s*REA\d+)*\)\s*$/i, "")
+    .trim();
+
+  actividadesAdicionalesHTML += `
+    <div style="margin-bottom:18px;">
+      <p>
+        <strong>Actividad formativa adicional ${index + 1}:</strong><br>
+        <strong>Metodología vinculada:</strong>
+        ${actividad.metodologiaVinculada || ""}
+      </p>
+
+      <p>
+        <strong>Mediación docente:</strong><br>
+        ${actividad.explicacionVinculacion || ""}
+      </p>
+
+      <strong>Actividad formativa:</strong><br>
+      ${actividadLimpia}${codigosREA ? ` (${codigosREA})` : ""}
+      
+         </div>
+  
+  `;
+});
+   const reaSugeridos =
+  Array.isArray(clase.reaSugeridos)
+    ? clase.reaSugeridos
+    : [];
+
+let reaSugeridosHTML = "";
+
+reaSugeridos.forEach((rea, reaIndex) => {
+const estadoREA =
+  rea.estado === "validado"
+    ? `<div style="margin-top:12px;">
+         <strong>Estado:</strong> Validado por el docente
+       </div>`
+    : rea.estado === "rechazado" &&
+  rea.estadoRevision === "reformulacion-validada"
+ ? `<div style="margin-top:12px;">
+     <strong>Estado:</strong> REA sugerido rechazado por el docente<br>
+     <strong>Revisión de la actividad:</strong> Completada y validada por el docente<br>
+     <strong>REA oficial vinculado después de la revisión:</strong>
+     ${
+       Array.isArray(rea.revisionPropuesta?.codigosREA)
+         ? rea.revisionPropuesta.codigosREA.join(", ")
+         : ""
+     }<br>
+     <strong>Acción requerida:</strong> Ninguna
+   </div>`
+: rea.estado === "rechazado" &&
+  rea.estadoRevision === "reformulacion-no-aceptada"
+  ? `<div style="margin-top:12px;">
+       <strong>Estado:</strong> REA sugerido rechazado por el docente<br>
+       <strong>Revisión de la actividad:</strong> Reformulación no aceptada<br>
+       <strong>Decisión docente:</strong> Se mantiene la actividad anterior<br>
+       <strong>Vinculación con REA oficial:</strong> No establecida<br>
+       <strong>Acción requerida:</strong> Requiere valoración docente
+     </div>`
+  : rea.estado === "rechazado"
+  ? `<div style="margin-top:12px;">
+       <strong>Estado:</strong> Rechazado por el docente<br>
+       <strong>Acción requerida:</strong> Revisar la actividad formativa vinculada.
+       <br><br>
+
+       <button
+         type="button"
+         class="btn-principal"
+         onclick="revisarActividadRea(${clase.clase}, ${reaIndex})"
+       >
+         Revisar actividad
+       </button>
+     </div>`
+  : "";
+  const botonesValidacion =
+  rea.estado === "validado" || rea.estado === "rechazado"
+    ? ""
+    : `
+        <br><br>
+
+        <button
+          type="button"
+          class="btn-principal"
+          onclick="aceptarReaSugerido(${clase.clase}, ${reaIndex})"
+        >
+          Aceptar REA sugerido
+        </button>
+
+        <button
+          type="button"
+          class="btn-secundario"
+          onclick="rechazarReaSugerido(${clase.clase}, ${reaIndex})"
+        >
+          Rechazar
+        </button>
+      `;
+  const tituloREA =
+  rea.estado === "validado"
+    ? "REA sugerido - validado por el docente"
+    : rea.estado === "rechazado"
+      ? "REA sugerido - rechazado por el docente"
+      : "REA sugerido - requiere validación docente";
+  reaSugeridosHTML += `
+    <div class="resultado" style="margin-bottom:18px;">
+      <strong>${tituloREA}</strong><br><br>
+
+      <strong>Código propuesto:</strong>
+      ${rea.codigo || ""}<br>
+
+      <strong>REA sugerido:</strong>
+      ${rea.reaSugerido || ""}<br>
+
+      <strong>Actividad vinculada:</strong>
+      ${rea.actividadVinculada || ""}<br>
+
+      <strong>Justificación:</strong>
+      ${rea.justificacion || ""}
+      ${estadoREA}
+   ${botonesValidacion}
+    </div>
+  `;
+}); 
+    html += `
+      <div class="resumen-item">
+
+        <h4>Clase ${clase.clase}</h4>
+
+        <p>
+          <strong>Contenido:</strong><br>
+          ${clase.contenido || ""}
+        </p>
+
+        <button
+          type="button"
+          class="boton boton-secundario"
+          onclick="editarContenidoClase(${clase.clase})"
+         >
+        Editar contenido
+</button>
+
+        ${metodologiasHTML}
+        ${actividadesAdicionalesHTML}
+        ${reaSugeridosHTML}
+<p>
+  <strong>Recursos materiales:</strong><br>
+  ${recursosMaterialesTexto || "No se especificaron recursos materiales."}
+</p>
+
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarRecursosMateriales(${clase.clase})"
+>
+  Editar recursos materiales
+</button>
+
+<p>
+  <strong>Recursos virtuales:</strong><br>
+  ${recursosVirtualesTexto || "No se especificaron recursos virtuales."}
+</p>
+
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarRecursosVirtuales(${clase.clase})"
+>
+  Editar recursos virtuales
+</button>
+
+        <p>
+          <strong>Bibliografía:</strong><br>
+          ${bibliografiaTexto || "No se especificó bibliografía pertinente."}
+        </p>
+<button
+  type="button"
+  class="boton boton-secundario"
+  onclick="editarBibliografiaClase(${clase.clase})"
+>
+  Editar bibliografía
+</button>
+      </div>
+    `;
+  });
+
+  contenido.innerHTML = html;
+  contenedor.classList.remove("oculto");
+} 
+
+  function editarContenidoClase(numeroClase) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const nuevoContenido = prompt(
+    "Edite el contenido de la Clase " + numeroClase + ":",
+    clase.contenido || ""
+  );
+
+  if (nuevoContenido === null) {
+    return;
+  }
+  
+  clase.contenido = nuevoContenido.trim();
+
+  guardarProgreso();
+
+  mostrarPropuestaAcademica(
+  semana.propuesta
+);
+  }
+
+function editarMetodologiaClase(numeroClase, indiceMetodologia) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const metodologia =
+    clase.metodologiasActividades[indiceMetodologia];
+
+  if (!metodologia) {
+    return;
+  }
+
+  const metodologiasPermitidas = [
+  "Trabajo colaborativo",
+  "Intercambios orales",
+  "Diálogo socrático",
+  "Estudio de casos",
+  "Aprendizaje basado en problemas (ABP)",
+  "Aprendizaje basado en proyectos (ABProyectos)",
+  "Simulaciones",
+  "Dramatizaciones",
+  "Prácticas",
+  "Pasantías"
+];
+
+const opciones = metodologiasPermitidas
+  .map((nombre, index) => (index + 1) + ". " + nombre)
+  .join("\n");
+
+const seleccion = prompt(
+  "Seleccione la nueva metodología escribiendo su número:\n\n" +
+  opciones +
+  "\n\nMetodología actual: " +
+  metodologia.metodologia
+);
+
+if (seleccion === null) {
+  return;
+}
+
+const numeroSeleccionado = parseInt(seleccion, 10);
+
+if (
+  isNaN(numeroSeleccionado) ||
+  numeroSeleccionado < 1 ||
+  numeroSeleccionado > metodologiasPermitidas.length
+) {
+  alert("Seleccione un número válido del 1 al 10.");
+  return;
+}
+
+metodologia.metodologia =
+  metodologiasPermitidas[numeroSeleccionado - 1];
+
+guardarProgreso();
+
+mostrarPropuestaAcademica(
+  semana.propuesta
+);
+  
+}
+
+  function editarMediacionClase(numeroClase, indiceMetodologia) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const metodologia =
+    clase.metodologiasActividades[indiceMetodologia];
+
+  if (!metodologia) {
+    return;
+  }
+
+  const nuevaMediacion = prompt(
+  "Edite la mediación docente:",
+  metodologia.explicacionMetodologia || ""
+);
+
+if (nuevaMediacion === null) {
+  return;
+}
+
+metodologia.explicacionMetodologia =
+  nuevaMediacion.trim();
+
+guardarProgreso();
+
+mostrarPropuestaAcademica(
+  semana.propuesta
+);
+}
+async function modificarMediacionConIA(numeroClase, indiceMetodologia) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const metodologia =
+    clase.metodologiasActividades[indiceMetodologia];
+
+  if (!metodologia) {
+    return;
+  }
+
+  const indicacionDocente = prompt(
+    "¿Qué desea modificar de la mediación docente?\n\n" +
+    "Ejemplo: Hacerla más participativa, incorporar preguntas orientadoras o reducir la exposición del docente."
+  );
+
+  if (
+    indicacionDocente === null ||
+    indicacionDocente.trim() === ""
+  ) {
+    return;
+  }
+
+  try {
+
+  const respuesta = await fetch(
+    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/modificar-mediacion",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        contenido:
+          clase.contenido || "",
+
+        metodologia:
+          metodologia.metodologia || "",
+
+        mediacionActual:
+          metodologia.explicacionMetodologia || "",
+
+        indicacionDocente:
+          indicacionDocente.trim()
+      })
+    }
+  );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.correcto
+  ) {
+    alert(
+      resultado.error ||
+      "No fue posible modificar la mediación con IA."
+    );
+    return;
+  }
+const aceptarPropuesta = confirm(
+  "MEDIACIÓN ACTUAL:\n\n" +
+  (metodologia.explicacionMetodologia || "") +
+  "\n\n------------------------------\n\n" +
+  "PROPUESTA DE LA IA:\n\n" +
+  resultado.mediacionPropuesta +
+  "\n\n------------------------------\n\n" +
+  "¿Desea sustituir la mediación actual por la propuesta de la IA?"
+);
+
+if (!aceptarPropuesta) {
+  return;
+}
+
+metodologia.explicacionMetodologia =
+  resultado.mediacionPropuesta.trim();
+
+guardarProgreso();
+
+mostrarPropuestaAcademica(
+  semana.propuesta
+);
+} catch (error) {
+
+  alert(
+    "No fue posible conectar con el servicio de IA."
+  );
+  return;
+}
+}
+async function editarActividadFormativa(numeroClase, indiceMetodologia) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const metodologia =
+    clase.metodologiasActividades[indiceMetodologia];
+
+  if (!metodologia) {
+    return;
+  }
+
+  const actividadCompleta =
+  metodologia.actividadFormativa || "";
+
+const actividadSinREA =
+  actividadCompleta
+    .replace(/\s*\(REA[^)]*\)\s*$/i, "")
+    .trim();
+
+const nuevaActividad = prompt(
+  "Edite la actividad formativa:",
+  actividadSinREA
+);
+
+if (nuevaActividad === null) {
+  return;
+}
+  const actividadModificada =
+    nuevaActividad.trim();
+
+  const reaOficiales =
+    datosGuia.programa.reaOficiales || [];
+
+  if (!reaOficiales.length) {
+  alert(
+    "No hay REA oficiales disponibles para analizar la nueva actividad. " +
+    "Revise los REA cargados en la Etapa 3."
+  );
+  return;
+}
+
+const datosParaRevisionREA = {
+  actividad: actividadModificada,
+  reaOficiales: reaOficiales.map(rea => ({
+    codigo: rea.codigo,
+    texto: rea.texto
+  }))
+};
+  
+const respuestaRevision = await fetch(
+  "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-rea-actividad",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(
+      datosParaRevisionREA
+    )
+  }
+);
+  const resultadoRevision =
+  await respuestaRevision.json();
+
+if (
+  !respuestaRevision.ok ||
+  !resultadoRevision.correcto
+) {
+  alert(
+    resultadoRevision.error ||
+    "No fue posible revisar los REA de la actividad."
+  );
+  return;
+}
+const reaPertinentes =
+  reaOficiales.filter(
+    rea =>
+      resultadoRevision.codigosREA.includes(
+        rea.codigo
+      )
+  );  
+  const textoREAPertinentes =
+  reaPertinentes.length
+    ? reaPertinentes
+        .map(
+          rea =>
+            rea.codigo + ": " + rea.texto
+        )
+        .join("\n\n")
+    : "Ningún REA oficial fue identificado como pertinente para la nueva actividad.";
+  if (!reaPertinentes.length) {
+  alert(
+    "La actividad modificada no presenta una vinculación académicamente pertinente " +
+    "con ninguno de los REA oficiales disponibles.\n\n" +
+    "La actividad anterior y sus REA se mantendrán sin cambios."
+  );
+  return;
+}
+  const confirmarREA = confirm(
+  "REA identificados para la nueva actividad:\n\n" +
+  textoREAPertinentes +
+  "\n\n¿Desea asociar estos REA a la actividad modificada?"
+);
+  if (!confirmarREA) {
+  return;
+}
+ const codigosREAConfirmados =
+  reaPertinentes.map(
+    rea => rea.codigo
+  );
+
+metodologia.actividadFormativa =
+  actividadModificada;
+
+metodologia.codigosREA =
+  codigosREAConfirmados;
+
+guardarProgreso();
+
+mostrarPropuestaAcademica(
+  semana.propuesta
+); 
+}
+ async function modificarActividadConIA(numeroClase, indiceMetodologia) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const metodologia =
+    clase.metodologiasActividades[indiceMetodologia];
+
+  if (!metodologia) {
+    return;
+  }
+  const actividadCompleta =
+  metodologia.actividadFormativa || "";
+
+const actividadActual =
+  actividadCompleta
+    .replace(/\s*\(REA[^)]*\)\s*$/i, "")
+    .trim();
+
+const indicacionDocente = prompt(
+  "¿Qué desea modificar de la actividad formativa?\n\n" +
+  "Ejemplo: Hacerla más práctica, incorporar trabajo colaborativo o contextualizarla a una situación profesional."
+);
+
+if (
+  indicacionDocente === null ||
+  indicacionDocente.trim() === ""
+) {
+  return;
+} 
+const datosParaIA = {
+  contenido:
+    clase.contenido || "",
+
+  metodologia:
+    metodologia.metodologia || "",
+
+  mediacionDocente:
+    metodologia.explicacionMetodologia || "",
+
+  actividadActual:
+    actividadActual,
+
+  indicacionDocente:
+    indicacionDocente.trim()
+};  
+ try {
+
+  const respuestaActividad = await fetch(
+    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/modificar-actividad",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datosParaIA)
+    }
+  );
+
+  const resultadoActividad =
+    await respuestaActividad.json();
+
+     if (
+    !respuestaActividad.ok ||
+    !resultadoActividad.correcto ||
+    !resultadoActividad.actividadPropuesta
+  ) {
+    alert(
+      resultadoActividad.error ||
+      "No fue posible generar una nueva actividad formativa."
+    );
+
+    return;
+  }
+  const reaOficiales =
+    datosGuia.programa.reaOficiales || [];
+
+  if (reaOficiales.length === 0) {
+    alert(
+      "No hay REA oficiales disponibles para revisar la actividad propuesta."
+    );
+
+    return;
+  }
+  const respuestaREA = await fetch(
+    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-rea-actividad",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        actividad:
+          resultadoActividad.actividadPropuesta.trim(),
+
+        reaOficiales:
+          reaOficiales
+      })
+    }
+  );
+
+  const resultadoREA =
+    await respuestaREA.json();   
+     if (
+    !respuestaREA.ok ||
+    !resultadoREA.correcto ||
+    !Array.isArray(resultadoREA.codigosREA)
+  ) {
+    alert(
+      resultadoREA.error ||
+      "No fue posible revisar los REA de la actividad propuesta."
+    );
+
+    return;
+  }
+     const reaPertinentes =
+    reaOficiales.filter(
+      rea =>
+        resultadoREA.codigosREA.includes(
+          rea.codigo
+        )
+    );
+   if (reaPertinentes.length === 0) {
+    alert(
+      "No se identificó ningún REA oficial pertinente para la actividad propuesta por la IA.\n\n" +
+      "La actividad actual y sus REA se conservarán sin cambios."
+    );
+
+    return;
+  }  
+   const textoREA =
+    reaPertinentes
+      .map(
+        rea =>
+          rea.codigo + ": " + rea.texto
+      )
+      .join("\n\n");  
+     const aceptarPropuesta = confirm(
+    "ACTIVIDAD ACTUAL:\n\n" +
+    actividadActual +
+    "\n\n------------------------------\n\n" +
+    "PROPUESTA DE LA IA:\n\n" +
+    resultadoActividad.actividadPropuesta.trim() +
+    "\n\n------------------------------\n\n" +
+    "REA IDENTIFICADOS:\n\n" +
+    textoREA +
+    "\n\n------------------------------\n\n" +
+    "¿Desea sustituir la actividad actual por la propuesta de la IA?"
+  );
+
+  if (!aceptarPropuesta) {
+    return;
+  }
+     metodologia.actividadFormativa =
+    resultadoActividad.actividadPropuesta.trim();
+
+  metodologia.codigosREA =
+    reaPertinentes.map(
+      rea => rea.codigo
+    );
+
+  guardarProgreso();
+
+  mostrarPropuestaAcademica(
+    semana.propuesta
+  );
+} catch (error) {
+
+  alert(
+    "No fue posible conectar con el servicio de IA para modificar la actividad formativa."
+  );
+
+  return;
+}  
+} 
+ function cerrarEdicionLista() {
+  document
+    .getElementById("modalEdicionLista")
+    .classList.add("oculto");
+
+  document.getElementById(
+    "campoEdicionLista"
+  ).value = "";
+
+  document.getElementById(
+    "botonGuardarEdicionLista"
+  ).onclick = null;
+} 
+
+ function editarRecursosMateriales(numeroClase) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+ const recursosActuales =
+  Array.isArray(clase.recursosMateriales)
+    ? clase.recursosMateriales.join("\n")
+    : "";
+
+document.getElementById(
+  "tituloEdicionLista"
+).textContent =
+  "Editar recursos materiales - Clase " +
+  numeroClase;
+
+document.getElementById(
+  "instruccionEdicionLista"
+).textContent =
+  "Escriba un recurso material por línea.";
+
+document.getElementById(
+  "campoEdicionLista"
+).value =
+  recursosActuales;
+
+document
+  .getElementById("modalEdicionLista")
+  .classList.remove("oculto");
+  document.getElementById(
+  "botonGuardarEdicionLista"
+).onclick = function () {
+
+  const nuevosRecursos =
+    document.getElementById(
+      "campoEdicionLista"
+    ).value;
+
+  clase.recursosMateriales =
+    nuevosRecursos
+      .split("\n")
+      .map(recurso => recurso.trim())
+      .filter(recurso => recurso !== "");
+
+  guardarProgreso();
+
+  cerrarEdicionLista();
+
+  mostrarPropuestaAcademica(
+    semana.propuesta
+  );
+}; 
+} 
+  function editarRecursosVirtuales(numeroClase) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const recursosActuales =
+    Array.isArray(clase.recursosVirtuales)
+      ? clase.recursosVirtuales.join("\n")
+      : "";
+    document.getElementById(
+  "tituloEdicionLista"
+).textContent =
+  "Editar recursos virtuales - Clase " +
+  numeroClase;
+
+document.getElementById(
+  "instruccionEdicionLista"
+).textContent =
+  "Escriba un recurso virtual por línea.";
+
+document.getElementById(
+  "campoEdicionLista"
+).value =
+  recursosActuales;
+
+document
+  .getElementById("modalEdicionLista")
+  .classList.remove("oculto");
+    document.getElementById(
+  "botonGuardarEdicionLista"
+).onclick = function () {
+
+  const nuevosRecursos =
+    document.getElementById(
+      "campoEdicionLista"
+    ).value;
+
+  clase.recursosVirtuales =
+    nuevosRecursos
+      .split("\n")
+      .map(recurso => recurso.trim())
+      .filter(recurso => recurso !== "");
+
+  guardarProgreso();
+
+  cerrarEdicionLista();
+
+  mostrarPropuestaAcademica(
+    semana.propuesta
+  );
+};
+}
+  function editarBibliografiaClase(numeroClase) {
+
+  const semana = datosGuia.cronograma.find(
+    item => item.semana === semanaActual
+  );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase = semana.propuesta.clases.find(
+    item => item.clase === numeroClase
+  );
+
+  if (!clase) {
+    return;
+  }
+
+  const bibliografiaActual =
+    Array.isArray(clase.bibliografia)
+      ? clase.bibliografia.join("\n")
+      : "";
+    document.getElementById(
+  "tituloEdicionLista"
+).textContent =
+  "Editar bibliografía - Clase " +
+  numeroClase;
+
+document.getElementById(
+  "instruccionEdicionLista"
+).textContent =
+  "Escriba una referencia bibliográfica por línea. Máximo 2 referencias.";
+
+document.getElementById(
+  "campoEdicionLista"
+).value =
+  bibliografiaActual;
+
+document
+  .getElementById("modalEdicionLista")
+  .classList.remove("oculto");
+    document.getElementById(
+  "botonGuardarEdicionLista"
+).onclick = function () {
+
+  const nuevasReferencias =
+    document.getElementById(
+      "campoEdicionLista"
+    ).value
+      .split("\n")
+      .map(referencia => referencia.trim())
+      .filter(referencia => referencia !== "");
+
+  if (nuevasReferencias.length > 2) {
+    alert(
+      "La bibliografía de cada clase puede contener un máximo de 2 referencias pertinentes."
+    );
+    return;
+  }
+
+  clase.bibliografia =
+    nuevasReferencias;
+
+  guardarProgreso();
+
+  cerrarEdicionLista();
+
+  mostrarPropuestaAcademica(
+    semana.propuesta
+  );
+};
+}
+ function aceptarReaSugerido(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+
+  rea.requiereValidacionDocente = false;
+  rea.validadoPorDocente = true;
+  rea.estado = "validado";
+
+  mostrarPropuestaAcademica(semana.propuesta);
+} 
+ function rechazarReaSugerido(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+
+  rea.requiereValidacionDocente = false;
+  rea.validadoPorDocente = false;
+  rea.estado = "rechazado";
+  rea.requiereRevisionActividad = true;
+
+
+   mostrarPropuestaAcademica(semana.propuesta);
+}
+function revisarActividadRea(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+
+  const idCuadro = `revisionActividad-${numeroClase}-${reaIndex}`;
+
+let cuadro = document.getElementById(idCuadro);
+
+if (!cuadro) {
+  cuadro = document.createElement("div");
+  cuadro.id = idCuadro;
+  cuadro.className = "resultado";
+  cuadro.style.marginTop = "16px";
+
+  const contenedor =
+    document.getElementById("contenidoPropuestaAcademica");
+
+  contenedor.appendChild(cuadro);
+}
+
+cuadro.innerHTML = `
+  <h4>Revisión de actividad formativa</h4>
+
+  <p>
+    <strong>Tipo de actividad:</strong><br>
+  ${rea.tipoActividad || "Pendiente de identificar"}
+</p>
+
+<p>
+  <strong>Metodología vinculada:</strong><br>
+  ${rea.metodologiaVinculada || "Pendiente de identificar"}
+</p>
+    <strong>Actividad que requiere revisión:</strong><br>
+    ${rea.actividadVinculada || ""}
+  </p>
+
+  <p>
+    <strong>Motivo de la revisión:</strong><br>
+    El REA sugerido fue rechazado por el docente.
+  </p>
+
+  <p>
+    <strong>Criterio para la revisión:</strong><br>
+    Se deberá reformular la actividad procurando su vinculación
+    total o parcial con un REA oficial pertinente, sin modificar
+    innecesariamente el contenido ni la metodología de la clase.
+  </p>
+
+  <button
+  type="button"
+  class="btn-principal"
+  onclick="solicitarRevisionActividad(${numeroClase}, ${reaIndex})"
+>
+  Reformular actividad con IA
+</button>
+
+  <p style="margin-top:10px;">
+  <small>
+    La actividad será revisada manteniendo su contenido,
+    metodología vinculada e intención formativa siempre que
+    sea académicamente posible.
+  </small>
+</p>
+`;
+
+cuadro.scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+}
+ async function solicitarRevisionActividad(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+
+  const datosRevision = {
+    semana: semanaActual,
+    clase: numeroClase,
+    contenido: clase.contenido || "",
+    tipoActividad: rea.tipoActividad || "",
+    metodologiaVinculada: rea.metodologiaVinculada || "",
+    actividadActual: rea.actividadVinculada || "",
+    reaOficiales: datosGuia.programa.reaOficiales || []
+  };
+
+  try {
+
+    const respuesta = await fetch(
+      "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-actividad",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datosRevision)
+      }
+    );
+
+    const resultado = await respuesta.json();
+
+    if (!resultado.correcto || !resultado.revision) {
+  throw new Error(
+    resultado.error || "No fue posible revisar la actividad formativa."
+  );
+}
+
+const revision = resultado.revision;
+rea.revisionPropuesta = {
+  alineacionEncontrada: revision.alineacionEncontrada,
+  actividadReformulada: revision.actividadReformulada || "",
+  codigosREA: Array.isArray(revision.codigosREA)
+    ? revision.codigosREA
+    : [],
+  explicacionAlineacion: revision.explicacionAlineacion || "",
+  requiereDecisionDocente: revision.requiereDecisionDocente
+};
+const idResultado =
+  `resultadoRevision-${numeroClase}-${reaIndex}`;
+
+let cuadroResultado =
+  document.getElementById(idResultado);
+
+if (!cuadroResultado) {
+  cuadroResultado = document.createElement("div");
+  cuadroResultado.id = idResultado;
+  cuadroResultado.className = "resultado";
+  cuadroResultado.style.marginTop = "16px";
+
+  const cuadroRevision =
+    document.getElementById(
+      `revisionActividad-${numeroClase}-${reaIndex}`
+    );
+
+  if (cuadroRevision) {
+    cuadroRevision.appendChild(cuadroResultado);
+  }
+}
+if (revision.alineacionEncontrada) {
+
+  const codigosREA =
+    Array.isArray(revision.codigosREA)
+      ? revision.codigosREA.join(", ")
+      : "";
+
+  cuadroResultado.innerHTML = `
+    <h4>Propuesta de reformulación</h4>
+
+    <p>
+      <strong>Actividad reformulada:</strong><br>
+      ${revision.actividadReformulada || ""}
+    </p>
+
+    <p>
+      <strong>REA oficial vinculado:</strong><br>
+      ${codigosREA || "No especificado"}
+    </p>
+
+    <p>
+      <strong>Explicación de la alineación:</strong><br>
+      ${revision.explicacionAlineacion || ""}
+    </p>
+
+    <p>
+      <strong>Estado:</strong><br>
+      Pendiente de validación docente
+    </p>
+
+    <button
+      type="button"
+      class="btn-principal"
+      onclick="aceptarReformulacionActividad(${numeroClase}, ${reaIndex})"
+    >
+      Aceptar reformulación
+    </button>
+
+    <button
+      type="button"
+      class="btn-secundario"
+      onclick="mantenerActividadAnterior(${numeroClase}, ${reaIndex})"
+    >
+      Mantener actividad anterior
+    </button>
+  `;
+
+} else {
+
+  cuadroResultado.innerHTML = `
+    <h4>Resultado de la revisión</h4>
+
+    <p>
+      <strong>No se encontró una alineación pertinente con los REA oficiales.</strong>
+    </p>
+
+    <p>
+      ${revision.explicacionAlineacion || ""}
+    </p>
+
+    <p>
+      <strong>Acción requerida:</strong><br>
+      Se requiere una decisión del docente.
+    </p>
+  `;
+}
+
+cuadroResultado.scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+  } catch (error) {
+
+    console.error(
+      "Error al probar la revisión de actividad:",
+      error
+    );
+
+  }
+} 
+ function aceptarReformulacionActividad(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+const revision = rea.revisionPropuesta;
+
+if (
+  !revision ||
+  !revision.alineacionEncontrada ||
+  !revision.actividadReformulada
+) {
+  return;
+}
+
+let actividadEncontrada = null;
+
+if (rea.tipoActividad === "obligatoria") {
+
+  actividadEncontrada =
+    (clase.metodologiasActividades || []).find(
+      actividad =>
+        actividad.metodologia === rea.metodologiaVinculada &&
+        actividad.actividadFormativa === rea.actividadVinculada
+    );
+
+} else if (rea.tipoActividad === "adicional") {
+
+  actividadEncontrada =
+    (clase.actividadesAdicionales || []).find(
+      actividad =>
+        actividad.metodologiaVinculada === rea.metodologiaVinculada &&
+        actividad.actividadFormativa === rea.actividadVinculada
+    );
+
+}
+
+if (!actividadEncontrada) {
+  return;
+}
+
+actividadEncontrada.actividadFormativa =
+  revision.actividadReformulada;
+
+actividadEncontrada.codigosREA =
+  Array.isArray(revision.codigosREA)
+    ? [...revision.codigosREA]
+    : [];
+   rea.actividadVinculada =
+  revision.actividadReformulada;
+
+rea.requiereRevisionActividad = false;
+  const cuadroResultado =
+    document.getElementById(
+      `resultadoRevision-${numeroClase}-${reaIndex}`
+    );
+
+  if (!cuadroResultado) {
+    return;
+  }
+
+  rea.reformulacionAceptada = true;
+  rea.estadoRevision = "reformulacion-validada";
+const botonesDecision =
+  cuadroResultado.querySelectorAll("button");
+
+botonesDecision.forEach(
+  boton => boton.remove()
+);
+  cuadroResultado.innerHTML += `
+    <p style="margin-top:16px;">
+      <strong>Estado de la reformulación:</strong><br>
+      Validada por el docente
+    </p>
+  `;
+} 
+  function mantenerActividadAnterior(numeroClase, reaIndex) {
+
+  const semana =
+    datosGuia.cronograma.find(
+      item => item.semana === semanaActual
+    );
+
+  if (!semana || !semana.propuesta) {
+    return;
+  }
+
+  const clase =
+    semana.propuesta.clases.find(
+      item => item.clase === numeroClase
+    );
+
+  if (
+    !clase ||
+    !Array.isArray(clase.reaSugeridos) ||
+    !clase.reaSugeridos[reaIndex]
+  ) {
+    return;
+  }
+
+  const rea = clase.reaSugeridos[reaIndex];
+
+  rea.reformulacionAceptada = false;
+  rea.estadoRevision = "actividad-original-mantenida";
+  rea.requiereRevisionActividad = true;
+  const cuadroResultado =
+    document.getElementById(
+      `resultadoRevision-${numeroClase}-${reaIndex}`
+    );
+
+  if (!cuadroResultado) {
+    return;
+  }
+const botonesDecision =
+  cuadroResultado.querySelectorAll("button");
+
+botonesDecision.forEach(
+  boton => boton.remove()
+);
+  cuadroResultado.innerHTML += `
+    <p style="margin-top:16px;">
+      <strong>Estado de la reformulación:</strong><br>
+      No aceptada. Se mantiene la actividad anterior.
+    </p>
+  `;
+}
+window.pruebaGuiaDocente = function() {
+  console.log("Prueba local disponible");
+};
+
+function mostrarErrorCronograma(texto){
+
+  const error =
+    document.getElementById("errorCronograma");
+
+  error.textContent = texto;
+
+  error.classList.remove("oculto");
+
+} 
+const parametrosInicio =
+  new URLSearchParams(window.location.search);
+
+const modoInicio =
+  parametrosInicio.get("modo");
+
+if (modoInicio === "nueva") {
+
+    window.history.replaceState(
+    {},
+    "",
+    window.location.pathname
+  );
+
+} else {
+  restaurarInterfazProgreso();
+}
+async function descargarCronogramaWord() {
+
+  if (typeof docx === "undefined") {
+    alert(
+      "No fue posible cargar el generador de Word."
+    );
+    return;
+  }
+
+  const {
+    Document,
+    Packer,
+    Paragraph,
+    TextRun,
+    Table,
+    TableRow,
+    TableCell,
+    WidthType,
+    AlignmentType,
+    VerticalAlign,
+    TableLayoutType
+    } = docx;
+
+  const semanasOrdenadas =
+    [...datosGuia.cronograma].sort(
+      (a, b) => a.semana - b.semana
+    );
+
+  if (semanasOrdenadas.length === 0) {
+    alert(
+      "No existen datos del cronograma para descargar."
+    );
+    return;
+  }
+
+  const filasCronograma = [];
+
+filasCronograma.push(
+  new TableRow({
+       children: [
+  { texto: "Contenido", ancho: 24 },
+  { texto: "Metodologías de Enseñanza", ancho: 27 },
+  { texto: "Actividades Formativas y REA(s)", ancho: 27 },
+  { texto: "Recursos y Bibliografías", ancho: 22 }
+].map(columna =>
+      new TableCell({
+  width: {
+    size: columna.ancho,
+    type: WidthType.PERCENTAGE
+  },
+  shading: {
+  fill: "006B54"
+  },
+  verticalAlign: VerticalAlign.CENTER,
+  children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: columna.texto,
+                bold: true,
+                color: "FFFFFF"
+          })
+            ]
+          })
+        ]
+      })
+    )
+  })
+);
+  semanasOrdenadas.forEach(datosSemana => {
+
+  filasCronograma.push(
+    new TableRow({
+      children: [
+        new TableCell({
+          columnSpan: 4,
+          shading: {
+            fill: "E9F4F1"
+          },
+          verticalAlign: VerticalAlign.CENTER,
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: "Semana " + datosSemana.semana,
+                  bold: true
+                })
+              ]
+            })
+          ]
+        })
+      ]
+    })
+  );
+const propuesta = datosSemana.propuesta;
+
+if (
+  propuesta &&
+  Array.isArray(propuesta.clases)
+) {
+
+  propuesta.clases.forEach(clase => {
+
+    const celdaContenido =
+  new TableCell({
+    width: {
+      size: 24,
+      type: WidthType.PERCENTAGE
+    },
+    children: [
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "Clase " + clase.clase,
+            bold: true
+          })
+        ]
+      }),
+
+      new Paragraph({
+        text: clase.contenido || ""
+      })
+    ]
+  });
+const parrafosMetodologias = [];
+
+    if (clase.evaluacionDiagnostica) {
+
+  const diagnostico =
+    clase.evaluacionDiagnostica;
+
+  parrafosMetodologias.push(
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: "Prueba Diagnóstica:",
+          bold: true
+        })
+      ]
+    }),
+
+    new Paragraph({
+      text:
+        diagnostico.metodologia || ""
+    }),
+
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: "Mediación docente:",
+          bold: true
+        })
+      ]
+    }),
+
+    new Paragraph({
+      text:
+        diagnostico.mediacionDocente || ""
+    })
+  );
+
+}
+
+if (Array.isArray(clase.metodologiasActividades)) {
+
+  clase.metodologiasActividades.forEach(
+    (item, index) => {
+
+      parrafosMetodologias.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text:
+                "Metodología " +
+                (index + 1) +
+                ":",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text: item.metodologia || ""
+        }),
+
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: "Mediación docente:",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text:
+            item.explicacionMetodologia || ""
+        })
+      );
+
+    }
+  );
+
+}
+
+/* METODOLOGÍAS DE ACTIVIDADES FORMATIVAS ADICIONALES */
+
+if (Array.isArray(clase.actividadesAdicionales)) {
+
+  clase.actividadesAdicionales.forEach(
+    (actividad, index) => {
+
+      parrafosMetodologias.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text:
+                "Metodología adicional " +
+                (index + 1) +
+                ":",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text:
+            actividad.metodologiaVinculada ||
+            ""
+        }),
+
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: "Mediación docente:",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text:
+            actividad.explicacionVinculacion ||
+            ""
+        })
+      );
+
+    }
+  );
+
+}
+    
+const celdaMetodologias =
+  new TableCell({
+    width: {
+      size: 27,
+      type: WidthType.PERCENTAGE
+    },
+    children: parrafosMetodologias
+  });
+  const parrafosActividades = [];
+
+    if (clase.evaluacionDiagnostica) {
+
+  const diagnostico =
+    clase.evaluacionDiagnostica;
+
+  parrafosActividades.push(
+    new Paragraph({
+      children: [
+        new TextRun({
+          text:
+             "Prueba Diagnóstica (valor: 0 puntos)",
+          bold: true
+        })
+      ]
+    }),
+
+new Paragraph({
+  text:
+    "Tipo: D · Instrumento: Prueba objetiva"
+}),
+    
+    new Paragraph({
+      text:
+        diagnostico.actividadDiagnostica || ""
+    })
+  );
+
+}
+
+if (Array.isArray(clase.metodologiasActividades)) {
+
+  clase.metodologiasActividades.forEach(
+    (item, index) => {
+
+      const codigosREA =
+        Array.isArray(item.codigosREA)
+          ? item.codigosREA.join(", ")
+          : "";
+
+      const actividadLimpia =
+        (item.actividadFormativa || "")
+          .replace(
+            /\s*\(REA\s*\d+(?:\s*,\s*REA\s*\d+)*\)\s*$/i,
+            ""
+          )
+          .replace(
+            /\s*\(REA\d+(?:\s*,\s*REA\d+)*\)\s*$/i,
+            ""
+          )
+          .trim();
+
+      const textoActividad =
+        actividadLimpia +
+        (
+          codigosREA
+            ? ` (${codigosREA})`
+            : ""
+        );
+
+      parrafosActividades.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text:
+                "Actividad formativa " +
+                (index + 1) +
+                ":",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text: textoActividad
+        })
+      );
+
+    }
+  );
+
+}
+
+/* ACTIVIDADES FORMATIVAS ADICIONALES */
+
+if (Array.isArray(clase.actividadesAdicionales)) {
+
+  clase.actividadesAdicionales.forEach(
+    (actividad, index) => {
+
+      const codigosREA =
+        Array.isArray(actividad.codigosREA)
+          ? actividad.codigosREA.join(", ")
+          : "";
+
+      const actividadLimpia =
+        (actividad.actividadFormativa || "")
+          .replace(
+            /\s*\(REA\s*\d+(?:\s*,\s*REA\s*\d+)*\)\s*$/i,
+            ""
+          )
+          .replace(
+            /\s*\(REA\d+(?:\s*,\s*REA\d+)*\)\s*$/i,
+            ""
+          )
+          .trim();
+
+      const textoActividad =
+        actividadLimpia +
+        (
+          codigosREA
+            ? ` (${codigosREA})`
+            : ""
+        );
+
+      parrafosActividades.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text:
+                "Actividad formativa adicional " +
+                (index + 1) +
+                ":",
+              bold: true
+            })
+          ]
+        }),
+
+        new Paragraph({
+          text: textoActividad
+        })
+      );
+
+    }
+  );
+
+} 
+const celdaActividades =
+  new TableCell({
+    width: {
+      size: 27,
+      type: WidthType.PERCENTAGE
+    },
+    children: parrafosActividades
+  });
+    const parrafosRecursos = [];
+
+parrafosRecursos.push(
+  new Paragraph({
+    children: [
+      new TextRun({
+        text: "Recursos materiales:",
+        bold: true
+      })
+    ]
+  })
+);
+
+if (Array.isArray(clase.recursosMateriales)) {
+  clase.recursosMateriales.forEach(recurso => {
+    parrafosRecursos.push(
+      new Paragraph({
+        text: recurso || ""
+      })
+    );
+  });
+}
+
+parrafosRecursos.push(
+  new Paragraph({
+    children: [
+      new TextRun({
+        text: "Recursos virtuales:",
+        bold: true
+      })
+    ]
+  })
+);
+
+if (Array.isArray(clase.recursosVirtuales)) {
+  clase.recursosVirtuales.forEach(recurso => {
+    parrafosRecursos.push(
+      new Paragraph({
+        text: recurso || ""
+      })
+    );
+  });
+}
+
+parrafosRecursos.push(
+  new Paragraph({
+    children: [
+      new TextRun({
+        text: "Bibliografía:",
+        bold: true
+      })
+    ]
+  })
+);
+
+if (Array.isArray(clase.bibliografia)) {
+  clase.bibliografia.forEach(referencia => {
+    parrafosRecursos.push(
+      new Paragraph({
+        text: referencia || ""
+      })
+    );
+  });
+}
+
+const celdaRecursos =
+  new TableCell({
+    width: {
+      size: 22,
+      type: WidthType.PERCENTAGE
+    },
+    children: parrafosRecursos
+  });
+    filasCronograma.push(
+  new TableRow({
+    children: [
+      celdaContenido,
+      celdaMetodologias,
+      celdaActividades,
+      celdaRecursos
+    ]
+  })
+);
+  });
+
+}
+});
+const tablaWord =
+  new Table({
+    width: {
+      size: 100,
+      type: WidthType.PERCENTAGE
+    },
+    layout: TableLayoutType.FIXED,
+    margins: {
+       top: 80,
+       bottom: 80,
+       left: 100,
+       right: 100
+    },
+    rows: filasCronograma
+  });
+
+const documentoWord =
+  new Document({
+    styles: {
+      default: {
+        document: {
+          run: {
+            size: 20
+          }
+        }
+      }
+    },
+
+    sections: [
+      {
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: "Cronograma de la asignatura",
+                bold: true,
+                size: 28
+              })
+            ]
+          }),
+
+          new Paragraph({
+            text: ""
+          }),
+
+          tablaWord
+        ]
+      }
+    ]
+  });  
+  const archivoWord =
+  await Packer.toBlob(documentoWord);
+
+const enlaceDescarga =
+  document.createElement("a");
+
+enlaceDescarga.href =
+  URL.createObjectURL(archivoWord);
+
+enlaceDescarga.download =
+  "Cronograma_Guia_Docente_UNPHU.docx";
+
+document.body.appendChild(enlaceDescarga);
+
+enlaceDescarga.click();
+
+document.body.removeChild(enlaceDescarga);
+
+setTimeout(
+  function () {
+    URL.revokeObjectURL(
+      enlaceDescarga.href
+    );
+  },
+  1000
+);
+}
+  function descargarCronogramaPDF() {
+
+  if (
+    typeof window.jspdf === "undefined" ||
+    typeof window.jspdf.jsPDF === "undefined"
+  ) {
+    alert(
+      "No fue posible cargar la herramienta para generar el PDF."
+    );
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const documentoPDF =
+    new jsPDF({
+      orientation: "portrait",
+      unit: "pt",
+      format: "a4"
+    });
+
+    const semanasOrdenadas =
+  [...datosGuia.cronograma]
+    .filter(
+      datosSemana =>
+        datosSemana.propuesta &&
+        Array.isArray(datosSemana.propuesta.clases) &&
+        datosSemana.propuesta.clases.length > 0
+    )
+    .sort(
+      (a, b) => a.semana - b.semana
+    );
+
+if (!semanasOrdenadas.length) {
+  alert(
+    "No hay contenido disponible para generar el PDF."
+  );
+  return;
+}
+const filasPDF = [];
+
+semanasOrdenadas.forEach(datosSemana => {
+
+  filasPDF.push([
+    {
+      content: "Semana " + datosSemana.semana,
+      colSpan: 4,
+      styles: {
+        halign: "center",
+        fontStyle: "bold",
+        fillColor: [233, 244, 241]
+      }
+    }
+  ]);
+const propuesta =
+  datosSemana.propuesta;
+
+propuesta.clases.forEach(clase => {
+
+  const contenido =
+    "Clase " + clase.clase + "\n" +
+    (clase.contenido || "");
+
+  let metodologias = "";
+
+  if (clase.evaluacionDiagnostica) {
+
+  const diagnostico =
+    clase.evaluacionDiagnostica;
+
+  metodologias +=
+    "Prueba Diagnóstica:\n" +
+    (diagnostico.metodologia || "") +
+    "\n" +
+    "Mediación docente:\n" +
+    (diagnostico.mediacionDocente || "") +
+    "\n\n";
+
+}
+
+if (Array.isArray(clase.metodologiasActividades)) {
+
+  clase.metodologiasActividades.forEach(
+    (item, index) => {
+
+      const codigosREA =
+  Array.isArray(item.codigosREA)
+    ? item.codigosREA.join(", ")
+    : "";
+
+const actividadBase =
+  String(item.actividadFormativa || "")
+    .replace(/\s*\(REA[^)]*\)\s*$/i, "")
+    .trim();
+
+const actividadConREA =
+  codigosREA
+    ? `${actividadBase} (${codigosREA})`
+    : actividadBase;
+
+      metodologias +=
+        "Metodología " + (index + 1) + ":\n" +
+        (item.metodologia || "") + "\n" +
+        "Mediación docente:\n" +
+        (item.explicacionMetodologia || "") + "\n\n";
+
+    }
+  );
+
+}
+  
+if (Array.isArray(clase.actividadesAdicionales)) {
+
+  clase.actividadesAdicionales.forEach(
+    (actividad, index) => {
+
+      metodologias +=
+        "Metodología adicional " +
+        (index + 1) +
+        ":\n" +
+        (actividad.metodologiaVinculada || "") +
+        "\n" +
+        "Mediación docente:\n" +
+        (actividad.explicacionVinculacion || "") +
+        "\n\n";
+
+    }
+  );
+
+}
+  
+let actividades = "";
+
+  if (clase.evaluacionDiagnostica) {
+
+  const diagnostico =
+    clase.evaluacionDiagnostica;
+
+  actividades +=
+    "Prueba Diagnóstica (valor: 0 puntos)\n" +
+    "Tipo: D · Instrumento: Prueba objetiva\n" +
+    (diagnostico.actividadDiagnostica || "") +
+    "\n\n";
+
+}
+
+if (Array.isArray(clase.metodologiasActividades)) {
+
+  clase.metodologiasActividades.forEach(
+    (item, index) => {
+
+      const codigosREA =
+        Array.isArray(item.codigosREA)
+          ? item.codigosREA.join(", ")
+          : "";
+
+      const actividadBase =
+        String(item.actividadFormativa || "")
+          .replace(/\s*\(REA[^)]*\)\s*$/i, "")
+          .trim();
+
+      const actividadConREA =
+        codigosREA
+          ? `${actividadBase} (${codigosREA})`
+          : actividadBase;
+
+      actividades +=
+        "Actividad formativa " + (index + 1) + ":\n" +
+        actividadConREA + "\n\n";
+
+    }
+  );
+
+}
+
+ if (Array.isArray(clase.actividadesAdicionales)) {
+
+  clase.actividadesAdicionales.forEach(
+    (actividad, index) => {
+
+      const codigosREA =
+        Array.isArray(actividad.codigosREA)
+          ? actividad.codigosREA.join(", ")
+          : "";
+
+      const actividadBase =
+        String(
+          actividad.actividadFormativa || ""
+        )
+          .replace(
+            /\s*\(REA[^)]*\)\s*$/i,
+            ""
+          )
+          .trim();
+
+      const actividadConREA =
+        codigosREA
+          ? `${actividadBase} (${codigosREA})`
+          : actividadBase;
+
+      actividades +=
+        "Actividad formativa adicional " +
+        (index + 1) +
+        ":\n" +
+        actividadConREA +
+        "\n\n";
+
+    }
+  );
+
+} 
+  
+  let recursos = "";
+
+recursos +=
+  "Recursos materiales:\n";
+
+if (Array.isArray(clase.recursosMateriales)) {
+  recursos +=
+    clase.recursosMateriales.join("\n");
+}
+
+recursos +=
+  "\n\nRecursos virtuales:\n";
+
+if (Array.isArray(clase.recursosVirtuales)) {
+  recursos +=
+    clase.recursosVirtuales.join("\n");
+}
+
+recursos +=
+  "\n\nBibliografía:\n";
+
+if (Array.isArray(clase.bibliografia)) {
+   recursos +=
+    clase.bibliografia.join("\n");
+}
+
+  filasPDF.push([
+  contenido,
+  metodologias.trim(),
+  actividades.trim(),
+  recursos.trim()
+]);
+});
+});
+    documentoPDF.setFontSize(14);
+documentoPDF.setFont(
+  "helvetica",
+  "bold"
+);
+
+documentoPDF.text(
+  "Cronograma de la asignatura",
+  documentoPDF.internal.pageSize.getWidth() / 2,
+  35,
+  {
+    align: "center"
+  }
+);
+
+documentoPDF.autoTable({
+  startY: 50,
+
+  head: [[
+    "Contenido",
+    "Metodologías de Enseñanza",
+    "Actividades Formativas y REA(s)",
+    "Recursos y Bibliografías"
+  ]],
+
+  body: filasPDF,
+
+  theme: "grid",
+
+  styles: {
+    font: "helvetica",
+    fontSize: 10,
+    cellPadding: 3,
+    valign: "top",
+    lineColor: [0, 0, 0],
+    lineWidth: 0.5,
+    textColor: [0, 0, 0],
+    overflow: "linebreak"
+  },
+
+  headStyles: {
+    fillColor: [0, 107, 84],
+    textColor: [255, 255, 255],
+    fontStyle: "bold",
+    halign: "center",
+    valign: "middle"
+  },
+
+  columnStyles: {
+    0: { cellWidth: 126 },
+    1: { cellWidth: 142 },
+    2: { cellWidth: 142 },
+    3: { cellWidth: 116 }
+  },
+
+  margin: {
+    left: 34,
+    right: 35
+  },
+
+  showHead: "firstPage"
+});
+
+documentoPDF.save(
+  "Cronograma_Guia_Docente_UNPHU.pdf"
+);
+}
+  const btnDescargarWord =
+  document.getElementById("btnDescargarWord");
+
+if (btnDescargarWord) {
+  btnDescargarWord.addEventListener(
+    "click",
+    function () {
+      descargarCronogramaWord();
+    }
+  );
+}
+  const btnDescargarPDF =
+  document.getElementById("btnDescargarPDF");
+
+if (btnDescargarPDF) {
+  btnDescargarPDF.addEventListener(
+    "click",
+    function () {
+      descargarCronogramaPDF();
+    }
+  );
+}
+</script>
+
+</body>
+</html>
