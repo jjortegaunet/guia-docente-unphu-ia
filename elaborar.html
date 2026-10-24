@@ -1381,7 +1381,7 @@ async function extraerDatosProgramaConIA(textoPrograma) {
 
   const respuesta =
     await fetch(
-     "https://guia-docente-unphu-api.jortega-cc4.workers.dev/extraer-programa",
+     "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/extraer-programa",
       {
         method: "POST",
 
@@ -5123,7 +5123,7 @@ const historialMetodologias = datosGuia.cronograma
  try {
 
   const respuesta = await fetch(
-    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/generar-semana",
+    "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/generar-semana",
     {
       method: "POST",
       headers: {
@@ -5797,7 +5797,7 @@ async function modificarMediacionConIA(numeroClase, indiceMetodologia) {
   try {
 
   const respuesta = await fetch(
-    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/modificar-mediacion",
+    "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/modificar-mediacion",
     {
       method: "POST",
       headers: {
@@ -5927,7 +5927,7 @@ const datosParaRevisionREA = {
 };
   
 const respuestaRevision = await fetch(
-  "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-rea-actividad",
+  "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/revisar-rea-actividad",
   {
     method: "POST",
     headers: {
@@ -6062,7 +6062,7 @@ const datosParaIA = {
  try {
 
   const respuestaActividad = await fetch(
-    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/modificar-actividad",
+    "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/modificar-actividad",
     {
       method: "POST",
       headers: {
@@ -6098,7 +6098,7 @@ const datosParaIA = {
     return;
   }
   const respuestaREA = await fetch(
-    "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-rea-actividad",
+    "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/revisar-rea-actividad",
     {
       method: "POST",
       headers: {
@@ -6602,7 +6602,7 @@ cuadro.scrollIntoView({
   try {
 
     const respuesta = await fetch(
-      "https://guia-docente-unphu-api.jortega-cc4.workers.dev/revisar-actividad",
+      "https://guia-docente-unphu-api.profe-estadistica-rd.workers.dev/revisar-actividad",
       {
         method: "POST",
         headers: {
